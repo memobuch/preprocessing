@@ -25,7 +25,7 @@ for entry in demo_dict:
 #3. Save entries as xml files
     folder_name = str(entry['Identifikatornummer'])
     folder_path = os.path.join(output_root, folder_name)
-    filename = f"{str(entry['Identifikatornummer'])}.xml"
+    filename = "DC.xml"
    
     xml_file_path = os.path.join(folder_path, filename)
     with open(xml_file_path, 'w', encoding='utf-8') as xml_file:

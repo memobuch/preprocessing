@@ -1,11 +1,19 @@
 [project]
-name = "memobuch-preprocessing"
+name = "memobuch_preprocessing"
 version = "0.1.0"
 description = "Add your description here"
 authors = [
     { name = "Sebastian Schiller-Stoff", email = "sebastian.stoff@uni-graz.at" }
 ]
-dependencies = []
+dependencies = [
+    "numpy==2.1.1",
+    "pandas==2.2.3",
+    "python-dateutil==2.9.0.post0",
+    "pytz==2024.2",
+    "six==1.16.0",
+    "tzdata==2024.2",
+    "bs4>=0.0.2",
+]
 readme = "README.md"
 requires-python = ">= 3.8"
 
@@ -22,3 +30,6 @@ allow-direct-references = true
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/memobuch_preprocessing"]
+
+[project.scripts]
+memo = "memobuch_preprocessing.memobuch_generate_structure:main"

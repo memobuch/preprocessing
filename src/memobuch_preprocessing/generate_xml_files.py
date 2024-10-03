@@ -17,7 +17,7 @@ def main():
 
     soup = bs(xml_template, 'xml')
 
-    output_root = 'demodata'
+    output_root = 'output'
 
     #3. insert values in the title element
     for entry in demo_dict:

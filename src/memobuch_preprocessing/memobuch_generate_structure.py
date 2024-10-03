@@ -12,7 +12,7 @@ def main():
     print(demo_dict[0])
 
     #2. Create a folder structure
-    output_root = 'demodata'
+    output_root = 'output'
 
     for entry in demo_dict:
         folder_name = str(entry['Identifikatornummer'])

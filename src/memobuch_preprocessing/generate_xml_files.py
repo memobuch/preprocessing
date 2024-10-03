@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup as bs
 def main():
     #1. Create a dictionary
 
-    df = pd.read_csv('memobuch_demodata.csv', sep=';')
+    df = pd.read_csv('data' + os.path.sep + 'memobuch_demodata.csv', sep=';')
     demo_dict = df.to_dict(orient='records')
 
     #2. Open xml template

@@ -11,7 +11,14 @@ import logging
 # The GAMS-REST-API has projects, named 'memo' in our case that will contain the digital objects
 
 # Configure logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+log_file_path = 'log/application.log'
+if os.path.exists(log_file_path):
+    os.remove(log_file_path)
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s', handlers=[
+    logging.FileHandler(log_file_path),
+    logging.StreamHandler()
+])
 logger = logging.getLogger(__name__)
 
 def clear_output_folder(output_root):

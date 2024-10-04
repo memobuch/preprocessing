@@ -128,7 +128,7 @@ def create_datastreams_csv(folder_path):
     df.to_csv(datastreams_csv_path, index=False, sep=',', quotechar='"', quoting=csv.QUOTE_ALL, encoding='utf-8')
     logger.info(f"Created datastreams CSV at: {datastreams_csv_path}")
 
-# TODO create also a RDF.xml file per object that contains the dc elements in RDF format AND the rest of the information
+# RDF.xml file per object that contains the dc elements in RDF format AND the rest of the information
 # provided by the source csv file. Use the foaf ontology to describe the person in the file.
 def create_rdf_xml(entry):
     logger.debug(f"Creating RDF XML for digital object ID: memo.{entry['Identifikatornummer']}")

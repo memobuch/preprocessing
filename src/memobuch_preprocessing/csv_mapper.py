@@ -128,6 +128,45 @@ def create_datastreams_csv(folder_path):
     df.to_csv(datastreams_csv_path, index=False, sep=',', quotechar='"', quoting=csv.QUOTE_ALL, encoding='utf-8')
     logger.info(f"Created datastreams CSV at: {datastreams_csv_path}")
 
+# TODO create also a RDF.xml file per object that contains the dc elements in RDF format AND the rest of the information
+# provided by the source csv file. Use the foaf ontology to describe the person in the file.
+def create_rdf_xml(entry):
+    logger.debug(f"Creating RDF XML for digital object ID: memo.{entry['Identifikatornummer']}")
+    rdf_ns = {'rdf': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'dc': 'http://purl.org/dc/elements/1.1/', 'foaf': 'http://xmlns.com/foaf/0.1/'}
+    root = ET.Element('rdf:RDF', rdf_ns)
+    description = ET.SubElement(root, 'rdf:Description', {'rdf:about': f"memo.{entry['Identifikatornummer']}"})
+
+    mapping = {
+        'Geschlecht': 'dc:subject',
+        'Freitext / Biografie': 'dc:description'
+    }
+
+    for csv_column, rdf_element in mapping.items():
+        if entry[csv_column]:
+            element = ET.SubElement(description, rdf_element)
+            element.text = str(entry[csv_column])
+            logger.debug(f"Added element: {rdf_element} with text: {entry[csv_column]}")
+
+    creator_element = ET.SubElement(description, 'dc:creator')
+    creator_element.text = "Born digital - memo project GAMS"
+
+    if entry['Vorname'] and entry['Nachname']:
+        name_element = ET.SubElement(description, 'foaf:name')
+        name_element.text = f"{entry['Vorname']} {entry['Nachname']}"
+
+    if entry['Jugendlich'] == 'ja':
+        subject_element = ET.SubElement(description, 'dc:subject')
+        subject_element.text = 'jugendlich'
+
+    identifier_element = ET.SubElement(description, 'dc:identifier')
+    identifier_element.text = f"memo.{entry['Identifikatornummer']}"
+
+    rights_element = ET.SubElement(description, 'dc:rights')
+    rights_element.text = "Creative Commons BY-NC 4.0"
+
+    logger.info(f"Created RDF XML for digital object ID: memo.{entry['Identifikatornummer']}")
+    return root
+
 def main():
     output_root = 'output'
     os.makedirs(output_root, exist_ok=True)
@@ -151,6 +190,12 @@ def main():
 
         create_object_csv(entry, folder_path)
         create_datastreams_csv(folder_path)
+
+        rdf_root = create_rdf_xml(entry)
+        rdf_file_path = os.path.join(folder_path, 'RDF.xml')
+        tree = ET.ElementTree(rdf_root)
+        tree.write(rdf_file_path, encoding='utf-8', xml_declaration=True)
+        logger.info(f"Created RDF file at: {rdf_file_path}")
 
 if __name__ == '__main__':
     main()

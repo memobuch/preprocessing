@@ -95,9 +95,9 @@ def create_object_csv(entry, folder_path):
         'description': [entry['Freitext / Biografie']],
         'creator': ['Born digital - memo project GAMS'],
         'rights': ['Creative Commons BY-NC 4.0'],
-        'publisher': [''],
+        'publisher': ['memo project GAMS5'],
         'source': [''],
-        'object_type': ['']
+        'objectType': ['RDF']
     }
 
     df = pd.DataFrame(data)
@@ -120,7 +120,7 @@ def create_datastreams_csv(folder_path, new_datastreams=[]):
                 'description': f'Datastream for {item}',
                 'creator': 'Born digital - memo project GAMS',
                 'rights': 'Creative Commons BY-NC 4.0',
-                'size': os.path.getsize(item_path)
+                # 'size': os.path.getsize(item_path)
             }
             datastreams.append(datastream)
 
@@ -186,7 +186,7 @@ def create_rdf_xml(entry, folder_path):
         'description': 'Datastream for RDF.xml',
         'creator': 'Born digital - memo project GAMS',
         'rights': 'Creative Commons BY-NC 4.0',
-        'size': size
+        # 'size': size
     }
     create_datastreams_csv(folder_path, [new_datastream])
 

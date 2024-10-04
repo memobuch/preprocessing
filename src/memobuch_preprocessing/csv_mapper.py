@@ -104,7 +104,7 @@ def create_object_csv(entry, folder_path):
     df.to_csv(object_csv_path, index=False, sep=',', quotechar='"', quoting=csv.QUOTE_ALL, encoding='utf-8')
     logger.info(f"Created object CSV at: {object_csv_path}")
 
-def create_datastreams_csv(folder_path):
+def create_datastreams_csv(folder_path, new_datastreams=[]):
     logger.debug(f"Creating datastreams CSV for folder: {folder_path}")
     datastreams_csv_path = os.path.join(folder_path, 'datastreams.csv')
     datastreams = []
@@ -124,13 +124,21 @@ def create_datastreams_csv(folder_path):
             }
             datastreams.append(datastream)
 
+    # Add new datastreams
+    datastreams.extend(new_datastreams)
+
     df = pd.DataFrame(datastreams)
     df.to_csv(datastreams_csv_path, index=False, sep=',', quotechar='"', quoting=csv.QUOTE_ALL, encoding='utf-8')
     logger.info(f"Created datastreams CSV at: {datastreams_csv_path}")
 
-# RDF.xml file per object that contains the dc elements in RDF format AND the rest of the information
-# provided by the source csv file. Use the foaf ontology to describe the person in the file.
-def create_rdf_xml(entry):
+def create_rdf_xml(entry, folder_path):
+    """
+    RDF.xml file per object that contains the dc elements in RDF format AND the rest of the information
+    provided by the source csv file.
+    :param entry:
+    :param folder_path:
+    :return:
+    """
     logger.debug(f"Creating RDF XML for digital object ID: memo.{entry['Identifikatornummer']}")
     rdf_ns = {'rdf': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'dc': 'http://purl.org/dc/elements/1.1/', 'foaf': 'http://xmlns.com/foaf/0.1/'}
     root = ET.Element('rdf:RDF', rdf_ns)
@@ -165,6 +173,23 @@ def create_rdf_xml(entry):
     rights_element.text = "Creative Commons BY-NC 4.0"
 
     logger.info(f"Created RDF XML for digital object ID: memo.{entry['Identifikatornummer']}")
+
+    # Add RDF file information to datastreams.csv
+    rdf_file_path = os.path.join(folder_path, 'RDF.xml')
+    # size = os.path.getsize(rdf_file_path)
+    size = 1
+    new_datastream = {
+        'dsid': 'RDF.xml',
+        'dspath': 'RDF.xml',
+        'title': 'RDF.xml',
+        'mimetype': 'application/xml',
+        'description': 'Datastream for RDF.xml',
+        'creator': 'Born digital - memo project GAMS',
+        'rights': 'Creative Commons BY-NC 4.0',
+        'size': size
+    }
+    create_datastreams_csv(folder_path, [new_datastream])
+
     return root
 
 def main():
@@ -191,7 +216,7 @@ def main():
         create_object_csv(entry, folder_path)
         create_datastreams_csv(folder_path)
 
-        rdf_root = create_rdf_xml(entry)
+        rdf_root = create_rdf_xml(entry, folder_path)
         rdf_file_path = os.path.join(folder_path, 'RDF.xml')
         tree = ET.ElementTree(rdf_root)
         tree.write(rdf_file_path, encoding='utf-8', xml_declaration=True)

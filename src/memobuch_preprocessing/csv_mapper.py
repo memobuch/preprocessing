@@ -10,6 +10,18 @@ import logging
 # The id extracted from the csv files are being used to create the digital object's id, like memo.1
 # The GAMS-REST-API has projects, named 'memo' in our case that will contain the digital objects
 
+# Every file inside a digital object folder will be a datastream on GAMS (except the object.csv file). For the files/datastreams
+# there should be a datastreams.csv in each object's folder that describes the metadata of the datastreams (and as object.csv for the object itself the datastreams.csv is also not being translated to a datastream on GAMS)
+# The datastreams.csv should have the following columns:
+# - dsid: the id the datastream = the filename of the datastream
+# - dspath: the path to the datastream relative to the current object folder
+# - title: the title of the datastream
+# - mimetype: the mimetype of the datastream
+# - description: the description of the datastream
+# - creator: the creator of the datastream
+# - rights: the rights of the datastream
+# - size: the size of the datastream
+
 # Configure logging
 log_file_path = 'log/application.log'
 if os.path.exists(log_file_path):
@@ -92,6 +104,30 @@ def create_object_csv(entry, folder_path):
     df.to_csv(object_csv_path, index=False, sep=',', quotechar='"', quoting=csv.QUOTE_ALL, encoding='utf-8')
     logger.info(f"Created object CSV at: {object_csv_path}")
 
+def create_datastreams_csv(folder_path):
+    logger.debug(f"Creating datastreams CSV for folder: {folder_path}")
+    datastreams_csv_path = os.path.join(folder_path, 'datastreams.csv')
+    datastreams = []
+
+    for item in os.listdir(folder_path):
+        item_path = os.path.join(folder_path, item)
+        if os.path.isfile(item_path) and item != 'object.csv':
+            datastream = {
+                'dsid': item,
+                'dspath': item,
+                'title': item,
+                'mimetype': 'application/xml' if item.endswith('.xml') else 'text/plain',
+                'description': f'Datastream for {item}',
+                'creator': 'Born digital - memo project GAMS',
+                'rights': 'Creative Commons BY-NC 4.0',
+                'size': os.path.getsize(item_path)
+            }
+            datastreams.append(datastream)
+
+    df = pd.DataFrame(datastreams)
+    df.to_csv(datastreams_csv_path, index=False, sep=',', quotechar='"', quoting=csv.QUOTE_ALL, encoding='utf-8')
+    logger.info(f"Created datastreams CSV at: {datastreams_csv_path}")
+
 def main():
     output_root = 'output'
     os.makedirs(output_root, exist_ok=True)
@@ -114,6 +150,7 @@ def main():
         logger.info(f"Created XML file at: {xml_file_path}")
 
         create_object_csv(entry, folder_path)
+        create_datastreams_csv(folder_path)
 
 if __name__ == '__main__':
     main()

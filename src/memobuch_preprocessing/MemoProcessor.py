@@ -92,7 +92,7 @@ class MemoProcessor:
         for person in self.memo_persons:
             for event in self.memo_events:
                 if event.person_number == person.id:
-                    person.event = event
+                    person.events.append(event)
 
 
     def output_data(self):

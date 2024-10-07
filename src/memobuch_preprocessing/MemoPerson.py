@@ -7,7 +7,7 @@ from memobuch_preprocessing.MemoStatics import MemoStatics
 import pandas as pd
 
 class MemoPerson:
-    def __init__(self, id: str, last_name: str, first_name: str, maiden_name: str, alternative_spelling: str, gender: Literal["male", "female"], is_youth: bool, memorial_sign: str, biography_text: str, event: MemoEvent = None):
+    def __init__(self, id: str, last_name: str, first_name: str, maiden_name: str, alternative_spelling: str, gender: Literal["male", "female"], is_youth: bool, memorial_sign: str, biography_text: str, events: list[MemoEvent] = []):
         self.id = id
         self.last_name = last_name
         self.first_name = first_name
@@ -17,7 +17,7 @@ class MemoPerson:
         self.is_youth = is_youth
         self.memorial_sign = memorial_sign
         self.biography_text = biography_text
-        self.event = event
+        self.events = events
 
     def __repr__(self) -> str:
         return f"MemoPerson({self.id}, {self.last_name}, {self.first_name}, {self.maiden_name}, {self.alternative_spelling}, {self.gender}, {self.is_youth}, {self.memorial_sign}, {self.biography_text})"
@@ -55,8 +55,9 @@ class MemoPerson:
         relation_element = ET.SubElement(root, 'dc:relation')
         relation_element.text = self.memorial_sign
 
-        dc_date = ET.SubElement(root, 'dc:date')
-        dc_date.text = f"{self.event.start_date} - {self.event.end_date}"
+        # TODO - tricky! must look for the geburts-event
+        # dc_date = ET.SubElement(root, 'dc:date')
+        # dc_date.text = f"{self.event.start_date} - {self.event.end_date}"
 
         dc_language = ET.SubElement(root, 'dc:language')
         dc_language.text = "de"

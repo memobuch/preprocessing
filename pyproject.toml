@@ -32,4 +32,4 @@ allow-direct-references = true
 packages = ["src/memobuch_preprocessing"]
 
 [project.scripts]
-memo = "memobuch_preprocessing.csv_mapper:main"
+memo = "memobuch_preprocessing.main:main"

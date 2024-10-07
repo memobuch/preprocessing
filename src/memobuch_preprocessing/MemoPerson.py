@@ -1,8 +1,10 @@
+import csv
 import os
 from typing import Literal
 from memobuch_preprocessing.MemoEvent import MemoEvent
 import xml.etree.ElementTree as ET
 from memobuch_preprocessing.MemoStatics import MemoStatics
+import pandas as pd
 
 class MemoPerson:
     def __init__(self, id: str, last_name: str, first_name: str, maiden_name: str, alternative_spelling: str, gender: Literal["male", "female"], is_youth: bool, memorial_sign: str, biography_text: str, event: MemoEvent = None):
@@ -70,3 +72,27 @@ class MemoPerson:
         tree = ET.ElementTree(root)
         tree.write(xml_file_path, encoding='utf-8', xml_declaration=True)
         # self.logger.info(f"Created XML file at: {xml_file_path}")
+
+
+    def write_as_object_csv(self):
+        """
+        Write the person as object CSV
+        :return:
+        """
+        # logger.debug(f"Creating object CSV for digital object ID: memo.{entry['Identifikatornummer']}")
+        object_csv_path = os.path.join(MemoStatics.OUTPUT_DIR,  str(self.id), 'object.csv')
+        data = {
+            'recid': [self.id],
+            'title': [f"{self.first_name} {self.last_name}"],
+            'project': [MemoStatics.PROJECT_ABBR],
+            'description': [self.biography_text],
+            'creator': ["Born digital - memo project GAMS"],
+            'rights': ['Creative Commons BY-NC 4.0'],
+            'publisher': ['memo project GAMS5'],
+            'source': ['Demo source'],
+            'objectType': ['RDF']
+        }
+
+        df = pd.DataFrame(data)
+        df.to_csv(object_csv_path, index=False, sep=',', quotechar='"', quoting=csv.QUOTE_ALL, encoding='utf-8')
+        # logger.info(f"Created object CSV at: {object_csv_path}")

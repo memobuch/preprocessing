@@ -54,7 +54,7 @@ class MemoProcessor:
             # TODO entries in ghseets might be optional! - must introduce some kind of check
             self.logger.info(f"Processing person entry from gsheet: {person_entry}")
             cur_memo_person = MemoPerson(
-                id=person_entry['Identifikatornummer'], # required
+                id=MemoStatics.PROJECT_ABBR + "." +  str(person_entry['Identifikatornummer']), # required
                 last_name=person_entry['Nachname'], # required
                 first_name=person_entry['Vorname'], # optional
                 maiden_name=person_entry['Mädchenname'], # optional
@@ -75,7 +75,7 @@ class MemoProcessor:
             cur_memo_event = MemoEvent(
                 id=event_entry['Id'],
                 title=event_entry['Titel'],
-                person_number=event_entry['Personennummer'],
+                person_number=MemoStatics.PROJECT_ABBR + "." + str(event_entry['Personennummer']),
                 type=event_entry['Typ'],
                 description=event_entry['Beschreibung'],
                 start_date=event_entry['Startdatum'],
@@ -108,6 +108,7 @@ class MemoProcessor:
             self.logger.debug(f"Created folder for digital object: {folder_path}")
 
             person.write_as_dublin_core()
+            person.write_as_object_csv()
 
 
 

@@ -1,5 +1,3 @@
-from memobuch_preprocessing.MemoPerson import MemoPerson
-
 
 class MemoEvent:
     """
@@ -17,3 +15,7 @@ class MemoEvent:
         self.location = location
         self.latt = latt
         self.long = long
+
+
+    def __repr__(self) -> str:
+        return f"MemoEvent({self.id}, {self.title}, {self.person_number}, {self.type}, {self.description}, {self.start_date}, {self.end_date}, {self.category}, {self.location}, {self.latt}, {self.long})"

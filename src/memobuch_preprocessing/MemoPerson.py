@@ -3,7 +3,7 @@ from memobuch_preprocessing.MemoEvent import MemoEvent
 
 
 class MemoPerson:
-    def __init__(self, id: str, last_name: str, first_name: str, maiden_name: str, alternative_spelling: str, gender: Literal["male", "female"], is_youth: bool, memorial_sign: str, biography_text: str, event: MemoEvent):
+    def __init__(self, id: str, last_name: str, first_name: str, maiden_name: str, alternative_spelling: str, gender: Literal["male", "female"], is_youth: bool, memorial_sign: str, biography_text: str, event: MemoEvent = None):
         self.id = id
         self.last_name = last_name
         self.first_name = first_name

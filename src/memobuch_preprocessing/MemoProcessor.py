@@ -5,12 +5,13 @@ import pandas as pd
 from memobuch_preprocessing.GSheet import GSheet
 from memobuch_preprocessing.MemoEvent import MemoEvent
 from memobuch_preprocessing.MemoPerson import MemoPerson
+from memobuch_preprocessing.MemoStatics import MemoStatics
 
 
 class MemoProcessor:
 
-    memo_persons: list = []
-    memo_events: list = []
+    memo_persons: list[MemoPerson] = []
+    memo_events: list[MemoEvent] = []
 
     memo_persons_frame: pd.DataFrame
     memo_events_frame: pd.DataFrame
@@ -50,7 +51,7 @@ class MemoProcessor:
 
         # Reading in the persons from the gsheet
         for person_entry in persons_dict:
-            # TODO entries in ghseets might be optional!
+            # TODO entries in ghseets might be optional! - must introduce some kind of check
             self.logger.info(f"Processing person entry from gsheet: {person_entry}")
             cur_memo_person = MemoPerson(
                 id=person_entry['Identifikatornummer'], # required
@@ -101,11 +102,12 @@ class MemoProcessor:
         """
         for person in self.memo_persons:
             self.logger.info(f"Memo Person: {person}")
+            folder_name = person.id
+            folder_path = os.path.join(MemoStatics.OUTPUT_DIR, str(folder_name))
+            os.makedirs(folder_path, exist_ok=True)
+            self.logger.debug(f"Created folder for digital object: {folder_path}")
 
-        for event in self.memo_events:
-            self.logger.info(f"Memo Event: {event}")
-
-
+            person.write_as_dublin_core()
 
 
 

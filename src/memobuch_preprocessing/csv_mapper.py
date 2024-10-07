@@ -4,6 +4,8 @@ import os
 import xml.etree.ElementTree as ET
 import logging
 
+from memobuch_preprocessing.GSheet import GSheet
+
 # Script to create folders and files for digital objects to be created on GAMS5
 # Each folder to be created represents a digital object to be created on GAMS5 (as REST-API) (Geisteswissenschaftliches Asset Management Systems)
 # each file inside the folder will be a datastream (Except the object.csv file, which is metadata for a digital object)
@@ -197,7 +199,8 @@ def main():
     os.makedirs(output_root, exist_ok=True)
     clear_output_folder(output_root)
 
-    df = pd.read_csv('data' + os.path.sep + 'memobuch_demodata.csv', sep=';')
+    # df = pd.read_csv('data' + os.path.sep + 'memobuch_demodata.csv', sep=';')
+    df = GSheet.request_public_sheet("1O0WHyEKA-IZc7L6iXVEbArsuuhK9PMStXhy3kZDUpi0", "Personen")
     demo_dict = df.to_dict(orient='records')
     logger.info(f"Loaded data from memobuch_demodata.csv with {len(demo_dict)} entries")
 

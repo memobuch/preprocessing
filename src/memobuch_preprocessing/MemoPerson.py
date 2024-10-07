@@ -97,3 +97,33 @@ class MemoPerson:
         df = pd.DataFrame(data)
         df.to_csv(object_csv_path, index=False, sep=',', quotechar='"', quoting=csv.QUOTE_ALL, encoding='utf-8')
         # logger.info(f"Created object CSV at: {object_csv_path}")
+
+
+    def write_as_rdf_xml(self):
+        """
+        RDF.xml file per object that contains the dc elements in RDF format AND the rest of the information
+        provided by the source csv file.
+        :param entry:
+        :param folder_path:
+        :return:
+        """
+        # logger.debug(f"Creating RDF XML for digital object ID: memo.{entry['Identifikatornummer']}")
+        rdf_ns = {'rdf': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'dc': 'http://purl.org/dc/elements/1.1/', 'foaf': 'http://xmlns.com/foaf/0.1/'}
+        root = ET.Element('rdf:RDF', rdf_ns)
+        description = ET.SubElement(root, 'rdf:Description', {'rdf:about': self.id})
+
+        creator_element = ET.SubElement(description, 'dc:creator')
+        creator_element.text = "Born digital - memo project GAMS"
+
+        identifier_element = ET.SubElement(description, 'dc:identifier')
+        identifier_element.text = str(self.id)
+
+        rights_element = ET.SubElement(description, 'dc:rights')
+        rights_element.text = "Creative Commons BY-NC 4.0"
+
+        #
+        xml_file_path = os.path.join(MemoStatics.OUTPUT_DIR, str(self.id), 'RDF.xml')
+        tree = ET.ElementTree(root)
+        tree.write(xml_file_path, encoding='utf-8', xml_declaration=True)
+
+        return root

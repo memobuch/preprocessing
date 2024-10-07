@@ -109,10 +109,14 @@ class MemoProcessor:
 
             person.write_as_dublin_core()
             person.write_as_object_csv()
-
-
+            person.write_as_rdf_xml()
 
     def clear_output_folder(self, output_root):
+        """
+        Clear the output folder
+        :param output_root:
+        :return:
+        """
         self.logger.debug(f"Clearing output folder: {output_root}")
         for item in os.listdir(output_root):
             item_path = os.path.join(output_root, item)

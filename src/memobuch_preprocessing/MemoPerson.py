@@ -127,3 +127,30 @@ class MemoPerson:
         tree.write(xml_file_path, encoding='utf-8', xml_declaration=True)
 
         return root
+
+
+    def write_as_datastreams_csv(self):
+        folder_path = os.path.join(MemoStatics.OUTPUT_DIR, str(self.id))
+        datastreams_csv_path = os.path.join(folder_path, 'datastreams.csv')
+        datastreams = []
+
+        # TODO think about: method must be called last in the chain!
+
+        for item in os.listdir(folder_path):
+            item_path = os.path.join(folder_path, item)
+            if os.path.isfile(item_path) and item != 'object.csv':
+                datastream = {
+                    'dsid': item,
+                    'dspath': item,
+                    'title': item,
+                    'mimetype': 'application/xml' if item.endswith('.xml') else 'text/plain',
+                    'description': f'Datastream for {item}',
+                    'creator': 'Born digital - memo project GAMS',
+                    'rights': 'Creative Commons BY-NC 4.0',
+                    # 'size': os.path.getsize(item_path)
+                }
+                datastreams.append(datastream)
+
+        df = pd.DataFrame(datastreams)
+        df.to_csv(datastreams_csv_path, index=False, sep=',', quotechar='"', quoting=csv.QUOTE_ALL, encoding='utf-8')
+        # logger.info(f"Created datastreams CSV at: {datastreams_csv_path}")

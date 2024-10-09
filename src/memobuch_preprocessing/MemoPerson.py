@@ -100,7 +100,7 @@ class MemoPerson:
         }
 
         df = pd.DataFrame(data)
-        df.to_csv(object_csv_path, index=False, sep=',', quotechar='"', quoting=csv.QUOTE_ALL, encoding='utf-8')
+        df.to_csv(object_csv_path, index=False, sep=',', quotechar='"', quoting=csv.QUOTE_ALL, encoding='utf-8', lineterminator='\n')
         # logger.info(f"Created object CSV at: {object_csv_path}")
 
 
@@ -157,5 +157,5 @@ class MemoPerson:
                 datastreams.append(datastream)
 
         df = pd.DataFrame(datastreams)
-        df.to_csv(datastreams_csv_path, index=False, sep=',', quotechar='"', quoting=csv.QUOTE_ALL, encoding='utf-8')
+        df.to_csv(datastreams_csv_path, index=False, sep=',', quotechar='"', quoting=csv.QUOTE_ALL, encoding='utf-8', lineterminator='\n')
         # logger.info(f"Created datastreams CSV at: {datastreams_csv_path}")

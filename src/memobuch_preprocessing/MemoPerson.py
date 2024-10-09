@@ -35,7 +35,7 @@ class MemoPerson:
         root = ET.Element('dublin_core', {'xmlns:dc': 'http://purl.org/dc/elements/1.1/'})
 
         id_element = ET.SubElement(root, 'dc:identifier')
-        id_element.text = f"memo.{self.id}"
+        id_element.text = self.id
 
         creator_element = ET.SubElement(root, 'dc:creator')
         creator_element.text = "Born digital - memo project GAMS"

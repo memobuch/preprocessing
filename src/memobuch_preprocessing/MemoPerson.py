@@ -7,7 +7,7 @@ from memobuch_preprocessing.MemoStatics import MemoStatics
 import pandas as pd
 
 class MemoPerson:
-    def __init__(self, id: str, last_name: str, first_name: str, maiden_name: str, alternative_spelling: str, gender: Literal["male", "female"], is_youth: bool, memorial_sign: str, biography_text: str, events: list[MemoEvent] = []):
+    def __init__(self, id: str, last_name: str, first_name: str, maiden_name: str, alternative_spelling: str, gender: Literal["male", "female"], is_youth: bool, memorial_sign: str, biography_text: str, birth_place: str, birth_date: str, events: list[MemoEvent] = []):
         self.id = id
         self.last_name = last_name
         self.first_name = first_name
@@ -17,6 +17,8 @@ class MemoPerson:
         self.is_youth = is_youth
         self.memorial_sign = memorial_sign
         self.biography_text = biography_text
+        self.birth_place = birth_place
+        self.birth_date = birth_date
         self.events = events
 
     def __repr__(self) -> str:
@@ -54,6 +56,9 @@ class MemoPerson:
 
         relation_element = ET.SubElement(root, 'dc:relation')
         relation_element.text = self.memorial_sign
+
+        date_element = ET.SubElement(root, 'dc:date')
+        date_element.text = self.birth_date
 
         # TODO - tricky! must look for the geburts-event
         # dc_date = ET.SubElement(root, 'dc:date')

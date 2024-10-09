@@ -62,7 +62,9 @@ class MemoProcessor:
                 is_youth=person_entry['Jugendlich'] == 'ja', # required
                 gender=person_entry['Geschlecht'], # required
                 memorial_sign=person_entry['Erinnerungszeichen (DERLA Nummer)'], # optional
-                biography_text=person_entry['Freitext / Biografie'] # optional
+                biography_text=person_entry['Freitext / Biografie'], # optional
+                birth_place=person_entry['Geburtsort'], # optional
+                birth_date=person_entry['Geburtsdatum'] # optional
 
             )
 

@@ -32,7 +32,7 @@ class MemoPerson:
         """
 
         # logger.debug(f"Creating Dublin Core XML for digital object ID: memo.{entry['Identifikatornummer']}")
-        root = ET.Element('dublin_core', {'xmlns:dc': 'http://purl.org/dc/elements/1.1/'})
+        root = ET.Element('oai_dc:dc', {'xmlns:dc': 'http://purl.org/dc/elements/1.1/', 'xmlns:oai_dc': 'http://www.openarchives.org/OAI/2.0/oai_dc/', 'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance', 'xsi:schemaLocation': 'http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd' })
 
         id_element = ET.SubElement(root, 'dc:identifier')
         id_element.text = self.id
@@ -41,7 +41,7 @@ class MemoPerson:
         creator_element.text = "Born digital - memo project GAMS"
 
         if self.first_name and self.last_name:
-            title_element = ET.SubElement(root, 'dc:title', {'lang': 'en'})
+            title_element = ET.SubElement(root, 'dc:title', {'xml:lang': 'en'})
             title_element.text = f"{self.first_name} {self.last_name}"
 
         if self.is_youth:
@@ -72,6 +72,10 @@ class MemoPerson:
 
         dc_rights = ET.SubElement(root, 'dc:rights')
         dc_rights.text = "Creative Commons BY-NC 4.0 (Hardcoded)"
+
+        dc_format = ET.SubElement(root, 'dc:format')
+        dc_format.text = "Born digital: Eintrag in google Tabelle"
+
 
         # logger.info(f"Created Dublin Core XML for digital object ID: memo.{entry['Identifikatornummer']}")
         xml_file_path = os.path.join(MemoStatics.OUTPUT_DIR, str(self.id), 'DC.xml')

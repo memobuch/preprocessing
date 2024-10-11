@@ -113,6 +113,7 @@ class MemoProcessor:
             person.write_as_object_csv()
             person.write_as_rdf_xml()
             person.write_as_datastreams_csv()
+            person.write_as_search_json()
 
 
     def clear_output_folder(self, output_root):

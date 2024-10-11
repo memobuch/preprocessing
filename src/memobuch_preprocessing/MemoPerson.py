@@ -1,5 +1,7 @@
 import csv
+import json
 import os
+from idlelib.iomenu import encoding
 from typing import Literal
 from memobuch_preprocessing.MemoEvent import MemoEvent
 import xml.etree.ElementTree as ET
@@ -177,3 +179,27 @@ class MemoPerson:
         df = pd.DataFrame(datastreams)
         df.to_csv(datastreams_csv_path, index=False, sep=',', quotechar='"', quoting=csv.QUOTE_ALL, encoding='utf-8', lineterminator='\n')
         # logger.info(f"Created datastreams CSV at: {datastreams_csv_path}")
+
+
+    def write_as_search_json(self):
+        """
+        Write the person as search JSON
+
+        """
+
+        search_json_path = os.path.join(MemoStatics.OUTPUT_DIR, str(self.id), 'search.json')
+        data = {
+            "id": self.id,
+            "title": f"{self.first_name} {self.last_name}",
+            "description": self.biography_text,
+            "creator": "Born digital - memo project GAMS",
+            "rights": 'Creative Commons BY-NC 4.0',
+            "publisher": 'memo project GAMS5',
+            "source": 'Demo source',
+            "objectType": 'RDF'
+        }
+
+        json_str = json.dumps(data, ensure_ascii=False, indent=4)
+
+        with open(search_json_path, 'w', encoding='utf-8', newline="\n") as f:
+            f.write(json_str)

@@ -119,7 +119,7 @@ class MemoPerson:
         :return:
         """
         # logger.debug(f"Creating RDF XML for digital object ID: memo.{entry['Identifikatornummer']}")
-        rdf_ns = {'rdf': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'dc': 'http://purl.org/dc/elements/1.1/', 'foaf': 'http://xmlns.com/foaf/0.1/'}
+        rdf_ns = {'xmlns:rdf': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'xmlns:dc': 'http://purl.org/dc/elements/1.1/', 'xmlns:foaf': 'http://xmlns.com/foaf/0.1/', 'xmlns:gams': 'https://gams.uni-graz.at/', 'xmlns:memo': "https://gams.uni-graz.at/memo/"}
         root = ET.Element('rdf:RDF', rdf_ns)
         description = ET.SubElement(root, 'rdf:Description', {'rdf:about': self.id})
 
@@ -131,6 +131,18 @@ class MemoPerson:
 
         rights_element = ET.SubElement(description, 'dc:rights')
         rights_element.text = "Creative Commons BY-NC 4.0"
+
+        #
+        memo_start_date = ET.SubElement(description, 'memo:start_date')
+        memo_start_date.text = self.birth_date
+
+        memo_end_date = ET.SubElement(description, 'memo:end_date')
+        memo_end_date.text = self.birth_date # TODO replace wirth death event date
+
+        #
+        memo_birth_place = ET.SubElement(description, 'memo:birth_place')
+        memo_birth_place.text = self.birth_place
+
 
         #
         xml_file_path = os.path.join(MemoStatics.OUTPUT_DIR, str(self.id), 'RDF.xml')

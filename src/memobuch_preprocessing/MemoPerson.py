@@ -60,10 +60,6 @@ class MemoPerson:
         date_element = ET.SubElement(root, 'dc:date')
         date_element.text = self.birth_date
 
-        # TODO - tricky! must look for the geburts-event
-        # dc_date = ET.SubElement(root, 'dc:date')
-        # dc_date.text = f"{self.event.start_date} - {self.event.end_date}"
-
         dc_language = ET.SubElement(root, 'dc:language')
         dc_language.text = "de"
 
@@ -72,6 +68,12 @@ class MemoPerson:
 
         dc_rights = ET.SubElement(root, 'dc:rights')
         dc_rights.text = "Creative Commons BY-NC 4.0 (Hardcoded)"
+
+        dc_rights2 = ET.SubElement(root, 'dc:rights')
+        dc_rights2.text = "https://creativecommons.org/licenses/by-nc/4.0"
+
+        dc_type = ET.SubElement(root, 'dc:type')
+        dc_type.text = "Person"
 
         dc_format = ET.SubElement(root, 'dc:format')
         dc_format.text = "Born digital: Eintrag in google Tabelle"

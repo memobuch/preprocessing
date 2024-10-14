@@ -160,7 +160,7 @@ class MemoPerson:
 
             ET.SubElement(event_rdf_description, 'rdf:type', {'rdf:resource': 'http://digitales-memobuch.at/ontology#Event'})
             # type a wgs point
-            ET.SubElement(event_rdf_description, 'rdf:type', {'rdf:resource': 'wgs84_pos:Point'})
+            ET.SubElement(event_rdf_description, 'rdf:type', {'rdf:resource': 'http://www.w3.org/2003/01/geo/wgs84_pos#'})
 
             ET.SubElement(event_rdf_description, 'wgs84_pos:lat', {'rdf:datatype': 'http://www.w3.org/2001/XMLSchema#float'}).text = str(event.latt)
             ET.SubElement(event_rdf_description, 'wgs84_pos:long', {'rdf:datatype': 'http://www.w3.org/2001/XMLSchema#float'}).text = str(event.long)

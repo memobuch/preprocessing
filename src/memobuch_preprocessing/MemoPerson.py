@@ -119,7 +119,7 @@ class MemoPerson:
         :return:
         """
         # logger.debug(f"Creating RDF XML for digital object ID: memo.{entry['Identifikatornummer']}")
-        rdf_ns = {'xmlns:rdf': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'xmlns:dc': 'http://purl.org/dc/elements/1.1/', 'xmlns:foaf': 'http://xmlns.com/foaf/0.1/'}
+        rdf_ns = {'xmlns:rdf': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'xmlns:dc': 'http://purl.org/dc/elements/1.1/', 'xmlns:foaf': 'http://xmlns.com/foaf/0.1/', 'xmlns:rdfs': 'http://www.w3.org/2000/01/rdf-schema#', 'xmlns:void': 'http://rdfs.org/ns/void#'}
         root = ET.Element('rdf:RDF', rdf_ns)
         description = ET.SubElement(root, 'rdf:Description', {'rdf:about': self.id})
 

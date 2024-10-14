@@ -158,8 +158,8 @@ class MemoPerson:
 
             ET.SubElement(event_rdf_description, 'rdf:type', {'rdf:resource': 'http://digitales-memobuch.at/ontology#Event'})
             # type a wgs point
-            rdf_type_point = ET.SubElement(event_rdf_description, 'rdf:type')
-            rdf_type_point.text = "wgs84_pos:Point"
+            ET.SubElement(event_rdf_description, 'rdf:type', {'rdf:resource': 'wgs84_pos:Point'})
+
             ET.SubElement(event_rdf_description, 'wgs84_pos:lat', {'rdf:datatype': 'http://www.w3.org/2001/XMLSchema#float'}).text = str(event.latt)
             ET.SubElement(event_rdf_description, 'wgs84_pos:long', {'rdf:datatype': 'http://www.w3.org/2001/XMLSchema#float'}).text = str(event.long)
 
@@ -191,7 +191,7 @@ class MemoPerson:
             event_rights = ET.SubElement(event_rdf_description, 'memo:rights')
             event_rights.text = "Creative Commons BY-NC 4.0"
 
-
+            ET.SubElement(event_rdf_description, 'memo:describesPerson', {'rdf:resource': MEMO_BASE_URI + self.id})
 
 
 

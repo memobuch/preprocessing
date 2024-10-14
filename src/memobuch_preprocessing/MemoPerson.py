@@ -242,16 +242,15 @@ class MemoPerson:
 
         """
 
-        search_json_path = os.path.join(MemoStatics.OUTPUT_DIR, str(self.id), 'search.json')
+        search_json_path = os.path.join(MemoStatics.OUTPUT_DIR, str(self.id), 'SEARCH.json')
+        # TODO use gams specific fields
         data = {
             "id": self.id,
             "title": f"{self.first_name} {self.last_name}",
             "description": self.biography_text,
-            "creator": "Born digital - memo project GAMS",
-            "rights": 'Creative Commons BY-NC 4.0',
-            "publisher": 'memo project GAMS5',
-            "source": 'Demo source',
-            "objectType": 'RDF'
+            "type": "person"
+            # TODO think aboput keyword assigment
+            # "keyword": self.memorial_sign,
         }
 
         json_str = json.dumps(data, ensure_ascii=False, indent=4)

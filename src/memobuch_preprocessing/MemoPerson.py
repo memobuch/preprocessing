@@ -157,12 +157,19 @@ class MemoPerson:
             event_rdf_description = ET.SubElement(root, 'rdf:Description', {'rdf:about': MEMO_BASE_URI +  "event/" + str(event.id)})
 
             ET.SubElement(event_rdf_description, 'rdf:type', {'rdf:resource': 'http://digitales-memobuch.at/ontology#Event'})
+            # type a wgs point
+            rdf_type_point = ET.SubElement(event_rdf_description, 'rdf:type')
+            rdf_type_point.text = "wgs84_pos:Point"
+            ET.SubElement(event_rdf_description, 'wgs84_pos:lat', {'rdf:datatype': 'http://www.w3.org/2001/XMLSchema#float'}).text = str(event.latt)
+            ET.SubElement(event_rdf_description, 'wgs84_pos:long', {'rdf:datatype': 'http://www.w3.org/2001/XMLSchema#float'}).text = str(event.long)
 
             event_rdf_creator = ET.SubElement(event_rdf_description, 'dc:creator')
             event_rdf_creator.text = "Born digital - memo project GAMS"
 
             rdfs_label = ET.SubElement(event_rdf_description, 'rdfs:label')
             rdfs_label.text = event.title
+
+            # longitude
 
 
 

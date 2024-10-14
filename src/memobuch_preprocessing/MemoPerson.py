@@ -132,6 +132,21 @@ class MemoPerson:
         rights_element = ET.SubElement(description, 'dc:rights')
         rights_element.text = "Creative Commons BY-NC 4.0"
 
+        rdfs_label = ET.SubElement(description, 'rdfs:label')
+        rdfs_label.text = f"{self.first_name} {self.last_name}"
+
+        rdf_type = ET.SubElement(description, 'rdf:type', {'rdf:resource': 'http://xmlns.com/foaf/0.1/Person'})
+
+        foaf_name = ET.SubElement(description, 'foaf:name')
+        foaf_name.text = f"{self.first_name} {self.last_name}"
+
+        foaf_family_name = ET.SubElement(description, 'foaf:familyName')
+        foaf_family_name.text = self.last_name
+
+        foaf_given_name = ET.SubElement(description, 'foaf:givenName')
+        foaf_given_name.text = self.first_name
+
+
         #
         xml_file_path = os.path.join(MemoStatics.OUTPUT_DIR, str(self.id), 'RDF.xml')
         tree = ET.ElementTree(root)

@@ -121,29 +121,84 @@ class MemoPerson:
         :return:
         """
         # logger.debug(f"Creating RDF XML for digital object ID: memo.{entry['Identifikatornummer']}")
-        rdf_ns = {'xmlns:rdf': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'xmlns:dc': 'http://purl.org/dc/elements/1.1/', 'xmlns:foaf': 'http://xmlns.com/foaf/0.1/', 'xmlns:gams': 'https://gams.uni-graz.at/', 'xmlns:memo': "https://gams.uni-graz.at/memo/"}
+        MEMO_BASE_URI = "http://digitales-memobuch.at/"
+        MEMO_ONTOLOGY = MEMO_BASE_URI + "onotology#"
+
+
+        rdf_ns = {'xmlns:rdf': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'xmlns:dc': 'http://purl.org/dc/elements/1.1/', 'xmlns:foaf': 'http://xmlns.com/foaf/0.1/', 'xmlns:rdfs': 'http://www.w3.org/2000/01/rdf-schema#', 'xmlns:void': 'http://rdfs.org/ns/void#', 'xmlns:wgs84_pos': 'http://www.w3.org/2003/01/geo/wgs84_pos#', 'xmlns:memo': MEMO_ONTOLOGY}
         root = ET.Element('rdf:RDF', rdf_ns)
-        description = ET.SubElement(root, 'rdf:Description', {'rdf:about': self.id})
+        description = ET.SubElement(root, 'rdf:Description', {'rdf:about': MEMO_BASE_URI + self.id})
 
-        creator_element = ET.SubElement(description, 'dc:creator')
-        creator_element.text = "Born digital - memo project GAMS"
+        rdfs_label = ET.SubElement(description, 'rdfs:label')
+        rdfs_label.text = f"{self.first_name} {self.last_name}"
 
-        identifier_element = ET.SubElement(description, 'dc:identifier')
-        identifier_element.text = str(self.id)
+        # rdf:type foaf:Person
+        ET.SubElement(description, 'rdf:type', {'rdf:resource': 'http://xmlns.com/foaf/0.1/Person'})
 
-        rights_element = ET.SubElement(description, 'dc:rights')
-        rights_element.text = "Creative Commons BY-NC 4.0"
+        foaf_name = ET.SubElement(description, 'foaf:name')
+        foaf_name.text = f"{self.first_name} {self.last_name}"
 
-        #
-        memo_start_date = ET.SubElement(description, 'memo:start_date')
-        memo_start_date.text = self.birth_date
+        foaf_family_name = ET.SubElement(description, 'foaf:familyName')
+        foaf_family_name.text = self.last_name
 
-        memo_end_date = ET.SubElement(description, 'memo:end_date')
-        memo_end_date.text = self.birth_date # TODO replace wirth death event date
+        foaf_given_name = ET.SubElement(description, 'foaf:givenName')
+        foaf_given_name.text = self.first_name
 
-        #
-        memo_birth_place = ET.SubElement(description, 'memo:birth_place')
-        memo_birth_place.text = self.birth_place
+        if self.birth_place:
+            foaf_based_near = ET.SubElement(description, 'foaf:based_near')
+            foaf_based_near.text = self.birth_place
+
+        if self.birth_date:
+            foaf_birthday = ET.SubElement(description, 'foaf:birthday')
+            foaf_birthday.text = self.birth_date
+
+
+
+        for event in self.events:
+            # add events as rdf model
+            event_rdf_description = ET.SubElement(root, 'rdf:Description', {'rdf:about': MEMO_BASE_URI +  "event/" + str(event.id)})
+
+            ET.SubElement(event_rdf_description, 'rdf:type', {'rdf:resource': 'http://digitales-memobuch.at/ontology#Event'})
+            # type a wgs point
+            ET.SubElement(event_rdf_description, 'rdf:type', {'rdf:resource': 'wgs84_pos:Point'})
+
+            ET.SubElement(event_rdf_description, 'wgs84_pos:lat', {'rdf:datatype': 'http://www.w3.org/2001/XMLSchema#float'}).text = str(event.latt)
+            ET.SubElement(event_rdf_description, 'wgs84_pos:long', {'rdf:datatype': 'http://www.w3.org/2001/XMLSchema#float'}).text = str(event.long)
+
+            event_rdf_creator = ET.SubElement(event_rdf_description, 'dc:creator')
+            event_rdf_creator.text = "Born digital - memo project GAMS"
+
+            rdfs_label = ET.SubElement(event_rdf_description, 'rdfs:label')
+            rdfs_label.text = event.title
+
+            event_dc_description = ET.SubElement(event_rdf_description, 'dc:description')
+            event_dc_description.text = event.description
+
+            event_start_date = ET.SubElement(event_rdf_description, 'memo:startDate')
+            event_start_date.text = event.start_date
+
+            event_end_date = ET.SubElement(event_rdf_description, 'memo:endDate')
+            event_end_date.text = event.end_date
+
+
+            event_category = ET.SubElement(event_rdf_description, 'memo:category')
+            event_category.text = event.category
+
+            event_location = ET.SubElement(event_rdf_description, 'memo:location')
+            event_location.text = event.location
+
+            event_creator = ET.SubElement(event_rdf_description, 'memo:creator')
+            event_creator.text = "Born digital - memo project GAMS"
+
+            event_rights = ET.SubElement(event_rdf_description, 'memo:rights')
+            event_rights.text = "Creative Commons BY-NC 4.0"
+
+            ET.SubElement(event_rdf_description, 'memo:describesPerson', {'rdf:resource': MEMO_BASE_URI + self.id})
+
+
+
+
+
 
 
         #

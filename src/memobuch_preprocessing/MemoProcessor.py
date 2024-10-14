@@ -112,8 +112,8 @@ class MemoProcessor:
             person.write_as_dublin_core()
             person.write_as_object_csv()
             person.write_as_rdf_xml()
-            person.write_as_datastreams_csv()
             person.write_as_search_json()
+            person.write_as_datastreams_csv()
 
 
     def clear_output_folder(self, output_root):

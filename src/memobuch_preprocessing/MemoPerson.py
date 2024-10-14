@@ -169,7 +169,31 @@ class MemoPerson:
             rdfs_label = ET.SubElement(event_rdf_description, 'rdfs:label')
             rdfs_label.text = event.title
 
-            # longitude
+            event_dc_description = ET.SubElement(event_rdf_description, 'dc:description')
+            event_dc_description.text = event.description
+
+            event_start_date = ET.SubElement(event_rdf_description, 'memo:startDate')
+            event_start_date.text = event.start_date
+
+            event_end_date = ET.SubElement(event_rdf_description, 'memo:endDate')
+            event_end_date.text = event.end_date
+
+
+            event_category = ET.SubElement(event_rdf_description, 'memo:category')
+            event_category.text = event.category
+
+            event_location = ET.SubElement(event_rdf_description, 'memo:location')
+            event_location.text = event.location
+
+            event_creator = ET.SubElement(event_rdf_description, 'memo:creator')
+            event_creator.text = "Born digital - memo project GAMS"
+
+            event_rights = ET.SubElement(event_rdf_description, 'memo:rights')
+            event_rights.text = "Creative Commons BY-NC 4.0"
+
+
+
+
 
 
 

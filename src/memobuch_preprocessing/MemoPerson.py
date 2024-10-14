@@ -119,23 +119,19 @@ class MemoPerson:
         :return:
         """
         # logger.debug(f"Creating RDF XML for digital object ID: memo.{entry['Identifikatornummer']}")
-        rdf_ns = {'xmlns:rdf': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'xmlns:dc': 'http://purl.org/dc/elements/1.1/', 'xmlns:foaf': 'http://xmlns.com/foaf/0.1/', 'xmlns:rdfs': 'http://www.w3.org/2000/01/rdf-schema#', 'xmlns:void': 'http://rdfs.org/ns/void#'}
+        MEMO_BASE_URI = "http://digitales-memobuch.at/"
+        MEMO_ONTOLOGY = MEMO_BASE_URI + "onotology#"
+
+
+        rdf_ns = {'xmlns:rdf': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'xmlns:dc': 'http://purl.org/dc/elements/1.1/', 'xmlns:foaf': 'http://xmlns.com/foaf/0.1/', 'xmlns:rdfs': 'http://www.w3.org/2000/01/rdf-schema#', 'xmlns:void': 'http://rdfs.org/ns/void#', 'xmlns:wgs84_pos': 'http://www.w3.org/2003/01/geo/wgs84_pos#', 'xmlns:memo': MEMO_ONTOLOGY}
         root = ET.Element('rdf:RDF', rdf_ns)
-        description = ET.SubElement(root, 'rdf:Description', {'rdf:about': self.id})
-
-        creator_element = ET.SubElement(description, 'dc:creator')
-        creator_element.text = "Born digital - memo project GAMS"
-
-        identifier_element = ET.SubElement(description, 'dc:identifier')
-        identifier_element.text = str(self.id)
-
-        rights_element = ET.SubElement(description, 'dc:rights')
-        rights_element.text = "Creative Commons BY-NC 4.0"
+        description = ET.SubElement(root, 'rdf:Description', {'rdf:about': MEMO_BASE_URI + self.id})
 
         rdfs_label = ET.SubElement(description, 'rdfs:label')
         rdfs_label.text = f"{self.first_name} {self.last_name}"
 
-        rdf_type = ET.SubElement(description, 'rdf:type', {'rdf:resource': 'http://xmlns.com/foaf/0.1/Person'})
+        # rdf:type foaf:Person
+        ET.SubElement(description, 'rdf:type', {'rdf:resource': 'http://xmlns.com/foaf/0.1/Person'})
 
         foaf_name = ET.SubElement(description, 'foaf:name')
         foaf_name.text = f"{self.first_name} {self.last_name}"
@@ -145,6 +141,31 @@ class MemoPerson:
 
         foaf_given_name = ET.SubElement(description, 'foaf:givenName')
         foaf_given_name.text = self.first_name
+
+        if self.birth_place:
+            foaf_based_near = ET.SubElement(description, 'foaf:based_near')
+            foaf_based_near.text = self.birth_place
+
+        if self.birth_date:
+            foaf_birthday = ET.SubElement(description, 'foaf:birthday')
+            foaf_birthday.text = self.birth_date
+
+
+
+        for event in self.events:
+            # add events as rdf model
+            event_rdf_description = ET.SubElement(root, 'rdf:Description', {'rdf:about': MEMO_BASE_URI +  "event/" + str(event.id)})
+
+            ET.SubElement(event_rdf_description, 'rdf:type', {'rdf:resource': 'http://digitales-memobuch.at/ontology#Event'})
+
+            event_rdf_creator = ET.SubElement(event_rdf_description, 'dc:creator')
+            event_rdf_creator.text = "Born digital - memo project GAMS"
+
+            rdfs_label = ET.SubElement(event_rdf_description, 'rdfs:label')
+            rdfs_label.text = event.title
+
+
+
 
 
         #

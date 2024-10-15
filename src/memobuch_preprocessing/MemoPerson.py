@@ -246,9 +246,10 @@ class MemoPerson:
         # TODO use gams specific fields
         data = {
             "id": self.id,
-            "title": f"{self.first_name} {self.last_name}",
-            "description": self.biography_text,
-            "type": "person"
+            "sys_entityTitle": f"{self.first_name} {self.last_name}",
+            "sys_entityDesc": self.biography_text,
+            # TODO could possibly use enums in SOLR!
+            "sys_entityTypes": ["person"]
             # TODO think aboput keyword assigment
             # "keyword": self.memorial_sign,
         }

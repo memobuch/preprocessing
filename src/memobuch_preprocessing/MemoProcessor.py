@@ -1,3 +1,4 @@
+import csv
 import os
 import logging
 import pandas as pd
@@ -76,6 +77,9 @@ class MemoProcessor:
             for person_id in person_numbers:
                 person_ids.append(MemoStatics.PROJECT_ABBR + "." + str(person_id))
 
+            # split the categories by comma - BUT ignore commas within quotes (because of return from gsheets)
+            person_categories = MemoProcessor.split_ignoring_quotes(event_entry['Kategorie'], ',')
+
             cur_memo_event = MemoEvent(
                 id=event_entry['Id'],
                 title=event_entry['Titel'],
@@ -84,7 +88,7 @@ class MemoProcessor:
                 description=event_entry['Beschreibung'],
                 start_date=event_entry['Startdatum'],
                 end_date=event_entry['Enddatum'],
-                category=event_entry['Kategorie'],
+                categories=person_categories,
                 location=event_entry['Ort'],
                 latt=event_entry['Längengrad'],
                 long=event_entry['Breitengrad'])
@@ -141,3 +145,32 @@ class MemoProcessor:
                         self.logger.info(f"Deleted directory: {os.path.join(root, name)}")
                 os.rmdir(item_path)
                 self.logger.info(f"Deleted directory: {item_path}")
+
+
+    @staticmethod
+    def split_ignoring_quotes(text, delimiter):
+        """
+        Split a string by a delimiter, but ignore the delimiter if it is within quotes
+        :param text: The text to split
+        :param delimiter: The delimiter to split by
+        :return: A list of the split text
+        """
+        result = []
+        in_quotes = False
+        current = ""
+        for char in text:
+            if char == '"':
+                in_quotes = not in_quotes
+            elif char == delimiter and not in_quotes:
+                result.append(current)
+                current = ""
+            else:
+                current += char
+
+        result.append(current)
+
+        # strip the results
+        for i in range(len(result)):
+            result[i] = result[i].strip()
+
+        return result

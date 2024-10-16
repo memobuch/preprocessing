@@ -184,9 +184,9 @@ class MemoPerson:
             event_end_date = ET.SubElement(event_rdf_description, 'memo:endDate')
             event_end_date.text = event.end_date
 
-
-            event_category = ET.SubElement(event_rdf_description, 'memo:category')
-            event_category.text = event.category
+            for event_category_label in event.categories:
+                event_category_elem = ET.SubElement(event_rdf_description, 'memo:category')
+                event_category_elem.text = event_category_label
 
             event_location = ET.SubElement(event_rdf_description, 'memo:location')
             event_location.text = event.location

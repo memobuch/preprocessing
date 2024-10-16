@@ -48,11 +48,9 @@ class MemoProcessor:
         self.logger.info("Processing memo persons")
         persons_dict = self.memo_persons_frame.to_dict(orient='records')
 
-
         # Reading in the persons from the gsheet
         for person_entry in persons_dict:
             # TODO entries in ghseets might be optional! - must introduce some kind of check
-            self.logger.info(f"Processing person entry from gsheet: {person_entry}")
             cur_memo_person = MemoPerson(
                 id=MemoStatics.PROJECT_ABBR + "." +  str(person_entry['Identifikatornummer']), # required
                 last_name=person_entry['Nachname'], # required
@@ -65,7 +63,6 @@ class MemoProcessor:
                 biography_text=person_entry['Freitext / Biografie'], # optional
                 birth_place=person_entry['Geburtsort'], # optional
                 birth_date=person_entry['Geburtsdatum'] # optional
-
             )
 
             self.memo_persons.append(cur_memo_person)
@@ -74,7 +71,6 @@ class MemoProcessor:
         # Reading in Events from the gsheet
         for event_entry in self.memo_events_frame.to_dict(orient='records'):
             self.logger.info(f"Processing event entry from gsheet: {event_entry}")
-
             person_numbers = event_entry['Personennummer'].split(", ")
             person_ids = []
             for person_id in person_numbers:
@@ -93,18 +89,16 @@ class MemoProcessor:
                 latt=event_entry['Längengrad'],
                 long=event_entry['Breitengrad'])
 
+            self.logger.debug(f"Constructed memo event: {cur_memo_event}")
             self.memo_events.append(cur_memo_event)
 
-
-        # Linking persons to events last
         for person in self.memo_persons:
             for event in self.memo_events:
                 if person.id in event.person_ids:
                     person.events.append(event)
-                    self.logger.info(f"Linking person {person.id} to event {event.id}")
+                    self.logger.debug(f"Linking person {person.id} to event {event.id}. Constructed memo person: {person}")
 
-
-
+            self.logger.info(f"Loaded memo person: {person}")
 
 
     def output_data(self):
@@ -113,17 +107,16 @@ class MemoProcessor:
         :return:
         """
         for person in self.memo_persons:
-            self.logger.info(f"Memo Person: {person}")
             folder_name = person.id
             folder_path = os.path.join(MemoStatics.OUTPUT_DIR, str(folder_name))
             os.makedirs(folder_path, exist_ok=True)
-            self.logger.debug(f"Created folder for digital object: {folder_path}")
 
             person.write_as_dublin_core()
             person.write_as_object_csv()
             person.write_as_rdf_xml()
             person.write_as_search_json()
             person.write_as_datastreams_csv()
+            self.logger.debug(f"Outputted digital object: {folder_path}")
 
 
     def clear_output_folder(self, output_root):

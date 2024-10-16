@@ -1,7 +1,6 @@
 import csv
 import json
 import os
-from idlelib.iomenu import encoding
 from typing import Literal
 from memobuch_preprocessing.MemoEvent import MemoEvent
 import xml.etree.ElementTree as ET
@@ -9,7 +8,12 @@ from memobuch_preprocessing.MemoStatics import MemoStatics
 import pandas as pd
 
 class MemoPerson:
-    def __init__(self, id: str, last_name: str, first_name: str, maiden_name: str, alternative_spelling: str, gender: Literal["male", "female"], is_youth: bool, memorial_sign: str, biography_text: str, birth_place: str, birth_date: str, events: list[MemoEvent] = []):
+    def __init__(self, id: str, last_name: str, first_name: str, maiden_name: str, alternative_spelling: str, gender: Literal["male", "female"], is_youth: bool, memorial_sign: str, biography_text: str, birth_place: str, birth_date: str,
+                 events=None):
+
+        if events is None:
+            events = []
+
         self.id = id
         self.last_name = last_name
         self.first_name = first_name
@@ -24,7 +28,7 @@ class MemoPerson:
         self.events = events
 
     def __repr__(self) -> str:
-        return f"MemoPerson({self.id}, {self.last_name}, {self.first_name}, {self.maiden_name}, {self.alternative_spelling}, {self.gender}, {self.is_youth}, {self.memorial_sign}, {self.biography_text})"
+        return f"MemoPerson({self.id}, {self.last_name}, {self.first_name}, {self.maiden_name}, {self.alternative_spelling}, {self.gender}, {self.is_youth}, {self.memorial_sign}, {self.biography_text}, {str(self.events)})"
 
 
     def write_as_dublin_core(self):
@@ -253,6 +257,18 @@ class MemoPerson:
             # TODO think aboput keyword assigment
             # "keyword": self.memorial_sign,
         }
+
+        death_event = None
+        for event in self.events:
+            if event.type == "Tod":
+                death_event = event
+                break
+
+        if death_event:
+            # TODO add this start and end date ranges
+            # data["sys_entityStartDateRanges"] = death_event.start_date
+            # data["sys_entityEndDateRanges"] = death_event.end_date
+            data["sys-entityLongLat"] = [death_event.latt, death_event.long]
 
         json_str = json.dumps(data, ensure_ascii=False, indent=4)
 

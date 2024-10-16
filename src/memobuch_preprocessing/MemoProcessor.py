@@ -74,10 +74,16 @@ class MemoProcessor:
         # Reading in Events from the gsheet
         for event_entry in self.memo_events_frame.to_dict(orient='records'):
             self.logger.info(f"Processing event entry from gsheet: {event_entry}")
+
+            person_numbers = event_entry['Personennummer'].split(", ")
+            person_ids = []
+            for person_id in person_numbers:
+                person_ids.append(MemoStatics.PROJECT_ABBR + "." + str(person_id))
+
             cur_memo_event = MemoEvent(
                 id=event_entry['Id'],
                 title=event_entry['Titel'],
-                person_number=MemoStatics.PROJECT_ABBR + "." + str(event_entry['Personennummer']),
+                person_ids=person_ids,
                 type=event_entry['Typ'],
                 description=event_entry['Beschreibung'],
                 start_date=event_entry['Startdatum'],
@@ -93,8 +99,12 @@ class MemoProcessor:
         # Linking persons to events last
         for person in self.memo_persons:
             for event in self.memo_events:
-                if event.person_number == person.id:
+                if person.id in event.person_ids:
                     person.events.append(event)
+                    self.logger.info(f"Linking person {person.id} to event {event.id}")
+
+
+
 
 
     def output_data(self):

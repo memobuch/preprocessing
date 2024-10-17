@@ -257,7 +257,8 @@ class MemoPerson:
             "sys_entityTypes": ["person"],
             # TODO think aboput keyword assigment
             # "keyword": self.memorial_sign,
-            "sys_entityStartDate": self.birth_date
+            "sys_entityStartDate": self.birth_date,
+            "sys_entityPointers": [self.memorial_sign]
         }
 
         death_event: MemoEvent = None

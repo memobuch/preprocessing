@@ -271,6 +271,7 @@ class MemoPerson:
             # data["sys_entityEndDateRanges"] = death_event.end_date
             data["sys-entityLongLat"] = [death_event.latt, death_event.long]
             data["sys_entityTags"] = list(death_event.categories)
+            data["sys-locationLabels"] =  [death_event.location]
 
         json_str = json.dumps(data, ensure_ascii=False, indent=4)
 

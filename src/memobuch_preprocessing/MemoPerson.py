@@ -254,9 +254,10 @@ class MemoPerson:
             "sys_entityTitle": f"{self.first_name} {self.last_name}",
             "sys_entityDesc": self.biography_text,
             # TODO could possibly use enums in SOLR!
-            "sys_entityTypes": ["person"]
+            "sys_entityTypes": ["person"],
             # TODO think aboput keyword assigment
             # "keyword": self.memorial_sign,
+            "sys_entityStartDate": self.birth_date
         }
 
         death_event: MemoEvent = None
@@ -266,12 +267,10 @@ class MemoPerson:
                 break
 
         if death_event:
-            # TODO add this start and end date ranges
-            # data["sys_entityStartDateRanges"] = death_event.start_date
-            # data["sys_entityEndDateRanges"] = death_event.end_date
             data["sys-entityLongLat"] = [death_event.latt, death_event.long]
             data["sys_entityTags"] = list(death_event.categories)
             data["sys-locationLabels"] =  [death_event.location]
+            data["sys_entityEndDate"] = death_event.end_date
 
         json_str = json.dumps(data, ensure_ascii=False, indent=4)
 

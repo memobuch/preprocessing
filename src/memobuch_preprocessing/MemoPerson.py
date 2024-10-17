@@ -132,7 +132,7 @@ class MemoPerson:
 
         rdf_ns = {'xmlns:rdf': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'xmlns:dc': 'http://purl.org/dc/elements/1.1/', 'xmlns:foaf': 'http://xmlns.com/foaf/0.1/', 'xmlns:rdfs': 'http://www.w3.org/2000/01/rdf-schema#', 'xmlns:void': 'http://rdfs.org/ns/void#', 'xmlns:wgs84_pos': 'http://www.w3.org/2003/01/geo/wgs84_pos#', 'xmlns:memo': MEMO_ONTOLOGY}
         root = ET.Element('rdf:RDF', rdf_ns)
-        description = ET.SubElement(root, 'rdf:Description', {'rdf:about': MEMO_BASE_URI + self.id})
+        description = ET.SubElement(root, 'rdf:Description', {'rdf:about': MEMO_BASE_URI + "persons/" + self.id})
 
         rdfs_label = ET.SubElement(description, 'rdfs:label')
         rdfs_label.text = f"{self.first_name} {self.last_name}"
@@ -161,7 +161,7 @@ class MemoPerson:
 
         for event in self.events:
             # add events as rdf model
-            event_rdf_description = ET.SubElement(root, 'rdf:Description', {'rdf:about': MEMO_BASE_URI + self.id + "/events/" + str(event.id)})
+            event_rdf_description = ET.SubElement(root, 'rdf:Description', {'rdf:about': MEMO_BASE_URI + "persons/" + self.id + "/events/" + str(event.id)})
 
             ET.SubElement(event_rdf_description, 'rdf:type', {'rdf:resource': 'http://digitales-memobuch.at/ontology#Event'})
             # type a wgs point

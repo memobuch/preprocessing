@@ -1,6 +1,7 @@
 import csv
 import json
 import os
+from array import array
 from typing import Literal
 from memobuch_preprocessing.MemoEvent import MemoEvent
 import xml.etree.ElementTree as ET
@@ -258,7 +259,7 @@ class MemoPerson:
             # "keyword": self.memorial_sign,
         }
 
-        death_event = None
+        death_event: MemoEvent = None
         for event in self.events:
             if event.type == "Tod":
                 death_event = event
@@ -269,6 +270,7 @@ class MemoPerson:
             # data["sys_entityStartDateRanges"] = death_event.start_date
             # data["sys_entityEndDateRanges"] = death_event.end_date
             data["sys-entityLongLat"] = [death_event.latt, death_event.long]
+            data["sys_entityTypes"] = data["sys_entityTypes"] + list(death_event.categories)
 
         json_str = json.dumps(data, ensure_ascii=False, indent=4)
 

@@ -55,7 +55,7 @@ class MemoProcessor:
             birth_date = MemoProcessor._convert_date(person_entry['Geburtsdatum'])
 
             cur_memo_person = MemoPerson(
-                id=MemoStatics.PROJECT_ABBR + "." +  str(person_entry['Identifikatornummer']), # required
+                id=MemoStatics.PROJECT_ABBR + ".person." +  str(person_entry['Identifikatornummer']), # required
                 last_name=person_entry['Nachname'], # required
                 first_name=person_entry['Vorname'], # optional
                 maiden_name=person_entry['Mädchenname'], # optional
@@ -77,7 +77,7 @@ class MemoProcessor:
             person_numbers = event_entry['Personennummer'].split(", ")
             person_ids = []
             for person_id in person_numbers:
-                person_ids.append(MemoStatics.PROJECT_ABBR + "." + str(person_id))
+                person_ids.append(MemoStatics.PROJECT_ABBR + ".person." + str(person_id))
 
             # split the categories by comma - BUT ignore commas within quotes (because of return from gsheets)
             person_categories = MemoProcessor.split_ignoring_quotes(event_entry['Kategorie'], ',')

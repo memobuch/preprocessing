@@ -161,7 +161,7 @@ class MemoPerson:
 
         for event in self.events:
             # add events as rdf model
-            event_rdf_description = ET.SubElement(root, 'rdf:Description', {'rdf:about': MEMO_BASE_URI +  "event/" + str(event.id)})
+            event_rdf_description = ET.SubElement(root, 'rdf:Description', {'rdf:about': MEMO_BASE_URI + self.id + "/events/" + str(event.id)})
 
             ET.SubElement(event_rdf_description, 'rdf:type', {'rdf:resource': 'http://digitales-memobuch.at/ontology#Event'})
             # type a wgs point

@@ -52,6 +52,8 @@ class MemoProcessor:
         # Reading in the persons from the gsheet
         for person_entry in persons_dict:
             # TODO entries in ghseets might be optional! - must introduce some kind of check
+            birth_date = MemoProcessor._convert_date(person_entry['Geburtsdatum'])
+
             cur_memo_person = MemoPerson(
                 id=MemoStatics.PROJECT_ABBR + "." +  str(person_entry['Identifikatornummer']), # required
                 last_name=person_entry['Nachname'], # required
@@ -63,7 +65,7 @@ class MemoProcessor:
                 memorial_sign=person_entry['Erinnerungszeichen (DERLA Nummer)'], # optional
                 biography_text=person_entry['Freitext / Biografie'], # optional
                 birth_place=person_entry['Geburtsort'], # optional
-                birth_date=person_entry['Geburtsdatum'] # optional
+                birth_date=birth_date # optional
             )
 
             self.memo_persons.append(cur_memo_person)
@@ -86,8 +88,8 @@ class MemoProcessor:
                 person_ids=person_ids,
                 type=event_entry['Typ'],
                 description=event_entry['Beschreibung'],
-                start_date=event_entry['Startdatum'],
-                end_date=event_entry['Enddatum'],
+                start_date=MemoProcessor._convert_date(event_entry['Startdatum']),
+                end_date=MemoProcessor._convert_date(event_entry['Enddatum']),
                 categories=person_categories,
                 location=event_entry['Ort'],
                 latt=event_entry['Längengrad'],
@@ -174,3 +176,13 @@ class MemoProcessor:
             result[i] = result[i].strip()
 
         return result
+
+    @staticmethod
+    def _convert_date(date: str):
+        """
+        Converts a date from the format dd.mm.yyyy to the format yyyy-mm-dd
+        :param date: The date to convert
+        :return: The converted date
+        """
+        day, month, year = date.split('.')
+        return f"{year}-{month}-{day}T00:00:00Z"

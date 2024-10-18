@@ -1,0 +1,268 @@
+
+<TEI xmlns="http://www.tei-c.org/ns/1.0" xmlns:html="http://www.w3.org/1999/xhtml">
+  <teiHeader>
+    <fileDesc>
+      <titleStmt>
+        <title>Impressum</title>
+        <author></author>
+      </titleStmt>
+      <publicationStmt>
+        <publisher>
+          <orgName corresp="https://sprachwissenschaft.uni-graz.at" ref="http://d-nb.info/gnd/807328-4">Institut für Sprachwissenschaft,
+            Karl-Franzens-Universität Graz</orgName>
+        </publisher>
+        <authority>
+          <orgName corresp="https://informationsmodellierung.uni-graz.at" ref="http://d-nb.info/gnd/1137284463">Zentrum für Informationsmodellierung - Austrian
+            Centre for Digital Humanities, Karl-Franzens-Universität Graz</orgName>
+        </authority>
+        <distributor>
+          <orgName ref="https://gams.uni-graz.at">GAMS - Geisteswissenschaftliches Asset Management
+            System</orgName>
+        </distributor>
+        <availability>
+          <licence target="https://creativecommons.org/licenses/by-nc/4.0">Creative Commons BY-NC
+            4.0</licence>
+        </availability>
+        <date when="2022">2022</date>
+        <pubPlace>Graz</pubPlace>
+      </publicationStmt>
+      <seriesStmt>
+        <title ref="http://digitales-memobuch.at">Digitales Memobuch</title>
+        <respStmt>
+          <resp>Herausgeber</resp>
+          <persName ref="http://d-nb.info/gnd/111679893">
+            <forename>Bernhard</forename>
+            <surname>Hurch</surname>
+            <orgName ref="http://d-nb.info/gnd/36157-4">Karl-Franzens-Universität Graz</orgName>
+          </persName>
+        </respStmt>
+      </seriesStmt>
+      <sourceDesc>
+        <p>born digital</p>
+      </sourceDesc>
+    </fileDesc>
+  </teiHeader>
+  <text>
+    <body>
+      <div xml:lang="de">
+        <head>Impressum</head>
+        <div>
+          <head>Herausgeber und Konzept</head>
+          <p> Bernhard Hurch (<ref target="mailto:bernhard.hurch@uni-graz.at">bernhard.hurch@uni-graz.at</ref>) <lb></lb>Institut für Sprachwissenschaft</p>
+          <p> Universität Graz<lb></lb> Merangasse 70<lb></lb> A-8010 Graz<lb></lb> Austria<lb></lb> Tel: +43 - 316
+            - 380 - 2415 (Sekr.), 2425 (dir.)<lb></lb> Fax: +43 - 316 - 380 - 9780</p>
+          <p> Dieser zeichnet sich auch für sämtliche Begleittexte des Archivs sowie die
+            Aufarbeitungen Schuchardtscher Manuskripte verantwortlich, soweit nicht explizit andere
+            Autoren oder Bearbeiter genannt sind. </p>
+          <p>Veröffentlichung der neuen Präsentation im Jahr 2022 in der Reihe GAMS als Nummer
+            518.10</p>
+        </div>
+        <div>
+          <head> Datenmodellierung, Umsetzung und Publikation</head>
+          <p>
+            <ref target="http://informationsmodellierung.uni-graz.at"> Zentrum für
+              Informationsmodellierung - Austrian Centre for Digital Humanities </ref>
+          </p>
+          <p>Sanja Sarić <lb></lb> Elisabeth Steiner (<ref target="mailto:elisabeth.steiner@uni-graz.at">elisabeth.steiner@uni-graz.at</ref>)</p>
+        </div>
+        <div>
+          <head>Technische Infrastruktur</head>
+          <p>
+            <ref target="https://gams.uni-graz.at"> GAMS-Geisteswissenschaftliches Asset Management
+              System </ref>
+          </p>
+        </div>
+        <div>
+          <head>Identifikation</head>
+          <p> Permalink: http://schuchardt.uni-graz.at<lb></lb> Handle: hdl.handle.net/11471/518.10 </p>
+        </div>
+        <div>
+          <head>Information gemäß § 5 E-Commerce Gesetz</head>
+          <p> Die Informationen und Dienste auf dieser Seite werden zur Verfügung gestellt von </p>
+          <p> Karl-Franzens-Universität Graz <lb></lb> Universitätsplatz 3 <lb></lb> 8010 Graz, Austria
+            <lb></lb> E-Mail: zim@uni-graz.at <lb></lb> Tel.: +43-(0)316 380 2292 </p>
+        </div>
+        <div>
+          <head>Design</head>
+          <p> Internetagentur <ref target="http://wukonig.com/">wukonig.com</ref>
+            <lb></lb> Layout based on <ref target="http://getbootstrap.com/">Bootstrap</ref>
+            <lb></lb> Icons by Open Iconic - <ref target="https://www.appstudio.dev/app/OpenIconic.html">
+              https://www.appstudio.dev/app/OpenIconic.html </ref>
+          </p>
+        </div>
+        <div>
+          <head>Links</head>
+          <p>
+            <ref target="https://informationsmodellierung.uni-graz.at">Zentrum für
+              Informationsmodellierung</ref>
+            <lb></lb>
+            <ref target="http://sprachwissenschaft.uni-graz.at/de/">Institut für
+                Sprachwissenschaft</ref>
+            <lb></lb>
+            <ref target=" https://malvinenstiftung.uni-graz.at">Malvinenstiftung</ref>
+            <lb></lb>
+            <ref target="https://gewi.uni-graz.at">Geisteswissenschaftliche Fakultät</ref>
+            <lb></lb>
+            <ref target="https://ub.uni-graz.at/de/bibliotheken-sammlungen/sondersammlungen/sammlungen/vor-nachlaesse/">Nachlass-Sammlung der Universitätsbibliothek</ref>
+            <lb></lb>
+            <ref target="http://languageserver.uni-graz.at">LanguageServer</ref>
+            <lb></lb>
+            <ref target="http://www.bbaw.de/forschung/wvhumboldt/uebersicht">Humboldt-Projekt</ref>
+            <lb></lb>
+          </p>
+        </div>
+        <div>
+          <head>Zitierempfehlung</head>
+          <p>Hurch, Bernhard (Hrsg.): <hi rend="italic">Hugo Schuchardt Archiv</hi>. Graz: Institut
+            für Sprachwissenschaft, Universität Graz. 2022. URL: <ref target="http://schuchardt.uni-graz.at">http://schuchardt.uni-graz.at</ref>. </p>
+        </div>
+      </div>
+      <div xml:lang="en">
+        <head>Imprint</head>
+        <div>
+          <head>Editor and conceptualization</head>
+          <p> Bernhard Hurch (<ref target="mailto:bernhard.hurch@uni-graz.at">bernhard.hurch@uni-graz.at</ref>) <lb></lb>Institut für Sprachwissenschaft</p>
+          <p> Universität Graz<lb></lb> Merangasse 70<lb></lb> A-8010 Graz<lb></lb> Austria<lb></lb> Tel: +43 - 316
+            - 380 - 2415 (Sekr.), 2425 (dir.)<lb></lb> Fax: +43 - 316 - 380 - 9780</p>
+          <p>Bernhard Hurch is also responsible for all accompanying texts of the archive as well as
+            for the editing of Schuchardt manuscripts, unless other authors or editors are
+            explicitly named. </p>
+          <p>Publication of the new presentation in 2022 in the GAMS series as number 518.10.</p>
+        </div>
+        <div>
+          <head>Data modelling, implementation and publication</head>
+          <p>
+            <ref target="http://informationsmodellierung.uni-graz.at"> Zentrum für
+              Informationsmodellierung - Austrian Centre for Digital Humanities </ref>
+          </p>
+          <p>Sanja Sarić <lb></lb> Elisabeth Steiner (<ref target="mailto:elisabeth.steiner@uni-graz.at">elisabeth.steiner@uni-graz.at</ref>)</p>
+        </div>
+        <div>
+          <head>Technical Infrastructure</head>
+          <p>
+            <ref target="https://gams.uni-graz.at"> GAMS - Humanities Asset Management System </ref>
+          </p>
+        </div>
+        <div>
+          <head>Identification</head>
+          <p> Permalink: http://schuchardt.uni-graz.at<lb></lb> Handle: hdl.handle.net/11471/518.10 </p>
+        </div>
+        <div>
+          <head>Information pursuant to § 5 E-Commerce Act</head>
+          <p> The information and services on this site are provided by </p>
+          <p> Karl-Franzens-Universität Graz <lb></lb> Universitätsplatz 3 <lb></lb> 8010 Graz, Austria
+            <lb></lb> E-mail: zim@uni-graz.at <lb></lb> Tel.: +43-(0)316 380 2292 </p>
+        </div>
+        <div>
+          <head>Design</head>
+          <p> Internet agency <ref target="http://wukonig.com/">wukonig.com</ref>
+            <lb></lb> Layout based on <ref target="http://getbootstrap.com/">Bootstrap</ref>
+            <lb></lb> Icons by Open Iconic - <ref target="https://www.appstudio.dev/app/OpenIconic.html">
+              https://www.appstudio.dev/app/OpenIconic.html </ref>
+          </p>
+        </div>
+        <div>
+          <head>Links</head>
+          <p>
+            <ref target="https://informationsmodellierung.uni-graz.at">Centre for Information
+              Modelling</ref>
+            <lb></lb>
+            <ref target="http://sprachwissenschaft.uni-graz.at/de/">Institute
+              for Linguistics</ref>
+            <lb></lb>
+            <ref target="https://malvinenstiftung.uni-graz.at">Foundation Malvinenstiftung</ref>
+            <lb></lb>
+            <ref target="https://gewi.uni-graz.at">Faculty of Humanities</ref>
+            <lb></lb>
+            <ref target="https://ub.uni-graz.at/de/bibliotheken-sammlungen/sondersammlungen/sammlungen/vor-nachlaesse/">Estate collection of the University Library</ref>
+            <lb></lb>
+            <ref target="http://languageserver.uni-graz.at">LanguageServer</ref>
+            <lb></lb>
+            <ref target="http://www.bbaw.de/forschung/wvhumboldt/uebersicht">Project
+            Humboldt</ref>
+            <lb></lb>
+          </p>
+        </div>
+        <div>
+          <head>Recommended citation</head>
+          <p>Hurch, Bernhard (ed.): <hi rend="italic">Hugo Schuchardt Archive</hi>. Graz: Institute
+            for Linguistics, University of Graz. 2022. URL: <ref target="http://schuchardt.uni-graz.at">http://schuchardt.uni-graz.at</ref>. </p>
+        </div>
+      </div>
+      <div xml:lang="fr">
+        <head>Mentions légales et liens</head>
+        <div>
+          <head>Éditeur et concept</head>
+          <p> Bernhard Hurch (<ref target="mailto:bernhard.hurch@uni-graz.at">bernhard.hurch@uni-graz.at</ref>) <lb></lb>Institut für Sprachwissenschaft</p>
+          <p> Universität Graz<lb></lb> Merangasse 70<lb></lb> A-8010 Graz<lb></lb> Austria<lb></lb> Tel: +43 - 316
+            - 380 - 2415 (Sekr.), 2425 (dir.)<lb></lb> Fax: +43 - 316 - 380 - 9780</p>
+          <p> Bernhard Hurch est également responsable de tous les textes d&apos;accompagnement des
+            archives ainsi que des mises à jour des manuscrits de Schuchardt, sauf si d&apos;autres
+            auteurs ou collaborateurs sont explicitement mentionnés. </p>
+          <p>Publication de la nouvelle présentation en 2022 dans la série GAMS sous le numéro
+            518.10.</p>
+        </div>
+        <div>
+          <head> Modélisation des données, mise en œuvre et publication</head>
+          <p>
+            <ref target="http://informationsmodellierung.uni-graz.at"> Zentrum für
+              Informationsmodellierung - Austrian Centre for Digital Humanities </ref>
+          </p>
+          <p>Sanja Sarić <lb></lb> Elisabeth Steiner (<ref target="mailto:elisabeth.steiner@uni-graz.at">elisabeth.steiner@uni-graz.at</ref>)</p>
+        </div>
+        <div>
+          <head>Infrastructure technique</head>
+          <p>
+            <ref target="https://gams.uni-graz.at"> GAMS - Humanities Asset Management System </ref>
+          </p>
+        </div>
+        <div>
+          <head>Identification</head>
+          <p> Lien permanent: http://schuchardt.uni-graz.at<lb></lb> Handle: hdl.handle.net/11471/518.10 </p>
+        </div>
+        <div>
+          <head>Information conformément au § 5 de la loi sur le commerce électronique</head>
+          <p>Les informations et services de ce site sont mis à disposition par </p>
+          <p> Karl-Franzens-Universität Graz <lb></lb> Universitätsplatz 3 <lb></lb> 8010 Graz, Austria
+            <lb></lb> Courrier électronique: zim@uni-graz.at <lb></lb> Tel.: +43-(0)316 380 2292 </p>
+        </div>
+        <div>
+          <head>Design</head>
+          <p>Agence Internet <ref target="http://wukonig.com/">wukonig.com</ref>
+            <lb></lb>Mise en page basée sur <ref target="http://getbootstrap.com/">Bootstrap</ref>
+            <lb></lb>Icônes par Open Iconic - <ref target="https://www.appstudio.dev/app/OpenIconic.html">
+              https://www.appstudio.dev/app/OpenIconic.html </ref>
+          </p>
+        </div>
+        <div>
+          <head>Liens</head>
+          <p>
+            <ref target="https://informationsmodellierung.uni-graz.at">Centre de modélisation de
+              l&apos;information</ref>
+            <lb></lb>
+            <ref target="http://sprachwissenschaft.uni-graz.at/de/">Institut des sciences du langage</ref>
+            <lb></lb>
+            <ref target="https://malvinenstiftung.uni-graz.at">Fondation
+              Malvinenstiftung</ref>
+            <lb></lb>
+            <ref target="https://gewi.uni-graz.at/">Faculté des
+              sciences humaines</ref>
+            <lb></lb>
+            <ref target="https://ub.uni-graz.at/de/bibliotheken-sammlungen/sondersammlungen/sammlungen/vor-nachlaesse/">Collection patrimoniale de la bibliothèque universitaire</ref>
+            <lb></lb>
+            <ref target="http://languageserver.uni-graz.at">LanguageServer</ref>
+            <lb></lb>
+            <ref target="http://www.bbaw.de/forschung/wvhumboldt/uebersicht">Project
+            Humboldt</ref>
+            <lb></lb>
+          </p>
+        </div>
+        <div>
+          <head>Recommended citation</head>
+          <p>Hurch, Bernhard (éd.): <hi rend="italic">Archives de Hugo Schuchardt</hi>. Graz:
+            Institut de linguistique, Université de Graz. 2022. URL: <ref target="http://schuchardt.uni-graz.at">http://schuchardt.uni-graz.at</ref>. </p>
+        </div>
+      </div>
+    </body>
+  </text>
+</TEI>

@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='utf-8'?>
+<oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+    <dc:identifier>memo.material</dc:identifier>
+    <dc:creator>Born digital - memo project GAMS</dc:creator>
+    <dc:title xml:lang="en">Memo project files</dc:title>
+    <dc:rights>Creative Commons BY-NC 4.0</dc:rights>
+    <dc:description lang="en">Project files, like imprint, team, about etc.
+    </dc:description>
+    <dc:relation>o:derla.ex</dc:relation>
+    <dc:date>1932-10-01T00:00:00Z</dc:date>
+    <dc:language>de</dc:language>
+    <dc:publisher>Heimo Halbrainer (Hardcoded)</dc:publisher>
+    <dc:rights>Creative Commons BY-NC 4.0 (Hardcoded)</dc:rights>
+    <dc:rights>https://creativecommons.org/licenses/by-nc/4.0</dc:rights>
+    <dc:type>Material</dc:type>
+    <dc:format>Born digital</dc:format>
+</oai_dc:dc>

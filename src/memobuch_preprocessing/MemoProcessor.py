@@ -127,7 +127,7 @@ class MemoProcessor:
 
     def clear_output_folder(self, output_root):
         """
-        Clear the output folder
+        Clears the output folder. Skips folder with name containing 'material' and the README.md file
         :param output_root:
         :return:
         """
@@ -138,6 +138,10 @@ class MemoProcessor:
                 os.remove(item_path)
                 self.logger.info(f"Deleted file: {item_path}")
             elif os.path.isdir(item_path):
+                # skip folder if it contains 'material'
+                if 'material' in item:
+                    self.logger.debug(f"Skipping deletion of folder: {item_path}")
+                    continue
                 for root, dirs, files in os.walk(item_path, topdown=False):
                     for name in files:
                         os.remove(os.path.join(root, name))

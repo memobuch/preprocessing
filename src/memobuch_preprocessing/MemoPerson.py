@@ -268,7 +268,7 @@ class MemoPerson:
                 break
 
         if death_event:
-            data["entityLongLat"] = f"{death_event.latt}, {death_event.long}"
+            data["entityLongLat"] = f"{death_event.long}, {death_event.latt}"
             data["entityTags"] = list(death_event.categories)
             data["entityLocationLabels"] =  [death_event.location]
             data["entityEndDate"] = death_event.end_date

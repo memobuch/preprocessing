@@ -251,14 +251,14 @@ class MemoPerson:
         # TODO use gams specific fields
         data = {
             "id": self.id,
-            "sys_entityTitle": f"{self.first_name} {self.last_name}",
-            "sys_entityDesc": self.biography_text,
+            "entityTitle": f"{self.first_name} {self.last_name}",
+            "entityDesc": self.biography_text,
             # TODO could possibly use enums in SOLR!
-            "sys_entityTypes": ["person"],
+            "entityTypes": ["person"],
             # TODO think aboput keyword assigment
             # "keyword": self.memorial_sign,
-            "sys_entityStartDate": self.birth_date,
-            "sys_entityPointers": [self.memorial_sign]
+            "entityStartDate": self.birth_date,
+            "entityPointers": [self.memorial_sign]
         }
 
         death_event: MemoEvent = None
@@ -268,10 +268,10 @@ class MemoPerson:
                 break
 
         if death_event:
-            data["sys-entityLongLat"] = f"{death_event.latt}, {death_event.long}"
-            data["sys_entityTags"] = list(death_event.categories)
-            data["sys-locationLabels"] =  [death_event.location]
-            data["sys_entityEndDate"] = death_event.end_date
+            data["entityLongLat"] = f"{death_event.latt}, {death_event.long}"
+            data["entityTags"] = list(death_event.categories)
+            data["entityLocationLabels"] =  [death_event.location]
+            data["entityEndDate"] = death_event.end_date
 
         json_str = json.dumps(data, ensure_ascii=False, indent=4)
 

@@ -12,7 +12,7 @@ pyrilo -h http://143.50.30.162:18085 -r C:\Users\stoffse\Documents\programming\g
 
 # personal laptop
 
-packager bag create C:\Users\sebas\Documents\programming\py\memobuch_preprocessing\output --overwrite-bag
+packager bag create C:\Users\sebas\Documents\programming\py\memo_preprocessing_zimlab\output --overwrite-bag
 
 
 

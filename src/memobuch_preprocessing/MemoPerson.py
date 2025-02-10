@@ -17,7 +17,7 @@ class MemoPerson:
     images: list[MemoPersonFile]
     documents: list[MemoPersonFile]
 
-    def __init__(self, id: str, last_name: str, first_name: str, maiden_name: str, alternative_spelling: str, gender: Literal["male", "female"], is_youth: bool, memorial_sign: str, biography_text: str, birth_place: str, birth_date: str, death_place: str, death_longitude: float, death_lattitude: float, voluntary_address: str, voluntary_longitude: float, voluntary_latitude: float, forced_address: str, forced_longitude: float, forced_latitude: float, victim_category: list[str], literature: str,
+    def __init__(self, id: str, last_name: str, first_name: str, maiden_name: str, alternative_spelling: str, gender: Literal["male", "female"], is_youth: bool, memorial_sign: str, biography_text: str, birth_place: str, birth_date: str, death_place: str, death_longitude: float, death_lattitude: float, death_date: str, voluntary_address: str, voluntary_longitude: float, voluntary_latitude: float, forced_address: str, forced_longitude: float, forced_latitude: float, victim_category: list[str], literature: str,
                  events=None):
 
         if events is None:
@@ -39,6 +39,7 @@ class MemoPerson:
         self.death_place = death_place
         self.death_longitude = death_longitude
         self.death_latitude = death_lattitude
+        self.death_date = death_date
 
         self.voluntary_address = voluntary_address
         self.voluntary_longitude = voluntary_longitude
@@ -366,20 +367,12 @@ class MemoPerson:
             # TODO think aboput keyword assigment
             # "keyword": self.memorial_sign,
             "entityStartDate": self.birth_date,
-            "entityPointers": [self.memorial_sign]
+            "entityPointers": [self.memorial_sign],
+            "entityLongLat": f"{self.death_longitude}, {self.death_latitude}",
+            "entityLocationLabels": [self.death_place],
+            "entityEndDate": self.death_date,
+            "entityTags": self.victim_category
         }
-
-        death_event: MemoEvent = None
-        for event in self.events:
-            if event.type == "Tod":
-                death_event = event
-                break
-
-        if death_event:
-            data["entityLongLat"] = f"{death_event.long}, {death_event.latt}"
-            data["entityTags"] = list(death_event.categories)
-            data["entityLocationLabels"] =  [death_event.location]
-            data["entityEndDate"] = death_event.end_date
 
         json_str = json.dumps(data, ensure_ascii=False, indent=4)
 

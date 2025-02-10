@@ -56,6 +56,8 @@ class MemoProcessor:
             # TODO entries in ghseets might be optional! - must introduce some kind of check
             birth_date = MemoProcessor._convert_date(person_entry['Geburtsdatum'])
 
+            victim_categories = person_entry["Opferkategorie"].replace(" ", "").split(",")
+
             cur_memo_person = MemoPerson(
                 id=MemoStatics.PROJECT_ABBR + ".person." +  str(person_entry['Identifikatornummer']), # required
                 last_name=person_entry['Nachname'], # required
@@ -72,13 +74,14 @@ class MemoProcessor:
                 death_place=person_entry['Sterbeort (Bezeichnung)'],
                 death_longitude=person_entry['Längengrad (Sterbeort)'],
                 death_lattitude=person_entry['Breitengrad (Sterbeort)'],
+                death_date=person_entry['Todesdatum'],
                 voluntary_address=person_entry["Letzte freiwillige Wohnadresse"],
                 voluntary_longitude=person_entry["Längengrad (freiwillige Wohnadresse)"],
                 voluntary_latitude=person_entry["Breitengrad (freiwillige Wohnadresse)"],
                 forced_address=person_entry["Letzte erzwungene Wohnadresse"],
                 forced_longitude=person_entry["Längengrad (erzwungene Wohnadresse)"],
                 forced_latitude=person_entry["Breitengrad (erzwungene Wohnadresse)"],
-                victim_category=person_entry["Opferkategorie"],
+                victim_category=victim_categories,
                 literature=person_entry["Literatur"],
 
             )

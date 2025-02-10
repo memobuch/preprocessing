@@ -11,7 +11,11 @@ pyrilo -h http://143.50.30.162:18085 -r C:\Users\stoffse\Documents\programming\g
 
 
 # personal laptop
+
 packager bag create C:\Users\sebas\Documents\programming\py\memobuch_preprocessing\output --overwrite-bag
+
+
+
 pyrilo -r C:\Users\sebas\Documents\programming\gams\gams-packager\bags sync memo
 
 ```

@@ -197,18 +197,18 @@ class MemoPerson:
         # handling of images
         for i, image in enumerate(self.images):
             # TODO here the correct dsid is needed from the datastream.csv!
-            image_dsid =  os.path.basename(image.source_path).upper()
+            image_dsid =  os.path.basename(image.source_path).lower()
             if i == 0:
-                ET.SubElement(description, 'memo:portraitImage', {'rdf:resource': f'http://localhost:18085/api/v1/projects/memo/objects/memo.person.3/datastreams/{image_dsid}'})
+                ET.SubElement(description, 'memo:portraitImage', {'rdf:resource': f'http://localhost:18085/api/v1/projects/memo/objects/memo.person.3/datastreams/{image_dsid}/content'})
             else:
-                ET.SubElement(description, 'memo:hasHistoricImage', {'rdf:resource': f'http://localhost:18085/api/v1/projects/memo/objects/memo.person.3/datastreams/{image_dsid}'})
+                ET.SubElement(description, 'memo:hasHistoricImage', {'rdf:resource': f'http://localhost:18085/api/v1/projects/memo/objects/memo.person.3/datastreams/{image_dsid}/content'})
                 pass
 
         # handling of documents
         for i, document in enumerate(self.documents):
             # TODO the correct dsid should come from the datastream.csv!
-            document_dsid = os.path.basename(document.source_path).upper()
-            ET.SubElement(description, 'memo:hasHistoricSourceDocument', {'rdf:resource': f'http://localhost:18085/api/v1/projects/memo/objects/memo.person.3/datastreams/{document_dsid}'})
+            document_dsid = os.path.basename(document.source_path).lower()
+            ET.SubElement(description, 'memo:hasHistoricSourceDocument', {'rdf:resource': f'http://localhost:18085/api/v1/projects/memo/objects/memo.person.3/datastreams/{document_dsid}/content'})
 
         for event in self.events:
             # add events as rdf model

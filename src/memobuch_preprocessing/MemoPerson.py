@@ -92,6 +92,9 @@ class MemoPerson:
             subject_element = ET.SubElement(root, 'dc:subject')
             subject_element.text = 'jugendlich'
 
+        person_subject = ET.SubElement(root, 'dc:subject')
+        person_subject.text = "Person"
+
         rights_element = ET.SubElement(root, 'dc:rights')
         rights_element.text = "Creative Commons BY-NC 4.0"
 
@@ -117,10 +120,10 @@ class MemoPerson:
         dc_rights2.text = "https://creativecommons.org/licenses/by-nc/4.0"
 
         dc_type = ET.SubElement(root, 'dc:type')
-        dc_type.text = "Person"
+        dc_type.text = "Dataset"
 
-        dc_format = ET.SubElement(root, 'dc:format')
-        dc_format.text = "Born digital: Eintrag in google Tabelle"
+        dc_source = ET.SubElement(root, 'dc:source')
+        dc_source.text = "Born digital: Entry transformed from google sheets"
 
 
         # logger.info(f"Created Dublin Core XML for digital object ID: memo.{entry['Identifikatornummer']}")

@@ -146,7 +146,8 @@ class MemoPerson:
             'rights': ['Creative Commons BY-NC 4.0'],
             'publisher': ['memo project GAMS5'],
             'source': ['Demo source'],
-            'objectType': ['RDF']
+            'objectType': ['RDF'],
+            'mainResource': ["RDF.xml"]
         }
 
         df = pd.DataFrame(data)

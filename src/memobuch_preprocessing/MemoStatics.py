@@ -7,4 +7,4 @@ class MemoStatics:
 
     OUTPUT_DIR = "output"
     PROJECT_ABBR = "memo"
-    MATERIAL_ROOT_PATH = 'C:\\Users\\sebas\\Desktop\\memo_material\\'
+    MATERIAL_ROOT_PATH = 'C:\\Users\\stoffse\\Meine Ablage\\01_Berufliches\\01_Projekte\\10_memo\\02_data\\material\\'

@@ -15,7 +15,7 @@ import pandas as pd
 from memobuch_preprocessing.MemoVocab import MemoVocab
 from memobuch_preprocessing.Person.MemoPersonFile import MemoPersonFile
 from memobuch_preprocessing.Person.memo_person_rdf_serialization import write_as_rdf_xml_improved
-
+from memobuch_preprocessing.Person.memo_person_turtle_serialization import write_as_turtle
 
 class MemoPerson:
     images: list[MemoPersonFile]
@@ -239,8 +239,12 @@ class MemoPerson:
             if os.path.isfile(item_path) and item != 'object.csv':
                 mimetype = mimetypes.guess_type(item_path)[0]
                 if mimetype is None:
-                    msg = f"Mimetype from file at path {item_path} is unexpectedly None!"
-                    raise ValueError(msg)
+                    # turtle might not be recognized
+                    if item.endswith('.ttl'):
+                        mimetype = 'text/turtle'
+                    else:
+                        msg = f"Mimetype from file at path {item_path} is unexpectedly None!"
+                        raise ValueError(msg)
 
                 # skip datastreams.csv itself
                 if item == "datastreams.csv":
@@ -283,6 +287,10 @@ class MemoPerson:
         df.to_csv(datastreams_csv_path, index=False, sep=',', quotechar='"', quoting=csv.QUOTE_ALL, encoding='utf-8',
                   lineterminator='\n')
         # logger.info(f"Created datastreams CSV at: {datastreams_csv_path}")
+
+    def write_as_turtle(self):
+        """Write SEMANTIC_STATEMENTS.ttl for GAMS5 triple store integration."""
+        return write_as_turtle(self)
 
     def write_as_search_json(self):
         """

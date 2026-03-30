@@ -250,6 +250,7 @@ class MemoProcessor:
             person.write_as_dublin_core()
             person.write_as_object_csv()
             person.write_as_rdf_xml()
+            person.write_as_turtle()
             person.write_as_search_json()
             person.write_as_image_files()
             person.write_as_document_files()

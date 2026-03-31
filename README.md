@@ -17,7 +17,7 @@ memo
 
 ```sh
 # demo usage of generated data with gams-packager and pyrilo
-packager create "C:\Users\stoffse\Documents\programming\python\memo-preprocessing\output" --overwrite-bag
+packager create "C:\Users\stoffse\Documents\programming\python\memo_preprocessing_zimlab\output" --overwrite-bag
 pyrilo -r "C:\Users\stoffse\Documents\programming\gams\gams-packager\bags" ingest memo
 
 ```

@@ -97,19 +97,19 @@ class MemoPerson:
         id_element.text = self.id
 
         creator_element = ET.SubElement(root, 'dc:creator')
-        creator_element.text = "Born digital - memo project GAMS"
+        creator_element.text = "Heimo Halbrainer, Gerald Lamprecht"
 
         if self.first_name and self.last_name:
             title_element = ET.SubElement(root, 'dc:title', {'xml:lang': 'en'})
-            title_element.text = f"{self.first_name} {self.last_name}"
+            title_element.text = f"{self.first_name} {self.last_name} (person description)"
 
         if self.is_youth:
             subject_element = ET.SubElement(root, 'dc:subject')
-            subject_element.text = 'jugendliche Opfer'
+            subject_element.text = 'jugendliche Opfer' # TODO should be english
 
         for category in self.victim_category:
             subject_element = ET.SubElement(root, 'dc:subject')
-            subject_element.text = self.map_dublin_core_subject_id_to_label(category)
+            subject_element.text = self.map_dublin_core_subject_id_to_label(category) # TODO english
 
         rights_element = ET.SubElement(root, 'dc:rights')
         rights_element.text = "Creative Commons BY-NC 4.0"
@@ -122,16 +122,13 @@ class MemoPerson:
             relation_element.text = sign
 
         date_element = ET.SubElement(root, 'dc:date')
-        date_element.text = self.birth_date
+        date_element.text = "2026"
 
         dc_language = ET.SubElement(root, 'dc:language')
         dc_language.text = "de"
 
         dc_publisher = ET.SubElement(root, 'dc:publisher')
-        dc_publisher.text = "Heimo Halbrainer (Hardcoded)"
-
-        dc_rights = ET.SubElement(root, 'dc:rights')
-        dc_rights.text = "Creative Commons BY-NC 4.0 (Hardcoded)"
+        dc_publisher.text = "GAMS"
 
         dc_rights2 = ET.SubElement(root, 'dc:rights')
         dc_rights2.text = "https://creativecommons.org/licenses/by-nc/4.0"
@@ -139,8 +136,9 @@ class MemoPerson:
         dc_type = ET.SubElement(root, 'dc:type')
         dc_type.text = "Dataset"
 
-        dc_format = ET.SubElement(root, 'dc:format')
-        dc_format.text = "Born digital: Eintrag in google Tabelle"
+        # makes no sense in MEMO's case
+        # dc_format = ET.SubElement(root, 'dc:format')
+        # dc_format.text = "Born digital: Eintrag in google Tabelle"
 
         # logger.info(f"Created Dublin Core XML for digital object ID: memo.{entry['Identifikatornummer']}")
         xml_file_path = os.path.join(MemoStatics.OUTPUT_DIR, str(self.id), 'DC.xml')
@@ -168,16 +166,16 @@ class MemoPerson:
 
         data = {
             'recid': [self.id],
-            'title': [f"{self.first_name} {self.last_name}"],
+            'title': [f"{self.first_name} {self.last_name} (person description)"],
             'project': [MemoStatics.PROJECT_ABBR],
             'description': [self.biography_text],
             'creator': ["Born digital - memo project GAMS"],
             'rights': ['Creative Commons BY-NC 4.0'],
-            'publisher': ['memo project GAMS5'],
+            'publisher': ['GAMS'],
             'source': ['Memo datasheet transformed by Memo preprocessing tool'],
             'objectType': ['RDF'],
             'mainResource': ['RDF.xml'],
-            'tags': ";".join(object_tags) # tags separated by semicolon
+            'tags': ";".join(object_tags) # tags separated by semicolon # TODO make sure english translation?
         }
 
         df = pd.DataFrame(data)
@@ -400,12 +398,21 @@ class MemoPerson:
         :param dc_field: The Dublin Core field
         :return: The human-readable label
         """
+
+        # small error safe for nan values
         mapping = MemoVocab.VICTIM_CATEGORY_TYPES
 
-        mapped = mapping.get(dc_field).get("label")
+        dc_field_mapped = mapping.get(dc_field)
+
+        if dc_field_mapped is None:
+            msg = f"Mapping for Dublin Core field '{dc_field}' resulted in None. At person: {self}"
+            logging.error(msg)
+            raise ValueError(msg)
+
+        mapped = dc_field_mapped.get("label")
 
         if mapped is None:
-            msg = f"Mapping for Dublin Core field '{dc_field}' resulted in None. At person: {self}"
+            msg = f"Mapping for Dublin Core field '{dc_field}' and extracting the label resulted in None. At person: {self}"
             logging.error(msg)
             raise ValueError(msg)
 

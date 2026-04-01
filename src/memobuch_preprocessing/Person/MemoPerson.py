@@ -99,6 +99,9 @@ class MemoPerson:
         creator_element = ET.SubElement(root, 'dc:creator')
         creator_element.text = "Heimo Halbrainer"
 
+        creator_element2 = ET.SubElement(root, 'dc:creator')
+        creator_element2.text = "Gerald Lamprecht"
+
         if self.first_name and self.last_name:
             title_element = ET.SubElement(root, 'dc:title', {'xml:lang': 'en'})
             title_element.text = f"{self.first_name} {self.last_name} (person description)"

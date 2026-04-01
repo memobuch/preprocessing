@@ -345,6 +345,17 @@ class MemoProcessor:
         if len(col_value) == 0:
             return None
 
+        if pd.isna(col_value):
+            return None
+
+        # if the column is parseable as float then it should not be Nan!
+        try:
+            parseable_as_float = float(col_value)
+            if pd.isna(parseable_as_float):
+                return None
+        except:
+            pass
+
         return col_value
 
     @staticmethod

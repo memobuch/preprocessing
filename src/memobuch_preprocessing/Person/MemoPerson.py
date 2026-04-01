@@ -97,7 +97,7 @@ class MemoPerson:
         id_element.text = self.id
 
         creator_element = ET.SubElement(root, 'dc:creator')
-        creator_element.text = "Heimo Halbrainer, Gerald Lamprecht"
+        creator_element.text = "Heimo Halbrainer"
 
         if self.first_name and self.last_name:
             title_element = ET.SubElement(root, 'dc:title', {'xml:lang': 'en'})
@@ -151,6 +151,9 @@ class MemoPerson:
 
         dc_funder_4 = ET.SubElement(root, 'dc:funder', {'xml:lang': 'en'})
         dc_funder_4.text = "Federal Chancellery of the Republic of Austria"
+
+        dc_relation_memo = ET.SubElement(root, 'dc:relation')
+        dc_relation_memo.text = "https://ns-opfer-graz.at"
 
         for derla_sign in self.memorial_signs:
             dc_relation = ET.SubElement(root, 'dc:relation')

@@ -248,7 +248,7 @@ def write_as_turtle(person) -> Optional[str]:
     ttl_file_path = os.path.join(MemoStatics.OUTPUT_DIR, str(person.id), 'SEMANTIC_STATEMENTS.ttl')
 
     g.serialize(destination=ttl_file_path, format="turtle", encoding="utf-8")
-    logging.info(f"Generated SEMANTIC_STATEMENTS.ttl at: {ttl_file_path}")
+    logging.debug(f"Generated SEMANTIC_STATEMENTS.ttl at: {ttl_file_path}")
 
     return ttl_file_path
 

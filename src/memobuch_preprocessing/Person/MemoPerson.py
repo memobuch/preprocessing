@@ -22,7 +22,7 @@ class MemoPerson:
     documents: list[MemoPersonFile]
 
     def __init__(self, id: str, last_name: str | None, first_name: str | None, maiden_name: str | None, alternative_spelling: str |None,
-                 gender: Literal["male", "female"], is_youth: bool, memorial_sign: list[str], biography_text: str | None,
+                 gender: Literal["male", "female"], is_youth: bool, memorial_signs: list[str], biography_text: str | None,
                  birth_place: str | None, birth_date: str | None, death_date: str | None, death_place: str | None, death_longitude: float | None,
                  death_lattitude: float | None, voluntary_address: str | None, voluntary_longitude: float | None, voluntary_latitude: float | None,
                  forced_address: str | None, forced_longitude: float | None, forced_latitude: float | None, victim_category: list[str],
@@ -39,7 +39,7 @@ class MemoPerson:
         self.alternative_spelling = alternative_spelling
         self.gender = gender
         self.is_youth = is_youth
-        self.memorial_sign = memorial_sign
+        self.memorial_signs = memorial_signs
         self.biography_text = biography_text
         self.birth_place = birth_place
         self.birth_date = birth_date
@@ -70,7 +70,7 @@ class MemoPerson:
         self.validate()
 
     def __repr__(self) -> str:
-        return f"MemoPerson(id={self.id}, last_name={self.last_name}, first_name={self.first_name}, maiden_name={self.maiden_name}, alternative_spelling={self.alternative_spelling}, gender={self.gender}, is_youth={self.is_youth}, memorial_sign={self.memorial_sign}, biography_text={self.biography_text}, birth_place={self.birth_place}, birth_date={self.birth_date}, death_place={self.death_place}, death_longitude={self.death_longitude}, death_latitude={self.death_latitude}, voluntary_address={self.voluntary_address}, voluntary_longitude={self.voluntary_longitude}, voluntary_latitude={self.voluntary_latitude}, forced_address={self.forced_address}, forced_longitude={self.forced_longitude}, forced_latitude={self.forced_latitude}, victim_category={self.victim_category}, literature={self.literature}, images={self.images}, events={self.events}, documents={self.documents})"
+        return f"MemoPerson(id={self.id}, last_name={self.last_name}, first_name={self.first_name}, maiden_name={self.maiden_name}, alternative_spelling={self.alternative_spelling}, gender={self.gender}, is_youth={self.is_youth}, memorial_sign={self.memorial_signs}, biography_text={self.biography_text}, birth_place={self.birth_place}, birth_date={self.birth_date}, death_place={self.death_place}, death_longitude={self.death_longitude}, death_latitude={self.death_latitude}, voluntary_address={self.voluntary_address}, voluntary_longitude={self.voluntary_longitude}, voluntary_latitude={self.voluntary_latitude}, forced_address={self.forced_address}, forced_longitude={self.forced_longitude}, forced_latitude={self.forced_latitude}, victim_category={self.victim_category}, literature={self.literature}, images={self.images}, events={self.events}, documents={self.documents})"
 
     def add_image(self, image: MemoPersonFile):
         self.images.append(image)
@@ -117,7 +117,7 @@ class MemoPerson:
         description_element = ET.SubElement(root, 'dc:description', {'xml:lang': 'de'})
         description_element.text = self.biography_text
 
-        for sign in self.memorial_sign:
+        for sign in self.memorial_signs:
             relation_element = ET.SubElement(root, 'dc:relation')
             relation_element.text = sign
 
@@ -152,6 +152,9 @@ class MemoPerson:
         dc_funder_4 = ET.SubElement(root, 'dc:funder', {'xml:lang': 'en'})
         dc_funder_4.text = "Federal Chancellery of the Republic of Austria"
 
+        for derla_sign in self.memorial_signs:
+            dc_relation = ET.SubElement(root, 'dc:relation')
+            dc_relation.text = f"http://gams.uni-graz.at/{derla_sign}"
 
         # logger.info(f"Created Dublin Core XML for digital object ID: memo.{entry['Identifikatornummer']}")
         xml_file_path = os.path.join(MemoStatics.OUTPUT_DIR, str(self.id), 'DC.xml')
@@ -329,7 +332,7 @@ class MemoPerson:
             "entityTags": tags,
             "entityStartDate": MemoPerson._convert_date(self.birth_date),
             "entityEndDate": self.death_date,
-            "entityPointers": [self.memorial_sign]
+            "entityPointers": [self.memorial_signs]
         }]
 
         # temporary testing purpose:
@@ -345,7 +348,7 @@ class MemoPerson:
                 "entityFulltext": random_description,
                 "entityTags": tags,
                 # "entityStartDate": self.birth_date,
-                "entityPointers": [self.memorial_sign]
+                "entityPointers": [self.memorial_signs]
             })
 
         death_event: MemoEvent = None

@@ -163,8 +163,8 @@ def write_as_turtle(person) -> Optional[str]:
         g.add((person_uri, DCTERMS.subject, URIRef(f"{MEMO_ONTOLOGY_URI}youth-victim")))
 
     # --- Memorial Signs ---
-    if person.memorial_sign:
-        for sign in person.memorial_sign:
+    if person.memorial_signs:
+        for sign in person.memorial_signs:
             if sign and sign.strip():
                 g.add((person_uri, DCTERMS.relation, Literal(sign.strip())))
                 g.add((person_uri, MEMO.memorialSign, Literal(sign.strip())))

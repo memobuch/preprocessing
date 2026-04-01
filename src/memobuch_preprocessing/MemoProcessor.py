@@ -78,7 +78,7 @@ class MemoProcessor:
                     alternative_spelling=MemoProcessor.map_nullable_col(person_entry['Alternative Schreibweise']), # optional
                     is_youth=MemoProcessor.map_is_youth_col(person_entry['Jugendlich']), # required
                     gender=MemoProcessor.map_gender_col(person_entry['Geschlecht']), # required
-                    memorial_sign=MemoProcessor.map_memorial_signs(person_entry['Erinnerungszeichen (DERLA Nummer)']), # optional
+                    memorial_signs=MemoProcessor.map_memorial_signs(person_entry['Erinnerungszeichen (DERLA Nummer)']), # optional
                     biography_text=MemoProcessor.map_nullable_col(person_entry['Biografie']), # optional
                     birth_place=MemoProcessor.map_nullable_col(person_entry['Geburtsort']), # optional
                     birth_date=MemoProcessor.map_nullable_col(person_entry['Geburtsdatum']), # optional

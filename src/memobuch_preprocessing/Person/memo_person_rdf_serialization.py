@@ -177,8 +177,8 @@ def write_as_rdf_xml_improved(self):
 
     # --- Memorial Signs ---
 
-    if self.memorial_sign:
-        for sign in self.memorial_sign:
+    if self.memorial_signs:
+        for sign in self.memorial_signs:
             if sign and sign.strip():
                 ET.SubElement(person_desc, 'dcterms:relation').text = sign.strip()
                 ET.SubElement(person_desc, 'memo:memorialSign').text = sign.strip()

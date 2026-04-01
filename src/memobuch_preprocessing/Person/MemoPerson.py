@@ -111,7 +111,7 @@ class MemoPerson:
             subject_element = ET.SubElement(root, 'dc:subject')
             subject_element.text = self.map_dublin_core_subject_id_to_label(category) # TODO english
 
-        rights_element = ET.SubElement(root, 'dc:rights')
+        rights_element = ET.SubElement(root, 'dc:rights', {'xml:lang': 'en'})
         rights_element.text = "Creative Commons BY-NC 4.0"
 
         description_element = ET.SubElement(root, 'dc:description', {'xml:lang': 'de'})
@@ -127,18 +127,31 @@ class MemoPerson:
         dc_language = ET.SubElement(root, 'dc:language')
         dc_language.text = "de"
 
-        dc_publisher = ET.SubElement(root, 'dc:publisher')
+        dc_publisher = ET.SubElement(root, 'dc:publisher', {'xml:lang': 'de'})
         dc_publisher.text = "GAMS"
 
         dc_rights2 = ET.SubElement(root, 'dc:rights')
         dc_rights2.text = "https://creativecommons.org/licenses/by-nc/4.0"
 
-        dc_type = ET.SubElement(root, 'dc:type')
+        dc_type = ET.SubElement(root, 'dc:type', {'xml:lang': 'en'})
         dc_type.text = "Dataset"
 
         # makes no sense in MEMO's case
         # dc_format = ET.SubElement(root, 'dc:format')
         # dc_format.text = "Born digital: Eintrag in google Tabelle"
+
+        dc_funder = ET.SubElement(root, 'dc:funder', {'xml:lang': 'en'})
+        dc_funder.text = "City of Graz"
+
+        dc_funder_2 = ET.SubElement(root, 'dc:funder', {'xml:lang': 'en'})
+        dc_funder_2.text = "National Fund of the Republic of Austria for Victims of National Socialism"
+
+        dc_funder_3 = ET.SubElement(root, 'dc:funder', {'xml:lang': 'en'})
+        dc_funder_3.text = "Future Fund of the Republic of Austria"
+
+        dc_funder_4 = ET.SubElement(root, 'dc:funder', {'xml:lang': 'en'})
+        dc_funder_4.text = "Federal Chancellery of the Republic of Austria"
+
 
         # logger.info(f"Created Dublin Core XML for digital object ID: memo.{entry['Identifikatornummer']}")
         xml_file_path = os.path.join(MemoStatics.OUTPUT_DIR, str(self.id), 'DC.xml')
@@ -169,9 +182,10 @@ class MemoPerson:
             'title': [f"{self.first_name} {self.last_name} (person description)"],
             'project': [MemoStatics.PROJECT_ABBR],
             'description': [self.biography_text],
-            'creator': ["Born digital - memo project GAMS"],
+            'creator': ["Heimo Halbrainer;Gerald Lamprecht"],
             'rights': ['Creative Commons BY-NC 4.0'],
             'publisher': ['GAMS'],
+            "funder": ";".join(["City of Graz", "National Fund of the Republic of Austria for Victims of National Socialism", "Future Fund of the Republic of Austria", "Federal Chancellery of the Republic of Austria"]),
             'source': ['Memo datasheet transformed by Memo preprocessing tool'],
             'objectType': ['RDF'],
             'mainResource': ['RDF.xml'],

@@ -156,7 +156,7 @@ class MemoPerson:
 
         for derla_sign in self.memorial_signs:
             dc_relation = ET.SubElement(root, 'dc:relation')
-            dc_relation.text = f"http://gams.uni-graz.at/{derla_sign}"
+            dc_relation.text = f"https://gams.uni-graz.at/{derla_sign}"
 
         # logger.info(f"Created Dublin Core XML for digital object ID: memo.{entry['Identifikatornummer']}")
         xml_file_path = os.path.join(MemoStatics.OUTPUT_DIR, str(self.id), 'DC.xml')

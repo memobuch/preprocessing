@@ -1,6 +1,7 @@
 import csv
 import json
 import os
+import shutil
 import logging
 from datetime import datetime
 from typing import Literal
@@ -247,16 +248,23 @@ class MemoProcessor:
             folder_path = os.path.join(MemoStatics.OUTPUT_DIR, str(folder_name))
             os.makedirs(folder_path, exist_ok=True)
 
-            person.write_as_dublin_core()
-            person.write_as_object_csv()
-            person.write_as_rdf_xml()
-            person.write_as_turtle()
-            person.write_as_search_json()
-            person.write_as_image_files()
-            person.write_as_document_files()
-            person.write_as_geojson()
-            person.write_as_datastreams_csv()
-            self.logger.info(f"Outputted digital object: {folder_path}")
+            try:
+                person.write_as_dublin_core()
+                person.write_as_object_csv()
+                person.write_as_rdf_xml()
+                person.write_as_turtle()
+                person.write_as_search_json()
+                person.write_as_image_files()
+                person.write_as_document_files()
+                person.write_as_geojson()
+                person.write_as_datastreams_csv()
+                self.logger.info(f"Outputted digital object: {folder_path}")
+            except Exception as e:
+                logging.error(f"SKIPPING writing output files for memo person: {person.id} - Error writing digital object at path: {folder_path}: {e}")
+                try:
+                    shutil.rmtree(folder_path)
+                except Exception as cleanup_error:
+                    logging.error(f"Failed to remove folder {folder_path}: {cleanup_error}")
 
 
     def clear_output_folder(self, output_root):
@@ -498,11 +506,3 @@ class MemoProcessor:
             csv_writer.writerow(["EVENTS.json","EVENTS.json","All Persons as GEOJSON", "application/json", "GEOJSON file containing all persons","Born digital - memo project GAMS","Creative Commons BY-NC 4.0"])
             csv_writer.writerow(["DC.xml","DC.xml", "Dublin Core Metadata","application/xml", "Dublin Core metadata for the persons register","Born digital - memo project GAMS","Creative Commons BY-NC 4.0"])
         self.logger.info(f"Outputted all persons datastreams.csv: {datastreams_csv_path}")
-
-
-
-
-
-
-
-

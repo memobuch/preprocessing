@@ -117,10 +117,6 @@ class MemoPerson:
         description_element = ET.SubElement(root, 'dc:description', {'xml:lang': 'de'})
         description_element.text = self.biography_text
 
-        for sign in self.memorial_signs:
-            relation_element = ET.SubElement(root, 'dc:relation')
-            relation_element.text = sign
-
         date_element = ET.SubElement(root, 'dc:date')
         date_element.text = "2026"
 

@@ -403,6 +403,8 @@ class MemoProcessor:
             col = MemoProcessor.map_nullable_col(col)
             victim_categories = col.split(",")
             victim_categories = [cat.strip() for cat in victim_categories]
+            # replace semicolons through normal commas
+            victim_categories = [cat.replace(";","_") for cat in victim_categories]
             return victim_categories
         except Exception as e:
             msg = f"Error analysing victim categories. There might be no victim categories assigned - assigning default empty list {e}"

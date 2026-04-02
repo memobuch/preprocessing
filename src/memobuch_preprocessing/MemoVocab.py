@@ -42,19 +42,19 @@ class MemoVocab:
     }
 
     VICTIM_CATEGORY_TYPES = {
-        "widerstand;politisch": {
+        "widerstand_politisch": {
             "label": "Widerstand, politisch",
             "color": "#ADFF2F"
         },
-        "widerstand;religiös": {
+        "widerstand_religiös": {
             "label": "Widerstand, religios",
             "color": "#ADFF2F"
         },
-        "widerstand;individuell": {
+        "widerstand_individuell": {
             "label": "Widerstand, individuell",
             "color": "#ADFF2F"
         },
-        "widerstand;deserteure": {
+        "widerstand_deserteure": {
             "label": "Widerstand, Deserteure",
             "color": "#ADFF2F"
         },
@@ -62,11 +62,11 @@ class MemoVocab:
             "label": "Zeugen Jehovas",
             "color": "#EE4B2B"
         },
-        "jüdischeopfer;jüdisch": {
+        "jüdischeopfer_jüdisch": {
             "label": "Jüdische Opfer",
             "color": "#228B22"
         },
-        "jüdischeopfer;als Jude verfolgt": {
+        "jüdischeopfer_als Jude verfolgt": {
             "label": "Jüdische Opfer, als Jude verfolgt",
             "color": "#228B22"
         },

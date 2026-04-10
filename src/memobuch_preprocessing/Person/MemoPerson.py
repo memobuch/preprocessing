@@ -139,18 +139,6 @@ class MemoPerson:
         # dc_format = ET.SubElement(root, 'dc:format')
         # dc_format.text = "Born digital: Eintrag in google Tabelle"
 
-        dc_funder = ET.SubElement(root, 'dc:funder', {'xml:lang': 'en'})
-        dc_funder.text = "City of Graz"
-
-        dc_funder_2 = ET.SubElement(root, 'dc:funder', {'xml:lang': 'en'})
-        dc_funder_2.text = "National Fund of the Republic of Austria for Victims of National Socialism"
-
-        dc_funder_3 = ET.SubElement(root, 'dc:funder', {'xml:lang': 'en'})
-        dc_funder_3.text = "Future Fund of the Republic of Austria"
-
-        dc_funder_4 = ET.SubElement(root, 'dc:funder', {'xml:lang': 'en'})
-        dc_funder_4.text = "Federal Chancellery of the Republic of Austria"
-
         dc_relation_memo = ET.SubElement(root, 'dc:relation')
         dc_relation_memo.text = "https://ns-opfer-graz.at"
 

@@ -118,7 +118,8 @@ class MemoProcessor:
                     memo_image = MemoPersonFile(
                         source_path=cur_image_path,
                         title=entry["Titel"],
-                        desc=entry["Beschreibung"]
+                        desc=entry["Beschreibung"],
+                        source=entry["Quelle"]
                     )
                     cur_memo_person.add_image(memo_image)
 

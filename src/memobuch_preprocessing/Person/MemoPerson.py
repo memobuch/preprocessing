@@ -275,7 +275,7 @@ class MemoPerson:
                         image_file_name = os.path.basename(image.source_path)
                         if output_file_name == image_file_name:
                             datastream["title"] = image.title
-                            datastream["description"] = image.desc
+                            datastream["description"] = f"{image.desc} | {image.source}"
 
                 # Apply metadata to memo documents (for datastreams.csv)
                 if "image" not in mimetype:

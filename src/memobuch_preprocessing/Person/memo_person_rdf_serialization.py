@@ -47,6 +47,7 @@ def write_as_rdf_xml_improved(self):
         'xmlns:rdf': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
         'xmlns:rdfs': 'http://www.w3.org/2000/01/rdf-schema#',
         'xmlns:xsd': 'http://www.w3.org/2001/XMLSchema#',
+        'xmlns:cidoc': 'http://www.cidoc-crm.org/cidoc-crm/',
         'xmlns:dc': 'http://purl.org/dc/elements/1.1/',
         'xmlns:dcterms': 'http://purl.org/dc/terms/',
         'xmlns:foaf': 'http://xmlns.com/foaf/0.1/',
@@ -338,8 +339,12 @@ def _create_birth_event(root, person_uri: str, birth_date: str, birth_place: str
     birth_desc = ET.SubElement(root, 'rdf:Description', {'rdf:about': birth_uri})
 
     ET.SubElement(birth_desc, 'rdf:type', {'rdf:resource': 'http://purl.org/vocab/bio/0.1/Birth'})
-    ET.SubElement(birth_desc, 'rdfs:label').text = f"Birth of {person_uri.split('/')[-1]}"
+    ET.SubElement(birth_desc, 'rdfs:label').text = f"Geburt von {person_uri.split('/')[-1]}"
     ET.SubElement(birth_desc, 'bio:principal', {'rdf:resource': person_uri})
+
+    # cidoc modeling
+    ET.SubElement(birth_desc, 'rdf:type', {'rdf:resource': "http://www.cidoc-crm.org/cidoc-crm/E5_Event"})
+    ET.SubElement(birth_desc, 'rdf:type', {'rdf:resource': "http://www.cidoc-crm.org/cidoc-crm/E67_Birth"})
 
     if birth_date:
         date_xsd = _convert_to_xsd_date(birth_date)
@@ -362,6 +367,9 @@ def _create_death_event(root, person_uri: str, death_date: str, death_place: str
     ET.SubElement(death_desc, 'rdf:type', {'rdf:resource': 'http://purl.org/vocab/bio/0.1/Death'})
     ET.SubElement(death_desc, 'rdfs:label').text = f"Death of {person_uri.split('/')[-1]}"
     ET.SubElement(death_desc, 'bio:principal', {'rdf:resource': person_uri})
+
+    ET.SubElement(death_desc, 'rdf:type', {'rdf:resource': "http://www.cidoc-crm.org/cidoc-crm/E5_Event"})
+    ET.SubElement(death_desc, 'rdf:type', {'rdf:resource': "http://www.cidoc-crm.org/cidoc-crm/E69_Death"})
 
     if death_date:
         date_xsd = _convert_to_xsd_date(death_date)

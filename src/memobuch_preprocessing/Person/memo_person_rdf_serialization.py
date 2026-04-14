@@ -559,27 +559,3 @@ def _indent(elem, level=0):
     else:
         if level and (not elem.tail or not elem.tail.strip()):
             elem.tail = i
-
-
-# ============================================================================
-# INTEGRATION INSTRUCTIONS
-# ============================================================================
-
-"""
-TO INTEGRATE INTO MemoPerson CLASS:
-
-1. Copy the write_as_rdf_xml_improved() function
-2. Rename it to write_as_rdf_xml() to replace the existing method
-3. Copy all helper functions (_convert_to_xsd_date, _create_birth_event, etc.)
-4. Add them as methods or module-level functions in MemoPerson.py
-
-ALTERNATIVE (cleaner):
-1. Save this file as memo_rdf_improved.py in the memobuch_preprocessing folder
-2. In MemoPerson.py, import: from memobuch_preprocessing.memo_rdf_improved import write_as_rdf_xml_improved
-3. In MemoPerson class, replace write_as_rdf_xml with:
-
-   def write_as_rdf_xml(self):
-       return write_as_rdf_xml_improved(self)
-
-This keeps the improved code separate and maintainable.
-"""

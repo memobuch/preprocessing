@@ -136,8 +136,8 @@ class MemoPerson:
         dc_type.text = "Dataset"
 
         # makes no sense in MEMO's case
-        # dc_format = ET.SubElement(root, 'dc:format')
-        # dc_format.text = "Born digital: Eintrag in google Tabelle"
+        dc_format = ET.SubElement(root, 'dc:format')
+        dc_format.text = "RDF dataset"
 
         dc_relation_memo = ET.SubElement(root, 'dc:relation')
         dc_relation_memo.text = "https://ns-opfer-graz.at"

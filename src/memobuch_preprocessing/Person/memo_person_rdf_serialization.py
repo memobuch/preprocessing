@@ -37,7 +37,7 @@ def write_as_rdf_xml_improved(self):
     # NAMESPACE DEFINITIONS
     # ============================================================================
 
-    MEMO_BASE_URI = "http://digitales-memobuch.at/"
+    MEMO_BASE_URI = "https://www.ns-opfer-graz.at/"
     MEMO_ONTOLOGY = MEMO_BASE_URI + "ontology#"  # FIXED: was "onotology"
 
     # Define all namespaces

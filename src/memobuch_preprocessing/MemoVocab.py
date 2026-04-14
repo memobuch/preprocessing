@@ -47,7 +47,7 @@ class MemoVocab:
             "color": "#ADFF2F"
         },
         "widerstand_religiös": {
-            "label": "Widerstand, religios",
+            "label": "Widerstand, religiös",
             "color": "#ADFF2F"
         },
         "widerstand_individuell": {

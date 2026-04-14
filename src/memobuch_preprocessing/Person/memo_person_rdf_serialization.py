@@ -24,6 +24,7 @@ import xml.etree.ElementTree as ET
 from typing import Optional
 import os
 
+from memobuch_preprocessing.MemoStatics import MemoStatics
 from memobuch_preprocessing.MemoVocab import MemoVocab
 
 
@@ -163,13 +164,16 @@ def write_as_rdf_xml_improved(self):
         for category in self.victim_category:
             category = category.strip()
             if category:
-                # Create SKOS concept for the category
+                # Create prosecution event for the category
                 category_uri = f"{MEMO_ONTOLOGY}victim-category/{_slugify(category)}"
                 ET.SubElement(person_desc, 'dcterms:subject', {'rdf:resource': category_uri})
                 ET.SubElement(person_desc, 'memo:victimCategory', {'rdf:resource': category_uri})
 
+                prosecution_uri = f"{MEMO_BASE_URI}/objects/{self.id}/prosecution/{_slugify(category)}"
+                ET.SubElement(person_desc, 'memo:prosecution', {'rdf:resource': prosecution_uri})
+
                 # Define the category concept (in same file for completeness)
-                _create_category_concept(root, category_uri, category)
+                _create_prosecution_event(root, prosecution_uri, category)
 
     # --- Youth Status ---
 
@@ -417,12 +421,14 @@ def _create_place(root, place_uri: str, address: str, lat: float, lon: float,
                       {'rdf:datatype': 'http://www.w3.org/2001/XMLSchema#float'}).text = str(lon)
 
 
-def _create_category_concept(root, category_uri: str, category: str):
-    """Create a SKOS Concept for a victim category."""
+def _create_prosecution_event(root, category_uri: str, category: str):
+    """Create a prosecution event resource."""
     concept_desc = ET.SubElement(root, 'rdf:Description', {'rdf:about': category_uri})
 
-    ET.SubElement(concept_desc, 'rdf:type',
-                  {'rdf:resource': 'http://www.w3.org/2004/02/skos/core#Concept'})
+    ET.SubElement(concept_desc, 'rdf:type', {'rdf:resource': "http://www.cidoc-crm.org/cidoc-crm/E5_Event"})
+
+    memo_prosecution_uri = f"{MemoStatics.MEMO_ONTOLOGY}prosecution/{category}"
+    ET.SubElement(concept_desc, 'rdf:type', {'rdf:resource': memo_prosecution_uri})
 
     category_vocab = MemoVocab.VICTIM_CATEGORY_TYPES.get(category)
     if not category_vocab:
@@ -430,16 +436,11 @@ def _create_category_concept(root, category_uri: str, category: str):
 
     category_label = category_vocab.get("label")
 
-    ET.SubElement(concept_desc, 'skos:prefLabel', {'xml:lang': 'de'}).text = category_label
     ET.SubElement(concept_desc, 'rdfs:label', {'xml:lang': 'de'}).text = category_label
-
-    from memobuch_preprocessing.MemoStatics import MemoStatics
-    MEMO_BASE_URI = "http://digitales-memobuch.at/"
-    MEMO_ONTOLOGY = MEMO_BASE_URI + "ontology#"
 
     # Link to concept scheme
     ET.SubElement(concept_desc, 'skos:inScheme',
-                  {'rdf:resource': f'{MEMO_ONTOLOGY}victim-categories'})
+                  {'rdf:resource': f'{MemoStatics.MEMO_ONTOLOGY}victim-categories'})
 
 
 def _create_image_resource(root, image_uri: str, title: str, description: str):

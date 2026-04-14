@@ -325,8 +325,8 @@ def _slugify(text: str) -> str:
     """Convert text to URL-friendly slug."""
     import re
     text = text.lower()
-    text = re.sub(r'[^a-z0-9]+', '-', text)
-    text = text.strip('-')
+    # text = re.sub(r'[^a-z0-9]+', '-', text)
+    # text = text.strip('-')
     return text
 
 

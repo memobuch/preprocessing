@@ -107,7 +107,7 @@ def write_as_rdf_xml_improved(self):
 
     if self.gender:
         # Schema.org gender (text)
-        gender_text = "Male" if self.gender == "male" else "Female"
+        gender_text = self.gender
         ET.SubElement(person_desc, 'schema:gender').text = gender_text
         # FOAF gender (resource)
         gender_uri = f"http://xmlns.com/foaf/0.1/{gender_text}"

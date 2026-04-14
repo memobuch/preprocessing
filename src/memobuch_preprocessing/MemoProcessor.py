@@ -378,16 +378,16 @@ class MemoProcessor:
 
 
     @staticmethod
-    def map_gender_col(col_value) -> Literal["male", "female"]:
+    def map_gender_col(col_value) -> Literal["männlich", "weiblich"]:
         """
         Maps a column value to a standardized gender
         """
         col_value = str(col_value)
         col_value = col_value.strip().lower()
         if col_value == "männlich":
-            return "male"
+            return "männlich"
         elif col_value == "weiblich":
-            return "female"
+            return "weiblich"
         else:
             msg = f"Invalid gender column: {col_value}"
             logging.error(msg)

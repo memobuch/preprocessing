@@ -200,21 +200,21 @@ def write_as_rdf_xml_improved(self):
 
     # Voluntary address (last known voluntary residence)
     if self.voluntary_address:
-        voluntary_place_uri = f"{person_uri}/places/voluntary"
-        ET.SubElement(person_desc, 'memo:lastVoluntaryResidence',
+        voluntary_place_uri = f"{person_uri}/places/voluntary_residence"
+        ET.SubElement(person_desc, 'memo:voluntary_residence',
                       {'rdf:resource': voluntary_place_uri})
-        _create_place(root, voluntary_place_uri, self.voluntary_address,
-                      self.voluntary_latitude, self.voluntary_longitude,
-                      "Last Voluntary Residence", "voluntary-residence")
+        _create_place_event(root, voluntary_place_uri, self.voluntary_address,
+                            self.voluntary_latitude, self.voluntary_longitude,
+                      MemoVocab.EVENT_TYPES.get("voluntary_residence").get("label"), "voluntary_residence")
 
     # Forced address (forced residence during persecution)
     if self.forced_address:
-        forced_place_uri = f"{person_uri}/places/forced"
-        ET.SubElement(person_desc, 'memo:forcedResidence',
+        forced_place_uri = f"{person_uri}/places/forced_residence"
+        ET.SubElement(person_desc, 'memo:forced_residence',
                       {'rdf:resource': forced_place_uri})
-        _create_place(root, forced_place_uri, self.forced_address,
-                      self.forced_latitude, self.forced_longitude,
-                      "Forced Residence", "forced-residence")
+        _create_place_event(root, forced_place_uri, self.forced_address,
+                            self.forced_latitude, self.forced_longitude,
+                      MemoVocab.EVENT_TYPES.get("forced_residence").get("label"), "forced_residence")
 
     # ============================================================================
     # IMAGES
@@ -396,10 +396,12 @@ def _create_death_event(root, person_uri: str, death_date: str, death_place: str
     return death_uri
 
 
-def _create_place(root, place_uri: str, address: str, lat: float, lon: float,
-                  label: str, place_type: str):
+def _create_place_event(root, place_uri: str, address: str, lat: float, lon: float,
+                        label: str, place_type: str):
     """Create a geographic place resource."""
     place_desc = ET.SubElement(root, 'rdf:Description', {'rdf:about': place_uri})
+
+    ET.SubElement(place_desc, 'rdf:type', {'rdf:resource': "http://www.cidoc-crm.org/cidoc-crm/E53_Place"})
 
     ET.SubElement(place_desc, 'rdf:type', {'rdf:resource': 'http://schema.org/Place'})
     ET.SubElement(place_desc, 'rdf:type',
@@ -407,11 +409,7 @@ def _create_place(root, place_uri: str, address: str, lat: float, lon: float,
     ET.SubElement(place_desc, 'rdfs:label').text = label
     ET.SubElement(place_desc, 'schema:address').text = address
 
-    from memobuch_preprocessing.MemoStatics import MemoStatics
-    MEMO_BASE_URI = "http://digitales-memobuch.at/"
-    MEMO_ONTOLOGY = MEMO_BASE_URI + "ontology#"
-
-    ET.SubElement(place_desc, 'memo:placeType').text = place_type
+    ET.SubElement(place_desc, 'rdf:type', {'rdf:resource': f"{MemoStatics.MEMO_ONTOLOGY}{place_type}"})
 
     if lat is not None:
         ET.SubElement(place_desc, 'wgs84_pos:lat',

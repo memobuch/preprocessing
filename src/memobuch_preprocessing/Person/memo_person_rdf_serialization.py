@@ -67,7 +67,7 @@ def write_as_rdf_xml_improved(self):
     # PERSON DESCRIPTION - Main Resource
     # ============================================================================
 
-    person_uri = f"{MEMO_BASE_URI}persons/{self.id}"
+    person_uri = f"{MEMO_BASE_URI}objects/{self.id}"
     person_desc = ET.SubElement(root, 'rdf:Description', {'rdf:about': person_uri})
 
     # --- Basic Identification ---

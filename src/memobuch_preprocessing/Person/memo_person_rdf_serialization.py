@@ -438,10 +438,6 @@ def _create_prosecution_event(root, category_uri: str, category: str):
 
     ET.SubElement(concept_desc, 'rdfs:label', {'xml:lang': 'de'}).text = category_label
 
-    # Link to concept scheme
-    ET.SubElement(concept_desc, 'skos:inScheme',
-                  {'rdf:resource': f'{MemoStatics.MEMO_ONTOLOGY}victim-categories'})
-
 
 def _create_image_resource(root, image_uri: str, title: str, description: str):
     """Create metadata for an image resource."""

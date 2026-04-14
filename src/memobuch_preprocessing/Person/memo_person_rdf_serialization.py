@@ -24,6 +24,8 @@ import xml.etree.ElementTree as ET
 from typing import Optional
 import os
 
+from memobuch_preprocessing.MemoVocab import MemoVocab
+
 
 def write_as_rdf_xml_improved(self):
     """
@@ -407,12 +409,19 @@ def _create_place(root, place_uri: str, address: str, lat: float, lon: float,
                       {'rdf:datatype': 'http://www.w3.org/2001/XMLSchema#float'}).text = str(lon)
 
 
-def _create_category_concept(root, category_uri: str, category_label: str):
+def _create_category_concept(root, category_uri: str, category: str):
     """Create a SKOS Concept for a victim category."""
     concept_desc = ET.SubElement(root, 'rdf:Description', {'rdf:about': category_uri})
 
     ET.SubElement(concept_desc, 'rdf:type',
                   {'rdf:resource': 'http://www.w3.org/2004/02/skos/core#Concept'})
+
+    category_vocab = MemoVocab.VICTIM_CATEGORY_TYPES.get(category)
+    if not category_vocab:
+        raise Exception(f"Category '{category}' not found.")
+
+    category_label = category_vocab.get("label")
+
     ET.SubElement(concept_desc, 'skos:prefLabel', {'xml:lang': 'de'}).text = category_label
     ET.SubElement(concept_desc, 'rdfs:label', {'xml:lang': 'de'}).text = category_label
 

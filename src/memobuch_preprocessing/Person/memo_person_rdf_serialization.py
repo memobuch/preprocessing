@@ -38,7 +38,7 @@ def write_as_rdf_xml_improved(self):
     # ============================================================================
 
     MEMO_BASE_URI = "https://www.ns-opfer-graz.at/"
-    MEMO_ONTOLOGY = MEMO_BASE_URI + "ontology#"  # FIXED: was "onotology"
+    MEMO_ONTOLOGY = MEMO_BASE_URI + "ontology#"
 
     # Define all namespaces
     namespaces = {

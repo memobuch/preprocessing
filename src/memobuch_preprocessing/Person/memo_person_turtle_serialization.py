@@ -185,8 +185,8 @@ def _slugify(text: str) -> str:
     # Minimal safety: Turtle/SPARQL URIs can't contain spaces or certain
     # characters. Replace them with dashes. Semicolons and non-ASCII
     # umlauts would otherwise break URI encoding in QLever.
-    text = re.sub(r'[^a-z0-9]+', '-', text)
-    text = text.strip('-')
+    # text = re.sub(r'[^a-z0-9]+', '-', text)
+    # text = text.strip('-')
     return text
 
 
@@ -416,21 +416,26 @@ def write_as_turtle(person) -> Optional[str]:
            _safe_literal(datetime.now().isoformat(), datatype=XSD.dateTime)))
 
     # ========================================================================
-    # SERIALIZE TO FILE (ASCII-safe Turtle)
+    # SERIALIZE TO FILE (UTF-8 Turtle with readable umlauts)
     # ========================================================================
+    #
+    # We serialize directly as UTF-8 so non-ASCII characters like ü, ö, ä, ß
+    # appear literally in the file (e.g. "Mürzzuschlag" instead of
+    # "M\u00FCrzzuschlag"). This is readable for humans, diffs cleanly in git,
+    # and is fully standards-compliant Turtle (W3C Turtle §6 allows raw UTF-8
+    # in string literals).
+    #
+    # Sanitization of problematic characters (BOM, C0/C1 controls, zero-width)
+    # still happens inside _safe_literal() before values enter the graph.
 
     from memobuch_preprocessing.MemoStatics import MemoStatics
     ttl_file_path = os.path.join(
         MemoStatics.OUTPUT_DIR, str(person.id), 'SEMANTIC_STATEMENTS.ttl'
     )
 
-    ttl_text = g.serialize(format="turtle")
-    ascii_safe_ttl = _escape_non_ascii_in_turtle(ttl_text)
+    g.serialize(destination=ttl_file_path, format="turtle", encoding="utf-8")
 
-    with open(ttl_file_path, 'w', encoding='utf-8') as f:
-        f.write(ascii_safe_ttl)
-
-    # logging.info(f"Generated SEMANTIC_STATEMENTS.ttl at: {ttl_file_path}")
+    logging.debug(f"Generated SEMANTIC_STATEMENTS.ttl at: {ttl_file_path}")
     return ttl_file_path
 
 

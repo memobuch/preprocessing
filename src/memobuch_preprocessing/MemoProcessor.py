@@ -115,11 +115,19 @@ class MemoProcessor:
                 entries = self._load_metadata_csv(person_img_metadata_path)
                 for entry in entries:
                     cur_image_path = f"{person_img_files_path}{os.path.sep}{entry['Dateiname']}"
+
+                    # small fail safe if the column is not defined
+                    source = ""
+                    try:
+                        source = entry["Quelle"]
+                    except:
+                        pass
+
                     memo_image = MemoPersonFile(
                         source_path=cur_image_path,
                         title=entry["Titel"],
                         desc=entry["Beschreibung"],
-                        source=entry["Quelle"]
+                        source=source
                     )
                     cur_memo_person.add_image(memo_image)
 

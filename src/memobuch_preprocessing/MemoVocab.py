@@ -42,6 +42,10 @@ class MemoVocab:
     }
 
     VICTIM_CATEGORY_TYPES = {
+        "NS-Gegnerschaft": {
+            "label": "NS-Gegnerschaft",
+            "color": "#ADFF2F"
+        },
         "widerstand_politisch": {
             "label": "Widerstand, politisch",
             "color": "#ADFF2F"

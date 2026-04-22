@@ -428,7 +428,7 @@ def write_as_turtle(person) -> Optional[str]:
     # Sanitization of problematic characters (BOM, C0/C1 controls, zero-width)
     # still happens inside _safe_literal() before values enter the graph.
 
-    from memobuch_preprocessing.MemoStatics import MemoStatics
+    from memobuch_preprocessing.MemorStatics import MemoStatics
     ttl_file_path = os.path.join(
         MemoStatics.OUTPUT_DIR, str(person.id), 'SEMANTIC_STATEMENTS.ttl'
     )

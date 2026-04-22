@@ -12,7 +12,7 @@ from memobuch_preprocessing.GSheet import GSheet
 from memobuch_preprocessing.MemorEvent import MemoEvent
 from memobuch_preprocessing.MemoVocab import MemoVocab
 from memobuch_preprocessing.Person.MemoPerson import MemoPerson
-from memobuch_preprocessing.MemoStatics import MemoStatics
+from memobuch_preprocessing.MemorStatics import MemoStatics
 from memobuch_preprocessing.Person.MemoPersonFile import MemoPersonFile
 from memobuch_preprocessing.geo.FeatureAggregator import FeatureAggregator
 

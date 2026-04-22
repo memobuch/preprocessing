@@ -9,7 +9,7 @@ from datetime import datetime
 from typing import Literal
 from memobuch_preprocessing.MemorEvent import MemoEvent
 import xml.etree.ElementTree as ET
-from memobuch_preprocessing.MemoStatics import MemoStatics
+from memobuch_preprocessing.MemorStatics import MemoStatics
 import pandas as pd
 
 from memobuch_preprocessing.MemoVocab import MemoVocab
@@ -608,7 +608,7 @@ class MemoPerson:
         }
 
         # Write to file
-        from memobuch_preprocessing.MemoStatics import MemoStatics
+        from memobuch_preprocessing.MemorStatics import MemoStatics
         json_path = os.path.join(MemoStatics.OUTPUT_DIR, str(self.id), 'EVENTS.json')
 
         with open(json_path, 'w', encoding='utf-8') as f:

@@ -24,7 +24,7 @@ import xml.etree.ElementTree as ET
 from typing import Optional
 import os
 
-from memobuch_preprocessing.MemoStatics import MemoStatics
+from memobuch_preprocessing.MemorStatics import MemoStatics
 from memobuch_preprocessing.MemoVocab import MemoVocab
 
 
@@ -286,7 +286,7 @@ def write_as_rdf_xml_improved(self):
     # WRITE TO FILE
     # ============================================================================
 
-    from memobuch_preprocessing.MemoStatics import MemoStatics
+    from memobuch_preprocessing.MemorStatics import MemoStatics
     xml_file_path = os.path.join(MemoStatics.OUTPUT_DIR, str(self.id), 'RDF.xml')
 
     # Pretty print with proper formatting
@@ -475,7 +475,7 @@ def _create_event_description(root, event_uri: str, event, person_uri: str):
     """Create comprehensive event description (Haftort, Fluchtort)."""
     event_desc = ET.SubElement(root, 'rdf:Description', {'rdf:about': event_uri})
 
-    from memobuch_preprocessing.MemoStatics import MemoStatics
+    from memobuch_preprocessing.MemorStatics import MemoStatics
     MEMO_BASE_URI = "http://digitales-memobuch.at/"
     MEMO_ONTOLOGY = MEMO_BASE_URI + "ontology#"
 

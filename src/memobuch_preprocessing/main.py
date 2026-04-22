@@ -1,4 +1,4 @@
-from memobuch_preprocessing.MemoProcessor import MemoProcessor
+from memobuch_preprocessing.MemorProcessor import MemoProcessor
 
 
 def main():

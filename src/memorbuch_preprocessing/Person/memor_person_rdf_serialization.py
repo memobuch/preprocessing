@@ -1,10 +1,10 @@
 """
-Improved RDF.xml Generation for MEMO Project
+Improved RDF.xml Generation for MEMOR Project
 =============================================
 
 This module provides an enhanced write_as_rdf_xml() method that:
 1. Fixes the ontology URI typo (onotology -> ontology)
-2. Maps ALL MemoPerson data to RDF
+2. Maps ALL MemorPerson data to RDF
 3. Uses proper, established ontologies
 4. Provides semantic richness for Holocaust victim data
 
@@ -15,9 +15,8 @@ Ontologies Used:
 - WGS84: Geographic coordinates
 - Dublin Core Terms: Descriptions, dates
 - SKOS: Victim categories
-- Custom MEMO ontology: Project-specific properties
+- Custom MEMOR ontology: Project-specific properties
 
-Author: Claude (for MEMO project refactoring)
 """
 
 import xml.etree.ElementTree as ET
@@ -31,17 +30,17 @@ from memorbuch_preprocessing.MemorVocab import MemorVocab
 def write_as_rdf_xml_improved(self):
     """
     IMPROVED RDF.xml file generator that creates comprehensive, semantically rich RDF
-    using proper ontologies and mapping ALL data from MemoPerson.
+    using proper ontologies and mapping ALL data from MemorPerson.
 
-    This method should REPLACE the existing write_as_rdf_xml() in MemoPerson class.
+    This method should REPLACE the existing write_as_rdf_xml() in MemorPerson class.
     """
 
     # ============================================================================
     # NAMESPACE DEFINITIONS
     # ============================================================================
 
-    MEMO_BASE_URI = "https://www.ns-opfer-graz.at/"
-    MEMO_ONTOLOGY = MEMO_BASE_URI + "ontology#"
+    MEMOR_BASE_URI = "https://www.ns-opfer-graz.at/"
+    MEMOR_ONTOLOGY = MEMOR_BASE_URI + "ontology#"
 
     # Define all namespaces
     namespaces = {
@@ -56,7 +55,7 @@ def write_as_rdf_xml_improved(self):
         'xmlns:bio': 'http://purl.org/vocab/bio/0.1/',
         'xmlns:skos': 'http://www.w3.org/2004/02/skos/core#',
         'xmlns:wgs84_pos': 'http://www.w3.org/2003/01/geo/wgs84_pos#',
-        'xmlns:memo': MEMO_ONTOLOGY
+        'xmlns:memor': MEMOR_ONTOLOGY
     }
 
     # ============================================================================
@@ -69,7 +68,7 @@ def write_as_rdf_xml_improved(self):
     # PERSON DESCRIPTION - Main Resource
     # ============================================================================
 
-    person_uri = f"{MEMO_BASE_URI}objects/{self.id}"
+    person_uri = f"{MEMOR_BASE_URI}objects/{self.id}"
     person_desc = ET.SubElement(root, 'rdf:Description', {'rdf:about': person_uri})
 
     # --- Basic Identification ---
@@ -81,7 +80,7 @@ def write_as_rdf_xml_improved(self):
     # Types - Multiple typing for better interoperability
     ET.SubElement(person_desc, 'rdf:type', {'rdf:resource': 'http://xmlns.com/foaf/0.1/Person'})
     ET.SubElement(person_desc, 'rdf:type', {'rdf:resource': 'http://schema.org/Person'})
-    ET.SubElement(person_desc, 'rdf:type', {'rdf:resource': f'{MEMO_ONTOLOGY}HolocaustVictim'})
+    ET.SubElement(person_desc, 'rdf:type', {'rdf:resource': f'{MEMOR_ONTOLOGY}HolocaustVictim'})
 
     # --- Names (COMPLETE) ---
 
@@ -100,7 +99,7 @@ def write_as_rdf_xml_improved(self):
     # NEW: Maiden name
     if self.maiden_name:
         ET.SubElement(person_desc, 'schema:additionalName').text = self.maiden_name
-        ET.SubElement(person_desc, 'memo:maidenName').text = self.maiden_name
+        ET.SubElement(person_desc, 'memor:maidenName').text = self.maiden_name
 
     # NEW: Alternative spelling
     if self.alternative_spelling:
@@ -117,7 +116,7 @@ def write_as_rdf_xml_improved(self):
         gender_uri = f"http://xmlns.com/foaf/0.1/{gender_text}"
         ET.SubElement(person_desc, 'foaf:gender').text = self.gender
         # Custom property
-        ET.SubElement(person_desc, 'memo:gender').text = gender_text
+        ET.SubElement(person_desc, 'memor:gender').text = gender_text
 
     # --- Biography ---
 
@@ -165,12 +164,12 @@ def write_as_rdf_xml_improved(self):
             category = category.strip()
             if category:
                 # Create prosecution event for the category
-                category_uri = f"{MEMO_ONTOLOGY}victim-category/{_slugify(category)}"
+                category_uri = f"{MEMOR_ONTOLOGY}victim-category/{_slugify(category)}"
                 ET.SubElement(person_desc, 'dcterms:subject', {'rdf:resource': category_uri})
-                ET.SubElement(person_desc, 'memo:victimCategory', {'rdf:resource': category_uri})
+                ET.SubElement(person_desc, 'memor:victimCategory', {'rdf:resource': category_uri})
 
-                prosecution_uri = f"{MEMO_BASE_URI}/objects/{self.id}/prosecution/{_slugify(category)}"
-                ET.SubElement(person_desc, 'memo:prosecution', {'rdf:resource': prosecution_uri})
+                prosecution_uri = f"{MEMOR_BASE_URI}/objects/{self.id}/prosecution/{_slugify(category)}"
+                ET.SubElement(person_desc, 'memor:prosecution', {'rdf:resource': prosecution_uri})
 
                 # Define the category concept (in same file for completeness)
                 _create_prosecution_event(root, prosecution_uri, category)
@@ -178,9 +177,9 @@ def write_as_rdf_xml_improved(self):
     # --- Youth Status ---
 
     if self.is_youth:
-        ET.SubElement(person_desc, 'memo:isYouth',
+        ET.SubElement(person_desc, 'memor:isYouth',
                       {'rdf:datatype': 'http://www.w3.org/2001/XMLSchema#boolean'}).text = 'true'
-        ET.SubElement(person_desc, 'dcterms:subject', {'rdf:resource': f'{MEMO_ONTOLOGY}youth-victim'})
+        ET.SubElement(person_desc, 'dcterms:subject', {'rdf:resource': f'{MEMOR_ONTOLOGY}youth-victim'})
 
     # --- Memorial Signs ---
 
@@ -188,20 +187,20 @@ def write_as_rdf_xml_improved(self):
         for sign in self.memorial_signs:
             if sign and sign.strip():
                 ET.SubElement(person_desc, 'dcterms:relation').text = sign.strip()
-                ET.SubElement(person_desc, 'memo:memorialSign').text = sign.strip()
+                ET.SubElement(person_desc, 'memor:memorialSign').text = sign.strip()
 
     # --- Literature References (NEW) ---
 
     if self.literature:
         ET.SubElement(person_desc, 'dcterms:references').text = self.literature
-        ET.SubElement(person_desc, 'memo:literatureReference').text = self.literature
+        ET.SubElement(person_desc, 'memor:literatureReference').text = self.literature
 
     # --- Addresses (NEW) ---
 
     # Voluntary address (last known voluntary residence)
     if self.voluntary_address:
         voluntary_place_uri = f"{person_uri}/places/voluntary_residence"
-        ET.SubElement(person_desc, 'memo:voluntary_residence',
+        ET.SubElement(person_desc, 'memor:voluntary_residence',
                       {'rdf:resource': voluntary_place_uri})
         _create_place_event(root, voluntary_place_uri, self.voluntary_address,
                             self.voluntary_latitude, self.voluntary_longitude,
@@ -210,7 +209,7 @@ def write_as_rdf_xml_improved(self):
     # Forced address (forced residence during persecution)
     if self.forced_address:
         forced_place_uri = f"{person_uri}/places/forced_residence"
-        ET.SubElement(person_desc, 'memo:forced_residence',
+        ET.SubElement(person_desc, 'memor:forced_residence',
                       {'rdf:resource': forced_place_uri})
         _create_place_event(root, forced_place_uri, self.forced_address,
                             self.forced_latitude, self.forced_longitude,
@@ -223,17 +222,17 @@ def write_as_rdf_xml_improved(self):
     for i, image in enumerate(self.images):
         image_dsid = os.path.basename(image.source_path).upper()
         # Use self.id instead of hardcoded person ID
-        image_uri = f'{MEMO_BASE_URI}api/v1/projects/memo/objects/{self.id}/datastreams/{image_dsid}'
+        image_uri = f'{MEMOR_BASE_URI}api/v1/projects/memor/objects/{self.id}/datastreams/{image_dsid}'
 
         if i == 0:
             # First image is portrait
             ET.SubElement(person_desc, 'schema:image', {'rdf:resource': image_uri})
             ET.SubElement(person_desc, 'foaf:depiction', {'rdf:resource': image_uri})
-            ET.SubElement(person_desc, 'memo:portraitImage', {'rdf:resource': image_uri})
+            ET.SubElement(person_desc, 'memor:portraitImage', {'rdf:resource': image_uri})
         else:
             # Additional images
             ET.SubElement(person_desc, 'schema:image', {'rdf:resource': image_uri})
-            ET.SubElement(person_desc, 'memo:hasHistoricImage', {'rdf:resource': image_uri})
+            ET.SubElement(person_desc, 'memor:hasHistoricImage', {'rdf:resource': image_uri})
 
         # Create image resource description
         _create_image_resource(root, image_uri, image.title, image.desc)
@@ -245,10 +244,10 @@ def write_as_rdf_xml_improved(self):
     for i, document in enumerate(self.documents):
         document_dsid = os.path.basename(document.source_path).upper()
         # Use self.id instead of hardcoded person ID
-        document_uri = f'{MEMO_BASE_URI}api/v1/projects/memo/objects/{self.id}/datastreams/{document_dsid}'
+        document_uri = f'{MEMOR_BASE_URI}api/v1/projects/memor/objects/{self.id}/datastreams/{document_dsid}'
 
         ET.SubElement(person_desc, 'dcterms:relation', {'rdf:resource': document_uri})
-        ET.SubElement(person_desc, 'memo:hasHistoricSourceDocument', {'rdf:resource': document_uri})
+        ET.SubElement(person_desc, 'memor:hasHistoricSourceDocument', {'rdf:resource': document_uri})
 
         # Create document resource description
         _create_document_resource(root, document_uri, document.title, document.desc)
@@ -262,7 +261,7 @@ def write_as_rdf_xml_improved(self):
 
         # Link person to event
         ET.SubElement(person_desc, 'bio:event', {'rdf:resource': event_uri})
-        ET.SubElement(person_desc, 'memo:hasLifeEvent', {'rdf:resource': event_uri})
+        ET.SubElement(person_desc, 'memor:hasLifeEvent', {'rdf:resource': event_uri})
 
         # Create detailed event description
         _create_event_description(root, event_uri, event, person_uri)
@@ -271,9 +270,9 @@ def write_as_rdf_xml_improved(self):
     # PROVENANCE & METADATA
     # ============================================================================
 
-    ET.SubElement(person_desc, 'dcterms:creator').text = "Born digital - memo project GAMS"
+    ET.SubElement(person_desc, 'dcterms:creator').text = "Born digital - memor project GAMS"
     ET.SubElement(person_desc, 'dcterms:rights').text = "Creative Commons BY-NC 4.0"
-    ET.SubElement(person_desc, 'dcterms:rightsHolder').text = "MEMO Project"
+    ET.SubElement(person_desc, 'dcterms:rightsHolder').text = "MEMOR Project"
     ET.SubElement(person_desc, 'dcterms:license',
                   {'rdf:resource': 'https://creativecommons.org/licenses/by-nc/4.0/'})
 
@@ -409,7 +408,7 @@ def _create_place_event(root, place_uri: str, address: str, lat: float, lon: flo
     ET.SubElement(place_desc, 'rdfs:label').text = label
     ET.SubElement(place_desc, 'schema:address').text = address
 
-    ET.SubElement(place_desc, 'rdf:type', {'rdf:resource': f"{MemorStatics.MEMO_ONTOLOGY}{place_type}"})
+    ET.SubElement(place_desc, 'rdf:type', {'rdf:resource': f"{MemorStatics.MEMOR_ONTOLOGY}{place_type}"})
 
     if lat is not None:
         ET.SubElement(place_desc, 'wgs84_pos:lat',
@@ -425,8 +424,8 @@ def _create_prosecution_event(root, category_uri: str, category: str):
 
     ET.SubElement(concept_desc, 'rdf:type', {'rdf:resource': "http://www.cidoc-crm.org/cidoc-crm/E5_Event"})
 
-    memo_prosecution_uri = f"{MemorStatics.MEMO_ONTOLOGY}prosecution/{category}"
-    ET.SubElement(concept_desc, 'rdf:type', {'rdf:resource': memo_prosecution_uri})
+    memor_prosecution_uri = f"{MemorStatics.MEMOR_ONTOLOGY}prosecution/{category}"
+    ET.SubElement(concept_desc, 'rdf:type', {'rdf:resource': memor_prosecution_uri})
 
     category_vocab = MemorVocab.VICTIM_CATEGORY_TYPES.get(category)
     if not category_vocab:
@@ -476,20 +475,20 @@ def _create_event_description(root, event_uri: str, event, person_uri: str):
     event_desc = ET.SubElement(root, 'rdf:Description', {'rdf:about': event_uri})
 
     from memorbuch_preprocessing.MemorStatics import MemorStatics
-    MEMO_BASE_URI = "http://digitales-memobuch.at/"
-    MEMO_ONTOLOGY = MEMO_BASE_URI + "ontology#"
+    MEMOR_BASE_URI = "https://www.ns-opfer-graz.at/"
+    MEMOR_ONTOLOGY = MEMOR_BASE_URI + "ontology#"
 
     # Type the event
     ET.SubElement(event_desc, 'rdf:type', {'rdf:resource': 'http://purl.org/vocab/bio/0.1/Event'})
-    ET.SubElement(event_desc, 'rdf:type', {'rdf:resource': f'{MEMO_ONTOLOGY}Event'})
+    ET.SubElement(event_desc, 'rdf:type', {'rdf:resource': f'{MEMOR_ONTOLOGY}Event'})
 
     # Specific event type based on event.type
     if event.type == "haft":
-        ET.SubElement(event_desc, 'rdf:type', {'rdf:resource': f'{MEMO_ONTOLOGY}ImprisonmentEvent'})
-        ET.SubElement(event_desc, 'memo:eventType').text = "Imprisonment"
+        ET.SubElement(event_desc, 'rdf:type', {'rdf:resource': f'{MEMOR_ONTOLOGY}ImprisonmentEvent'})
+        ET.SubElement(event_desc, 'memor:eventType').text = "Imprisonment"
     elif event.type == "flucht":
-        ET.SubElement(event_desc, 'rdf:type', {'rdf:resource': f'{MEMO_ONTOLOGY}FlightEvent'})
-        ET.SubElement(event_desc, 'memo:eventType').text = "Flight"
+        ET.SubElement(event_desc, 'rdf:type', {'rdf:resource': f'{MEMOR_ONTOLOGY}FlightEvent'})
+        ET.SubElement(event_desc, 'memor:eventType').text = "Flight"
 
     # Geographic point
     if event.lat is not None and event.long is not None:
@@ -516,20 +515,20 @@ def _create_event_description(root, event_uri: str, event, person_uri: str):
             ET.SubElement(event_desc, 'dcterms:date',
                           {'rdf:datatype': 'http://www.w3.org/2001/XMLSchema#date'}).text = date_xsd
         # Keep original
-        ET.SubElement(event_desc, 'memo:date').text = event.date
+        ET.SubElement(event_desc, 'memor:date').text = event.date
 
     # Location
     if event.location:
         ET.SubElement(event_desc, 'bio:place').text = event.location
         ET.SubElement(event_desc, 'schema:location').text = event.location
-        ET.SubElement(event_desc, 'memo:location').text = event.location
+        ET.SubElement(event_desc, 'memor:location').text = event.location
 
     # Link back to person
     ET.SubElement(event_desc, 'bio:principal', {'rdf:resource': person_uri})
-    ET.SubElement(event_desc, 'memo:describesVictim', {'rdf:resource': person_uri})
+    ET.SubElement(event_desc, 'memor:describesVictim', {'rdf:resource': person_uri})
 
     # Provenance
-    ET.SubElement(event_desc, 'dcterms:creator').text = "Born digital - memo project GAMS"
+    ET.SubElement(event_desc, 'dcterms:creator').text = "Born digital - memor project GAMS"
     ET.SubElement(event_desc, 'dcterms:rights').text = "Creative Commons BY-NC 4.0"
 
 

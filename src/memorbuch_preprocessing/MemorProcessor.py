@@ -19,11 +19,11 @@ from memorbuch_preprocessing.geo.FeatureAggregator import FeatureAggregator
 
 class MemorProcessor:
 
-    memo_persons: list[MemorPerson] = []
-    memo_events: list[MemorEvent] = []
+    memor_persons: list[MemorPerson] = []
+    memor_events: list[MemorEvent] = []
 
-    memo_persons_frame: pd.DataFrame
-    memo_events_frame: pd.DataFrame
+    memor_persons_frame: pd.DataFrame
+    memor_events_frame: pd.DataFrame
     logger: logging.Logger
 
     MATERIAL_ROOT_PATH = MemorStatics.MATERIAL_ROOT_PATH
@@ -49,29 +49,29 @@ class MemorProcessor:
 
     def load_data(self):
 
-        self.memo_persons_frame = GSheet.request_public_sheet("1O0WHyEKA-IZc7L6iXVEbArsuuhK9PMStXhy3kZDUpi0", "Personen")
-        # self.memo_events_frame = GSheet.request_public_sheet("1O0WHyEKA-IZc7L6iXVEbArsuuhK9PMStXhy3kZDUpi0", "Ereignisse")
+        self.memor_persons_frame = GSheet.request_public_sheet("1O0WHyEKA-IZc7L6iXVEbArsuuhK9PMStXhy3kZDUpi0", "Personen")
+        # self.memor_events_frame = GSheet.request_public_sheet("1O0WHyEKA-IZc7L6iXVEbArsuuhK9PMStXhy3kZDUpi0", "Ereignisse")
 
-        # self.logger.info(f"Memo Persons: {self.memo_persons_frame}")
-        # self.logger.info(f"Memo Events: {self.memo_events_frame}")
+        # self.logger.info(f"Memor Persons: {self.memor_persons_frame}")
+        # self.logger.info(f"Memor Events: {self.memor_events_frame}")
 
-        self.logger.info("Processing memo persons")
-        persons_dict = self.memo_persons_frame.to_dict(orient='records')
+        self.logger.info("Processing memor persons")
+        persons_dict = self.memor_persons_frame.to_dict(orient='records')
 
         # Reading in the persons from the gsheet
         for person_entry in persons_dict:
-            # first handle building memo person id (somewhat only required field)
-            memo_person_col_id = str(person_entry['Identifikatornummer'])
-            self.logger.info(f"Processing person entry from gsheet: {memo_person_col_id}")
+            # first handle building memor person id (somewhat only required field)
+            memor_person_col_id = str(person_entry['Identifikatornummer'])
+            self.logger.info(f"Processing person entry from gsheet: {memor_person_col_id}")
             # if no identifier number is given, skip the entry
-            if memo_person_col_id.isspace() or len(memo_person_col_id) == 0:
+            if memor_person_col_id.isspace() or len(memor_person_col_id) == 0:
                 self.logger.error(f"Missing identifier number for person entry: {person_entry}. Skipping entry.")
                 continue
-            memo_person_id = f"{MemorStatics.PROJECT_ABBR}.person.{memo_person_col_id}"
+            memor_person_id = f"{MemorStatics.PROJECT_ABBR}.person.{memor_person_col_id}"
 
             try:
-                cur_memo_person = MemorPerson(
-                    id=memo_person_id, # required
+                cur_memor_person = MemorPerson(
+                    id=memor_person_id, # required
                     last_name= MemorProcessor.map_nullable_col(person_entry['Nachname']), # optional
                     first_name=MemorProcessor.map_nullable_col(person_entry['Vorname']), # optional
                     maiden_name=MemorProcessor.map_nullable_col(person_entry['Mädchenname']), # optional
@@ -96,7 +96,7 @@ class MemorProcessor:
                     literature=MemorProcessor.map_nullable_col(person_entry["Literatur"]),
                 )
             except Exception as e:
-                self.logger.error(f"Error creating MemoPerson for entry - Skipping person: {person_entry}: {e}")
+                self.logger.error(f"Error creating MemorPerson for entry - Skipping person: {person_entry}: {e}")
                 continue
 
             # image logic must be here now
@@ -104,8 +104,8 @@ class MemorProcessor:
 
             try:
                 if not os.path.exists(person_folder_path):
-                    msg = f"No gdrive folder found for person (from table): {cur_memo_person.id} at expected path: {person_folder_path}. Every should have a folder defined!"
-                    self.memo_persons.append(cur_memo_person)
+                    msg = f"No gdrive folder found for person (from table): {cur_memor_person.id} at expected path: {person_folder_path}. Every should have a folder defined!"
+                    self.memor_persons.append(cur_memor_person)
                     raise FileNotFoundError(msg)
 
                 # image loading per person
@@ -123,20 +123,20 @@ class MemorProcessor:
                     except:
                         pass
 
-                    memo_image = MemorPersonFile(
+                    memor_image = MemorPersonFile(
                         source_path=cur_image_path,
                         title=entry["Titel"],
                         desc=entry["Beschreibung"],
                         source=source
                     )
-                    cur_memo_person.add_image(memo_image)
+                    cur_memor_person.add_image(memor_image)
 
-                ### Transforming Haftorte to memo events
+                ### Transforming Haftorte to memor events
                 person_haftorte_metadata_path = f"{person_folder_path}{os.sep}haftorte.txt"
                 haftorte_entries = self._load_metadata_csv(person_haftorte_metadata_path)
                 for i, haftort in enumerate(haftorte_entries):
                     event = MemorEvent(
-                        id=f"{cur_memo_person.id}_event_haft_{i}",
+                        id=f"{cur_memor_person.id}_event_haft_{i}",
                         event_type="haft",
                         title=haftort["Titel"],
                         description=haftort["Beschreibung"],
@@ -145,14 +145,14 @@ class MemorProcessor:
                         lat=haftort["Breitengrad"],
                         date=haftort["Datum"]
                     )
-                    cur_memo_person.add_event(event)
+                    cur_memor_person.add_event(event)
 
-                # handling of fluchtorte (to MemoEvents)
+                # handling of fluchtorte (to MemorEvents)
                 person_fluchtorte_metadata_path = f"{person_folder_path}{os.sep}fluchtorte.txt"
                 fluchtorte_entries = self._load_metadata_csv(person_fluchtorte_metadata_path)
                 for i, fluchtort in enumerate(fluchtorte_entries):
                     event = MemorEvent(
-                        id=f"{cur_memo_person.id}_event_flucht_{i}",
+                        id=f"{cur_memor_person.id}_event_flucht_{i}",
                         event_type="flucht",
                         title=fluchtort["Titel"],
                         description=fluchtort["Beschreibung"],
@@ -161,9 +161,9 @@ class MemorProcessor:
                         lat=fluchtort["Breitengrad"],
                         date=fluchtort["Datum"]
                     )
-                    cur_memo_person.add_event(event)
+                    cur_memor_person.add_event(event)
 
-                # Adding arbitrary documents to a memo person
+                # Adding arbitrary documents to a memor person
                 person_documents_metadata_path = f"{person_folder_path}{os.sep}files.txt"
                 documents_entries = self._load_metadata_csv(person_documents_metadata_path)
                 for i, person_document in enumerate(documents_entries):
@@ -172,49 +172,49 @@ class MemorProcessor:
                         desc=person_document["Beschreibung"],
                         source_path=f"{person_folder_path}{os.path.sep}files{os.path.sep}{person_document['Dateiname']}",
                     )
-                    cur_memo_person.add_document(document)
+                    cur_memor_person.add_document(document)
 
             except Exception as e:
-                self.logger.warning(f"Error loading material files for person {cur_memo_person.id} at path {person_folder_path}: {e}")
+                self.logger.warning(f"Error loading material files for person {cur_memor_person.id} at path {person_folder_path}: {e}")
             finally:
                 # as final step add the person
-                self.memo_persons.append(cur_memo_person)
-                self.logger.info(f"Loaded memo person: {cur_memo_person}")
+                self.memor_persons.append(cur_memor_person)
+                self.logger.info(f"Loaded memor person: {cur_memor_person}")
 
         # Reading in Events from the gsheet
-        # for event_entry in self.memo_events_frame.to_dict(orient='records'):
+        # for event_entry in self.memor_events_frame.to_dict(orient='records'):
         #     self.logger.info(f"Processing event entry from gsheet: {event_entry}")
         #     person_numbers = event_entry['Personennummer'].split(", ")
         #     person_ids = []
         #     for person_id in person_numbers:
-        #         person_ids.append(MemoStatics.PROJECT_ABBR + ".person." + str(person_id))
+        #         person_ids.append(MemorStatics.PROJECT_ABBR + ".person." + str(person_id))
         #
         #     # split the categories by comma - BUT ignore commas within quotes (because of return from gsheets)
-        #     person_categories = MemoProcessor.split_ignoring_quotes(event_entry['Kategorie'], ',')
+        #     person_categories = MemorProcessor.split_ignoring_quotes(event_entry['Kategorie'], ',')
         #
-        #     cur_memo_event = MemoEvent(
+        #     cur_memor_event = MemorEvent(
         #         id=event_entry['Id'],
         #         title=event_entry['Titel'],
         #         person_ids=person_ids,
         #         type=event_entry['Typ'],
         #         description=event_entry['Beschreibung'],
-        #         start_date=MemoProcessor._convert_date(event_entry['Startdatum']),
-        #         end_date=MemoProcessor._convert_date(event_entry['Enddatum']),
+        #         start_date=MemorProcessor._convert_date(event_entry['Startdatum']),
+        #         end_date=MemorProcessor._convert_date(event_entry['Enddatum']),
         #         categories=person_categories,
         #         location=event_entry['Ort'],
         #         latt=event_entry['Längengrad'],
         #         long=event_entry['Breitengrad'])
         #
-        #     self.logger.debug(f"Constructed memo event: {cur_memo_event}")
-        #     self.memo_events.append(cur_memo_event)
+        #     self.logger.debug(f"Constructed memor event: {cur_memor_event}")
+        #     self.memor_events.append(cur_memor_event)
 
-        # for person in self.memo_persons:
-        #     for event in self.memo_events:
+        # for person in self.memor_persons:
+        #     for event in self.memor_events:
         #         if person.id in event.person_ids:
         #             person.events.append(event)
-        #             self.logger.debug(f"Linking person {person.id} to event {event.id}. Constructed memo person: {person}")
+        #             self.logger.debug(f"Linking person {person.id} to event {event.id}. Constructed memor person: {person}")
         #
-        #     self.logger.info(f"Loaded memo person: {person}")
+        #     self.logger.info(f"Loaded memor person: {person}")
 
     def _load_metadata_csv(self, path: str):
         """
@@ -252,7 +252,7 @@ class MemorProcessor:
         Output the data to the output folder
         :return:
         """
-        for person in self.memo_persons:
+        for person in self.memor_persons:
             folder_name = person.id
             folder_path = os.path.join(MemorStatics.OUTPUT_DIR, str(folder_name))
             os.makedirs(folder_path, exist_ok=True)
@@ -269,7 +269,7 @@ class MemorProcessor:
                 person.write_as_datastreams_csv()
                 self.logger.info(f"Outputted digital object: {folder_path}")
             except Exception as e:
-                logging.error(f"SKIPPING writing output files for memo person: {person.id} - Error writing digital object at path: {folder_path}: {e}")
+                logging.error(f"SKIPPING writing output files for memor person: {person.id} - Error writing digital object at path: {folder_path}: {e}")
                 try:
                     shutil.rmtree(folder_path)
                 except Exception as cleanup_error:
@@ -404,7 +404,7 @@ class MemorProcessor:
     @staticmethod
     def map_victim_categories(col) -> list[str]:
         """
-        Extracts all unique victim categories from the memo persons
+        Extracts all unique victim categories from the memor persons
         :return: A set of unique victim categories
         """
 
@@ -443,13 +443,13 @@ class MemorProcessor:
         """
 
         # first create folder
-        object_id = "memo.person-register"
+        object_id = "memor.person-register"
         folder_path = os.path.join(MemorStatics.OUTPUT_DIR, str(object_id))
         os.makedirs(folder_path, exist_ok=True)
 
         # create aggregated geojson file
         all_features = []
-        for person in self.memo_persons:
+        for person in self.memor_persons:
             person_features = person.to_geojson_features()
             all_features.extend(person_features)
 
@@ -470,8 +470,8 @@ class MemorProcessor:
             "type": "FeatureCollection",
             "vocab": MemorVocab.VOCAB_CONTAINER,
             "metadata": {
-                "project": "MEMO - Digitales Memobuch",
-                "total_persons": len(self.memo_persons),
+                "project": "MEMOR - Digitales Memorbuch",
+                "total_persons": len(self.memor_persons),
                 "total_location_events": len(deduplicated_features),
                 # "event_type_counts": event_type_counts,
                 "generated": datetime.now().isoformat()
@@ -493,11 +493,11 @@ class MemorProcessor:
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
                 <dc:identifier>{object_id}</dc:identifier>
-                <dc:creator>Born digital - memo project GAMS</dc:creator>
+                <dc:creator>Born digital - memor project GAMS</dc:creator>
                 <dc:title xml:lang="en">Ernst Altmann</dc:title>
                 <dc:subject>Register</dc:subject>
                 <dc:rights>Creative Commons BY-NC 4.0</dc:rights>
-                <dc:description xml:lang="de">Personenregister des Memo Projekts</dc:description>
+                <dc:description xml:lang="de">Personenregister des Memor Projekts</dc:description>
                 <dc:date>2025/26</dc:date>
                 <dc:language>de</dc:language>
                 <dc:publisher>Heimo Halbrainer</dc:publisher>
@@ -517,7 +517,7 @@ class MemorProcessor:
         with open(object_csv_path, "w", encoding="utf-8", newline='') as csv_file:
             csv_writer = csv.writer(csv_file)
             csv_writer.writerow(["recid", "title", "project", "description", "creator", "rights", "publisher", "source", "objectType", "mainResource", "tags"])
-            csv_writer.writerow([object_id, "Personenregister", "memo", "Person registers and related indices for the MEMO project", "Born digital - memo project GAMS", "Creative Commons BY-NC 4.0", "memo project GAMS5", "Memo datasheet transformed by Memo preprocessing tool", "Dataset", "EVENTS.json", "register"])
+            csv_writer.writerow([object_id, "Personenregister", "memor", "Person registers and related indices for the MEMOR project", "Born digital - memor project GAMS", "Creative Commons BY-NC 4.0", "memor project GAMS5", "Memor datasheet transformed by Memor preprocessing tool", "Dataset", "EVENTS.json", "register"])
         self.logger.info(f"Outputted all persons object.csv: {object_csv_path}")
 
         # Datastreams csv
@@ -525,6 +525,6 @@ class MemorProcessor:
         with open(datastreams_csv_path, "w", encoding="utf-8", newline='') as csv_file:
             csv_writer = csv.writer(csv_file)
             csv_writer.writerow(["dsid","dspath", "title","mimetype", "description","creator","rights"])
-            csv_writer.writerow(["EVENTS.json","EVENTS.json","All Persons as GEOJSON", "application/json", "GEOJSON file containing all persons","Born digital - memo project GAMS","Creative Commons BY-NC 4.0"])
-            csv_writer.writerow(["DC.xml","DC.xml", "Dublin Core Metadata","application/xml", "Dublin Core metadata for the persons register","Born digital - memo project GAMS","Creative Commons BY-NC 4.0"])
+            csv_writer.writerow(["EVENTS.json","EVENTS.json","All Persons as GEOJSON", "application/json", "GEOJSON file containing all persons","Born digital - memor project GAMS","Creative Commons BY-NC 4.0"])
+            csv_writer.writerow(["DC.xml","DC.xml", "Dublin Core Metadata","application/xml", "Dublin Core metadata for the persons register","Born digital - memor project GAMS","Creative Commons BY-NC 4.0"])
         self.logger.info(f"Outputted all persons datastreams.csv: {datastreams_csv_path}")

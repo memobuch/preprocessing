@@ -1,11 +1,11 @@
 """
-Turtle (SEMANTIC_STATEMENTS.ttl) Generation for MEMO Project
+Turtle (SEMANTIC_STATEMENTS.ttl) Generation for MEMOR Project
 =============================================================
 
 Generates SEMANTIC_STATEMENTS.ttl per digital object / person.
 When ingested via gams-packager + pyrilo, GAMS5 automatically loads
 these triples into the Blazegraph / QLever triple store, enabling
-SPARQL queries across all MEMO persons.
+SPARQL queries across all MEMOR persons.
 
 Produces semantically equivalent output to memor_person_rdf_serialization.py
 (RDF/XML) but in Turtle format, with all non-ASCII characters escaped
@@ -19,7 +19,7 @@ Ontologies Used:
 - WGS84: Geographic coordinates
 - Dublin Core Terms: Descriptions, dates
 - SKOS: Alternative labels
-- Custom MEMO ontology: Project-specific properties
+- Custom MEMOR ontology: Project-specific properties
 """
 
 import os
@@ -39,11 +39,11 @@ from memorbuch_preprocessing.MemorVocab import MemorVocab
 # ============================================================================
 # Keep these aligned with memor_person_rdf_serialization.py
 
-MEMO_BASE_URI = "https://www.ns-opfer-graz.at/"
-MEMO_ONTOLOGY_URI = MEMO_BASE_URI + "ontology#"
+MEMOR_BASE_URI = "https://www.ns-opfer-graz.at/"
+MEMOR_ONTOLOGY_URI = MEMOR_BASE_URI + "ontology#"
 
 # rdflib Namespace objects
-MEMO = Namespace(MEMO_ONTOLOGY_URI)
+MEMOR = Namespace(MEMOR_ONTOLOGY_URI)
 SCHEMA = Namespace("http://schema.org/")
 BIO = Namespace("http://purl.org/vocab/bio/0.1/")
 WGS84 = Namespace("http://www.w3.org/2003/01/geo/wgs84_pos#")
@@ -196,10 +196,10 @@ def _slugify(text: str) -> str:
 
 def write_as_turtle(person) -> Optional[str]:
     """
-    Generate SEMANTIC_STATEMENTS.ttl for a MemoPerson.
+    Generate SEMANTIC_STATEMENTS.ttl for a MemorPerson.
 
     Args:
-        person: MemoPerson instance
+        person: MemorPerson instance
 
     Returns:
         Path to the generated .ttl file, or None if writing fails
@@ -217,18 +217,18 @@ def write_as_turtle(person) -> Optional[str]:
     g.bind("skos", SKOS)
     g.bind("wgs84_pos", WGS84)
     g.bind("cidoc", CIDOC)
-    g.bind("memo", MEMO)
+    g.bind("memor", MEMOR)
 
     # ========================================================================
     # PERSON RESOURCE
     # ========================================================================
 
-    person_uri = URIRef(f"{MEMO_BASE_URI}objects/{person.id}")
+    person_uri = URIRef(f"{MEMOR_BASE_URI}objects/{person.id}")
 
     # --- Types ---
     g.add((person_uri, RDF.type, FOAF.Person))
     g.add((person_uri, RDF.type, SCHEMA.Person))
-    g.add((person_uri, RDF.type, MEMO.HolocaustVictim))
+    g.add((person_uri, RDF.type, MEMOR.HolocaustVictim))
 
     # --- Label ---
     full_name = f"{person.first_name} {person.last_name}" if person.first_name and person.last_name else "Unknown"
@@ -249,7 +249,7 @@ def write_as_turtle(person) -> Optional[str]:
 
     if person.maiden_name:
         g.add((person_uri, SCHEMA.additionalName, _safe_literal(person.maiden_name)))
-        g.add((person_uri, MEMO.maidenName, _safe_literal(person.maiden_name)))
+        g.add((person_uri, MEMOR.maidenName, _safe_literal(person.maiden_name)))
 
     if person.alternative_spelling:
         g.add((person_uri, SCHEMA.alternateName, _safe_literal(person.alternative_spelling)))
@@ -261,7 +261,7 @@ def write_as_turtle(person) -> Optional[str]:
     if person.gender:
         g.add((person_uri, SCHEMA.gender, _safe_literal(person.gender)))
         g.add((person_uri, FOAF.gender, _safe_literal(person.gender)))
-        g.add((person_uri, MEMO.gender, _safe_literal(person.gender)))
+        g.add((person_uri, MEMOR.gender, _safe_literal(person.gender)))
 
     # --- Biography ---
     if person.biography_text:
@@ -302,25 +302,25 @@ def write_as_turtle(person) -> Optional[str]:
             slug = _slugify(category)
 
             # Shared victim-category concept URI
-            category_uri = URIRef(f"{MEMO_ONTOLOGY_URI}victim-category/{slug}")
+            category_uri = URIRef(f"{MEMOR_ONTOLOGY_URI}victim-category/{slug}")
             g.add((person_uri, DCTERMS.subject, category_uri))
-            g.add((person_uri, MEMO.victimCategory, category_uri))
+            g.add((person_uri, MEMOR.victimCategory, category_uri))
 
             # Per-person prosecution event URI
-            # Matches RDF/XML path: {MEMO_BASE_URI}/objects/{id}/prosecution/{slug}
+            # Matches RDF/XML path: {MEMOR_BASE_URI}/objects/{id}/prosecution/{slug}
             # (Note: the RDF/XML code has a double-slash bug — we fix it here
             # because double-slashes in URIs cause QLever parsing issues.)
             prosecution_uri = URIRef(
-                f"{MEMO_BASE_URI}objects/{person.id}/prosecution/{slug}"
+                f"{MEMOR_BASE_URI}objects/{person.id}/prosecution/{slug}"
             )
-            g.add((person_uri, MEMO.prosecution, prosecution_uri))
+            g.add((person_uri, MEMOR.prosecution, prosecution_uri))
 
             _add_prosecution_event(g, prosecution_uri, category)
 
     # --- Youth Status ---
     if person.is_youth:
-        g.add((person_uri, MEMO.isYouth, Literal(True)))
-        g.add((person_uri, DCTERMS.subject, URIRef(f"{MEMO_ONTOLOGY_URI}youth-victim")))
+        g.add((person_uri, MEMOR.isYouth, Literal(True)))
+        g.add((person_uri, DCTERMS.subject, URIRef(f"{MEMOR_ONTOLOGY_URI}youth-victim")))
 
     # --- Memorial Signs ---
     # Support both `memorial_signs` (new) and `memorial_sign` (current) attr names
@@ -332,17 +332,17 @@ def write_as_turtle(person) -> Optional[str]:
         for sign in memorial_signs_attr:
             if sign and sign.strip():
                 g.add((person_uri, DCTERMS.relation, _safe_literal(sign.strip())))
-                g.add((person_uri, MEMO.memorialSign, _safe_literal(sign.strip())))
+                g.add((person_uri, MEMOR.memorialSign, _safe_literal(sign.strip())))
 
     # --- Literature ---
     if person.literature:
         g.add((person_uri, DCTERMS.references, _safe_literal(person.literature)))
-        g.add((person_uri, MEMO.literatureReference, _safe_literal(person.literature)))
+        g.add((person_uri, MEMOR.literatureReference, _safe_literal(person.literature)))
 
     # --- Voluntary Residence ---
     if person.voluntary_address:
-        vol_place_uri = URIRef(f"{MEMO_BASE_URI}objects/{person.id}/places/voluntary_residence")
-        g.add((person_uri, MEMO.voluntary_residence, vol_place_uri))
+        vol_place_uri = URIRef(f"{MEMOR_BASE_URI}objects/{person.id}/places/voluntary_residence")
+        g.add((person_uri, MEMOR.voluntary_residence, vol_place_uri))
         vol_label = MemorVocab.EVENT_TYPES.get("voluntary_residence", {}).get(
             "label", "Voluntary Residence"
         )
@@ -352,8 +352,8 @@ def write_as_turtle(person) -> Optional[str]:
 
     # --- Forced Residence ---
     if person.forced_address:
-        forced_place_uri = URIRef(f"{MEMO_BASE_URI}objects/{person.id}/places/forced_residence")
-        g.add((person_uri, MEMO.forced_residence, forced_place_uri))
+        forced_place_uri = URIRef(f"{MEMOR_BASE_URI}objects/{person.id}/places/forced_residence")
+        g.add((person_uri, MEMOR.forced_residence, forced_place_uri))
         forced_label = MemorVocab.EVENT_TYPES.get("forced_residence", {}).get(
             "label", "Forced Residence"
         )
@@ -368,16 +368,16 @@ def write_as_turtle(person) -> Optional[str]:
     for i, image in enumerate(person.images):
         image_dsid = os.path.basename(image.source_path).upper()
         image_uri = URIRef(
-            f"{MEMO_BASE_URI}api/v1/projects/memo/objects/{person.id}/datastreams/{image_dsid}"
+            f"{MEMOR_BASE_URI}api/v1/projects/memor/objects/{person.id}/datastreams/{image_dsid}"
         )
 
         if i == 0:
             g.add((person_uri, SCHEMA.image, image_uri))
             g.add((person_uri, FOAF.depiction, image_uri))
-            g.add((person_uri, MEMO.portraitImage, image_uri))
+            g.add((person_uri, MEMOR.portraitImage, image_uri))
         else:
             g.add((person_uri, SCHEMA.image, image_uri))
-            g.add((person_uri, MEMO.hasHistoricImage, image_uri))
+            g.add((person_uri, MEMOR.hasHistoricImage, image_uri))
 
         _add_image_resource(g, image_uri, image.title, image.desc)
 
@@ -388,10 +388,10 @@ def write_as_turtle(person) -> Optional[str]:
     for document in person.documents:
         doc_dsid = os.path.basename(document.source_path).upper()
         doc_uri = URIRef(
-            f"{MEMO_BASE_URI}api/v1/projects/memo/objects/{person.id}/datastreams/{doc_dsid}"
+            f"{MEMOR_BASE_URI}api/v1/projects/memor/objects/{person.id}/datastreams/{doc_dsid}"
         )
         g.add((person_uri, DCTERMS.relation, doc_uri))
-        g.add((person_uri, MEMO.hasHistoricSourceDocument, doc_uri))
+        g.add((person_uri, MEMOR.hasHistoricSourceDocument, doc_uri))
         _add_document_resource(g, doc_uri, document.title, document.desc)
 
     # ========================================================================
@@ -399,18 +399,18 @@ def write_as_turtle(person) -> Optional[str]:
     # ========================================================================
 
     for event in person.events:
-        event_uri = URIRef(f"{MEMO_BASE_URI}objects/{person.id}/events/{event.id}")
+        event_uri = URIRef(f"{MEMOR_BASE_URI}objects/{person.id}/events/{event.id}")
         g.add((person_uri, BIO.event, event_uri))
-        g.add((person_uri, MEMO.hasLifeEvent, event_uri))
+        g.add((person_uri, MEMOR.hasLifeEvent, event_uri))
         _add_event(g, event_uri, event, person_uri)
 
     # ========================================================================
     # PROVENANCE & METADATA
     # ========================================================================
 
-    g.add((person_uri, DCTERMS.creator, _safe_literal("Born digital - memo project GAMS")))
+    g.add((person_uri, DCTERMS.creator, _safe_literal("Born digital - memor project GAMS")))
     g.add((person_uri, DCTERMS.rights, _safe_literal("Creative Commons BY-NC 4.0")))
-    g.add((person_uri, DCTERMS.rightsHolder, _safe_literal("MEMO Project")))
+    g.add((person_uri, DCTERMS.rightsHolder, _safe_literal("MEMOR Project")))
     g.add((person_uri, DCTERMS.license, URIRef("https://creativecommons.org/licenses/by-nc/4.0/")))
     g.add((person_uri, DCTERMS.created,
            _safe_literal(datetime.now().isoformat(), datatype=XSD.dateTime)))
@@ -491,8 +491,8 @@ def _add_place_event(g: Graph, place_uri: URIRef, address: str, lat: float, lon:
     g.add((place_uri, RDF.type, CIDOC.E53_Place))
     g.add((place_uri, RDF.type, SCHEMA.Place))
     g.add((place_uri, RDF.type, WGS84.Point))
-    # Custom MEMO type for the specific kind of place
-    g.add((place_uri, RDF.type, URIRef(f"{MEMO_ONTOLOGY_URI}{place_type}")))
+    # Custom MEMOR type for the specific kind of place
+    g.add((place_uri, RDF.type, URIRef(f"{MEMOR_ONTOLOGY_URI}{place_type}")))
 
     g.add((place_uri, RDFS.label, _safe_literal(label)))
     g.add((place_uri, SCHEMA.address, _safe_literal(address)))
@@ -508,8 +508,8 @@ def _add_prosecution_event(g: Graph, prosecution_uri: URIRef, category: str):
     Create a per-person prosecution event.
 
     Matches new RDF/XML _create_prosecution_event(): types the event as
-    CIDOC E5_Event and as a memo:prosecution/{slug} class, and labels
-    it with the human-readable German label from MemoVocab.
+    CIDOC E5_Event and as a memor:prosecution/{slug} class, and labels
+    it with the human-readable German label from MemorVocab.
     """
     g.add((prosecution_uri, RDF.type, CIDOC.E5_Event))
 
@@ -518,14 +518,14 @@ def _add_prosecution_event(g: Graph, prosecution_uri: URIRef, category: str):
     # non-ASCII characters (ü, ö, ß) and reserved chars (;) don't end up in
     # the URI and break Turtle/SPARQL parsing.
     slug = _slugify(category)
-    memo_prosecution_class = URIRef(f"{MEMO_ONTOLOGY_URI}prosecution/{slug}")
-    g.add((prosecution_uri, RDF.type, memo_prosecution_class))
+    memor_prosecution_class = URIRef(f"{MEMOR_ONTOLOGY_URI}prosecution/{slug}")
+    g.add((prosecution_uri, RDF.type, memor_prosecution_class))
 
     # German label from the vocab — raises if unknown category
     # (matches RDF/XML behavior which also raises)
     category_vocab = MemorVocab.VICTIM_CATEGORY_TYPES.get(category)
     if not category_vocab:
-        raise Exception(f"Category '{category}' not found in MemoVocab.VICTIM_CATEGORY_TYPES.")
+        raise Exception(f"Category '{category}' not found in MemorVocab.VICTIM_CATEGORY_TYPES.")
 
     category_label = category_vocab.get("label")
     g.add((prosecution_uri, RDFS.label, _safe_literal(category_label, lang="de")))
@@ -558,14 +558,14 @@ def _add_document_resource(g: Graph, doc_uri: URIRef, title: str, description: s
 def _add_event(g: Graph, event_uri: URIRef, event, person_uri: URIRef):
     """Add a Haftort / Fluchtort event description."""
     g.add((event_uri, RDF.type, BIO.Event))
-    g.add((event_uri, RDF.type, MEMO.Event))
+    g.add((event_uri, RDF.type, MEMOR.Event))
 
     if event.type == "haft":
-        g.add((event_uri, RDF.type, MEMO.ImprisonmentEvent))
-        g.add((event_uri, MEMO.eventType, _safe_literal("Imprisonment")))
+        g.add((event_uri, RDF.type, MEMOR.ImprisonmentEvent))
+        g.add((event_uri, MEMOR.eventType, _safe_literal("Imprisonment")))
     elif event.type == "flucht":
-        g.add((event_uri, RDF.type, MEMO.FlightEvent))
-        g.add((event_uri, MEMO.eventType, _safe_literal("Flight")))
+        g.add((event_uri, RDF.type, MEMOR.FlightEvent))
+        g.add((event_uri, MEMOR.eventType, _safe_literal("Flight")))
 
     # Coordinates
     if event.lat is not None and event.long is not None:
@@ -585,18 +585,18 @@ def _add_event(g: Graph, event_uri: URIRef, event, person_uri: URIRef):
         date_xsd = _convert_to_xsd_date(event.date)
         if date_xsd:
             g.add((event_uri, DCTERMS.date, _safe_literal(date_xsd, datatype=XSD.date)))
-        g.add((event_uri, MEMO.date, _safe_literal(event.date)))
+        g.add((event_uri, MEMOR.date, _safe_literal(event.date)))
 
     # Location
     if event.location:
         g.add((event_uri, BIO.place, _safe_literal(event.location)))
         g.add((event_uri, SCHEMA.location, _safe_literal(event.location)))
-        g.add((event_uri, MEMO.location, _safe_literal(event.location)))
+        g.add((event_uri, MEMOR.location, _safe_literal(event.location)))
 
     # Link back to person
     g.add((event_uri, BIO.principal, person_uri))
-    g.add((event_uri, MEMO.describesVictim, person_uri))
+    g.add((event_uri, MEMOR.describesVictim, person_uri))
 
     # Provenance
-    g.add((event_uri, DCTERMS.creator, _safe_literal("Born digital - memo project GAMS")))
+    g.add((event_uri, DCTERMS.creator, _safe_literal("Born digital - memor project GAMS")))
     g.add((event_uri, DCTERMS.rights, _safe_literal("Creative Commons BY-NC 4.0")))

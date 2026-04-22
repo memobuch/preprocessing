@@ -3,7 +3,7 @@ from typing import Literal
 
 class MemorEvent:
     """
-    Represents an event for the memo project.
+    Represents an event for the memor project.
     (Needed for Haft- and Fluchtorte)
     """
     def __init__(self, id: str, title: str, event_type: Literal["haft", "flucht"], description: str, date: str, location: str, long: float, lat: float,):
@@ -18,4 +18,4 @@ class MemorEvent:
 
 
     def __repr__(self) -> str:
-        return f"MemoEvent({self.id}, {self.title}, {self.type}, {self.description}, {self.date}, {self.location}, {self.lat}, {self.long})"
+        return f"MemorEvent({self.id}, {self.title}, {self.type}, {self.description}, {self.date}, {self.location}, {self.lat}, {self.long})"

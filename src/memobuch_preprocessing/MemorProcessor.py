@@ -13,7 +13,7 @@ from memobuch_preprocessing.MemorEvent import MemoEvent
 from memobuch_preprocessing.MemorVocab import MemoVocab
 from memobuch_preprocessing.Person.MemorPerson import MemoPerson
 from memobuch_preprocessing.MemorStatics import MemoStatics
-from memobuch_preprocessing.Person.MemoPersonFile import MemoPersonFile
+from memobuch_preprocessing.Person.MemorPersonFile import MemoPersonFile
 from memobuch_preprocessing.geo.FeatureAggregator import FeatureAggregator
 
 

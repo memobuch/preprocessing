@@ -7,7 +7,7 @@ import os
 import shutil
 from datetime import datetime
 from typing import Literal
-from memobuch_preprocessing.MemoEvent import MemoEvent
+from memobuch_preprocessing.MemorEvent import MemoEvent
 import xml.etree.ElementTree as ET
 from memobuch_preprocessing.MemoStatics import MemoStatics
 import pandas as pd

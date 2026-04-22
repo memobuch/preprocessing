@@ -9,7 +9,7 @@ from typing import Literal
 import pandas as pd
 
 from memobuch_preprocessing.GSheet import GSheet
-from memobuch_preprocessing.MemoEvent import MemoEvent
+from memobuch_preprocessing.MemorEvent import MemoEvent
 from memobuch_preprocessing.MemoVocab import MemoVocab
 from memobuch_preprocessing.Person.MemoPerson import MemoPerson
 from memobuch_preprocessing.MemoStatics import MemoStatics

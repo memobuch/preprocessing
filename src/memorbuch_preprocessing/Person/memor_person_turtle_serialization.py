@@ -31,7 +31,7 @@ from typing import Optional
 from rdflib import Graph, Namespace, Literal, URIRef
 from rdflib.namespace import RDF, RDFS, XSD, FOAF, SKOS, DCTERMS
 
-from memobuch_preprocessing.MemorVocab import MemoVocab
+from memorbuch_preprocessing.MemorVocab import MemorVocab
 
 
 # ============================================================================
@@ -343,7 +343,7 @@ def write_as_turtle(person) -> Optional[str]:
     if person.voluntary_address:
         vol_place_uri = URIRef(f"{MEMO_BASE_URI}objects/{person.id}/places/voluntary_residence")
         g.add((person_uri, MEMO.voluntary_residence, vol_place_uri))
-        vol_label = MemoVocab.EVENT_TYPES.get("voluntary_residence", {}).get(
+        vol_label = MemorVocab.EVENT_TYPES.get("voluntary_residence", {}).get(
             "label", "Voluntary Residence"
         )
         _add_place_event(g, vol_place_uri, person.voluntary_address,
@@ -354,7 +354,7 @@ def write_as_turtle(person) -> Optional[str]:
     if person.forced_address:
         forced_place_uri = URIRef(f"{MEMO_BASE_URI}objects/{person.id}/places/forced_residence")
         g.add((person_uri, MEMO.forced_residence, forced_place_uri))
-        forced_label = MemoVocab.EVENT_TYPES.get("forced_residence", {}).get(
+        forced_label = MemorVocab.EVENT_TYPES.get("forced_residence", {}).get(
             "label", "Forced Residence"
         )
         _add_place_event(g, forced_place_uri, person.forced_address,
@@ -428,9 +428,9 @@ def write_as_turtle(person) -> Optional[str]:
     # Sanitization of problematic characters (BOM, C0/C1 controls, zero-width)
     # still happens inside _safe_literal() before values enter the graph.
 
-    from memobuch_preprocessing.MemorStatics import MemoStatics
+    from memorbuch_preprocessing.MemorStatics import MemorStatics
     ttl_file_path = os.path.join(
-        MemoStatics.OUTPUT_DIR, str(person.id), 'SEMANTIC_STATEMENTS.ttl'
+        MemorStatics.OUTPUT_DIR, str(person.id), 'SEMANTIC_STATEMENTS.ttl'
     )
 
     g.serialize(destination=ttl_file_path, format="turtle", encoding="utf-8")
@@ -523,7 +523,7 @@ def _add_prosecution_event(g: Graph, prosecution_uri: URIRef, category: str):
 
     # German label from the vocab — raises if unknown category
     # (matches RDF/XML behavior which also raises)
-    category_vocab = MemoVocab.VICTIM_CATEGORY_TYPES.get(category)
+    category_vocab = MemorVocab.VICTIM_CATEGORY_TYPES.get(category)
     if not category_vocab:
         raise Exception(f"Category '{category}' not found in MemoVocab.VICTIM_CATEGORY_TYPES.")
 

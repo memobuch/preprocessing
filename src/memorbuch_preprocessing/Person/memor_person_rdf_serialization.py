@@ -24,8 +24,8 @@ import xml.etree.ElementTree as ET
 from typing import Optional
 import os
 
-from memobuch_preprocessing.MemorStatics import MemoStatics
-from memobuch_preprocessing.MemorVocab import MemoVocab
+from memorbuch_preprocessing.MemorStatics import MemorStatics
+from memorbuch_preprocessing.MemorVocab import MemorVocab
 
 
 def write_as_rdf_xml_improved(self):
@@ -205,7 +205,7 @@ def write_as_rdf_xml_improved(self):
                       {'rdf:resource': voluntary_place_uri})
         _create_place_event(root, voluntary_place_uri, self.voluntary_address,
                             self.voluntary_latitude, self.voluntary_longitude,
-                      MemoVocab.EVENT_TYPES.get("voluntary_residence").get("label"), "voluntary_residence")
+                      MemorVocab.EVENT_TYPES.get("voluntary_residence").get("label"), "voluntary_residence")
 
     # Forced address (forced residence during persecution)
     if self.forced_address:
@@ -214,7 +214,7 @@ def write_as_rdf_xml_improved(self):
                       {'rdf:resource': forced_place_uri})
         _create_place_event(root, forced_place_uri, self.forced_address,
                             self.forced_latitude, self.forced_longitude,
-                      MemoVocab.EVENT_TYPES.get("forced_residence").get("label"), "forced_residence")
+                      MemorVocab.EVENT_TYPES.get("forced_residence").get("label"), "forced_residence")
 
     # ============================================================================
     # IMAGES
@@ -286,8 +286,8 @@ def write_as_rdf_xml_improved(self):
     # WRITE TO FILE
     # ============================================================================
 
-    from memobuch_preprocessing.MemorStatics import MemoStatics
-    xml_file_path = os.path.join(MemoStatics.OUTPUT_DIR, str(self.id), 'RDF.xml')
+    from memorbuch_preprocessing.MemorStatics import MemorStatics
+    xml_file_path = os.path.join(MemorStatics.OUTPUT_DIR, str(self.id), 'RDF.xml')
 
     # Pretty print with proper formatting
     _indent(root)
@@ -409,7 +409,7 @@ def _create_place_event(root, place_uri: str, address: str, lat: float, lon: flo
     ET.SubElement(place_desc, 'rdfs:label').text = label
     ET.SubElement(place_desc, 'schema:address').text = address
 
-    ET.SubElement(place_desc, 'rdf:type', {'rdf:resource': f"{MemoStatics.MEMO_ONTOLOGY}{place_type}"})
+    ET.SubElement(place_desc, 'rdf:type', {'rdf:resource': f"{MemorStatics.MEMO_ONTOLOGY}{place_type}"})
 
     if lat is not None:
         ET.SubElement(place_desc, 'wgs84_pos:lat',
@@ -425,10 +425,10 @@ def _create_prosecution_event(root, category_uri: str, category: str):
 
     ET.SubElement(concept_desc, 'rdf:type', {'rdf:resource': "http://www.cidoc-crm.org/cidoc-crm/E5_Event"})
 
-    memo_prosecution_uri = f"{MemoStatics.MEMO_ONTOLOGY}prosecution/{category}"
+    memo_prosecution_uri = f"{MemorStatics.MEMO_ONTOLOGY}prosecution/{category}"
     ET.SubElement(concept_desc, 'rdf:type', {'rdf:resource': memo_prosecution_uri})
 
-    category_vocab = MemoVocab.VICTIM_CATEGORY_TYPES.get(category)
+    category_vocab = MemorVocab.VICTIM_CATEGORY_TYPES.get(category)
     if not category_vocab:
         raise Exception(f"Category '{category}' not found.")
 
@@ -475,7 +475,7 @@ def _create_event_description(root, event_uri: str, event, person_uri: str):
     """Create comprehensive event description (Haftort, Fluchtort)."""
     event_desc = ET.SubElement(root, 'rdf:Description', {'rdf:about': event_uri})
 
-    from memobuch_preprocessing.MemorStatics import MemoStatics
+    from memorbuch_preprocessing.MemorStatics import MemorStatics
     MEMO_BASE_URI = "http://digitales-memobuch.at/"
     MEMO_ONTOLOGY = MEMO_BASE_URI + "ontology#"
 

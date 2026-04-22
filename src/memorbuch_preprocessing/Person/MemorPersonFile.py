@@ -1,7 +1,7 @@
 
 
 
-class MemoPersonFile:
+class MemorPersonFile:
     """
     Data class representing files handled by the memo project.
     """

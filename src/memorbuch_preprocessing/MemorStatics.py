@@ -1,8 +1,8 @@
 
 
-class MemoStatics:
+class MemorStatics:
     """
-    Static variables for the memobuch_preprocessing package.
+    Static variables for the memorbuch_preprocessing package.
     """
 
     OUTPUT_DIR = "output"

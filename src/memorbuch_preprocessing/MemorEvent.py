@@ -1,7 +1,7 @@
 from typing import Literal
 
 
-class MemoEvent:
+class MemorEvent:
     """
     Represents an event for the memo project.
     (Needed for Haft- and Fluchtorte)

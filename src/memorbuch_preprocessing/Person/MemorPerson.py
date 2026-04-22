@@ -7,19 +7,19 @@ import os
 import shutil
 from datetime import datetime
 from typing import Literal
-from memobuch_preprocessing.MemorEvent import MemoEvent
+from memorbuch_preprocessing.MemorEvent import MemorEvent
 import xml.etree.ElementTree as ET
-from memobuch_preprocessing.MemorStatics import MemoStatics
+from memorbuch_preprocessing.MemorStatics import MemorStatics
 import pandas as pd
 
-from memobuch_preprocessing.MemorVocab import MemoVocab
-from memobuch_preprocessing.Person.MemorPersonFile import MemoPersonFile
-from memobuch_preprocessing.Person.memor_person_rdf_serialization import write_as_rdf_xml_improved
-from memobuch_preprocessing.Person.memor_person_turtle_serialization import write_as_turtle
+from memorbuch_preprocessing.MemorVocab import MemorVocab
+from memorbuch_preprocessing.Person.MemorPersonFile import MemorPersonFile
+from memorbuch_preprocessing.Person.memor_person_rdf_serialization import write_as_rdf_xml_improved
+from memorbuch_preprocessing.Person.memor_person_turtle_serialization import write_as_turtle
 
-class MemoPerson:
-    images: list[MemoPersonFile]
-    documents: list[MemoPersonFile]
+class MemorPerson:
+    images: list[MemorPersonFile]
+    documents: list[MemorPersonFile]
 
     def __init__(self, id: str, last_name: str | None, first_name: str | None, maiden_name: str | None, alternative_spelling: str |None,
                  gender: Literal["male", "female"], is_youth: bool, memorial_signs: list[str], biography_text: str | None,
@@ -72,13 +72,13 @@ class MemoPerson:
     def __repr__(self) -> str:
         return f"MemoPerson(id={self.id}, last_name={self.last_name}, first_name={self.first_name}, maiden_name={self.maiden_name}, alternative_spelling={self.alternative_spelling}, gender={self.gender}, is_youth={self.is_youth}, memorial_sign={self.memorial_signs}, biography_text={self.biography_text}, birth_place={self.birth_place}, birth_date={self.birth_date}, death_place={self.death_place}, death_longitude={self.death_longitude}, death_latitude={self.death_latitude}, voluntary_address={self.voluntary_address}, voluntary_longitude={self.voluntary_longitude}, voluntary_latitude={self.voluntary_latitude}, forced_address={self.forced_address}, forced_longitude={self.forced_longitude}, forced_latitude={self.forced_latitude}, victim_category={self.victim_category}, literature={self.literature}, images={self.images}, events={self.events}, documents={self.documents})"
 
-    def add_image(self, image: MemoPersonFile):
+    def add_image(self, image: MemorPersonFile):
         self.images.append(image)
 
-    def add_document(self, document: MemoPersonFile):
+    def add_document(self, document: MemorPersonFile):
         self.documents.append(document)
 
-    def add_event(self, event: MemoEvent):
+    def add_event(self, event: MemorEvent):
         self.events.append(event)
 
     def write_as_dublin_core(self):
@@ -147,7 +147,7 @@ class MemoPerson:
             dc_relation.text = f"https://gams.uni-graz.at/{derla_sign}"
 
         # logger.info(f"Created Dublin Core XML for digital object ID: memo.{entry['Identifikatornummer']}")
-        xml_file_path = os.path.join(MemoStatics.OUTPUT_DIR, str(self.id), 'DC.xml')
+        xml_file_path = os.path.join(MemorStatics.OUTPUT_DIR, str(self.id), 'DC.xml')
         tree = ET.ElementTree(root)
         tree.write(xml_file_path, encoding='utf-8', xml_declaration=True)
         # self.logger.info(f"Created XML file at: {xml_file_path}")
@@ -158,7 +158,7 @@ class MemoPerson:
         :return:
         """
         # logger.debug(f"Creating object CSV for digital object ID: memo.{entry['Identifikatornummer']}")
-        object_csv_path = os.path.join(MemoStatics.OUTPUT_DIR, str(self.id), 'object.csv')
+        object_csv_path = os.path.join(MemorStatics.OUTPUT_DIR, str(self.id), 'object.csv')
 
         object_tags = []
         for category in self.victim_category:
@@ -173,7 +173,7 @@ class MemoPerson:
         data = {
             'recid': [self.id],
             'title': [f"{self.first_name} {self.last_name} (person description)"],
-            'project': [MemoStatics.PROJECT_ABBR],
+            'project': [MemorStatics.PROJECT_ABBR],
             'description': [self.biography_text],
             'creator': ["Heimo Halbrainer;Gerald Lamprecht"],
             'rights': ['Creative Commons BY-NC 4.0'],
@@ -198,7 +198,7 @@ class MemoPerson:
         Copies all related images to the person's output folder
         :return: 
         """
-        folder_path = os.path.join(MemoStatics.OUTPUT_DIR, str(self.id))
+        folder_path = os.path.join(MemorStatics.OUTPUT_DIR, str(self.id))
         if not os.path.exists(folder_path):
             msg = f"Expected output folder not existent at path: {folder_path}"
             raise ValueError(msg)
@@ -217,7 +217,7 @@ class MemoPerson:
         Copies all related documents to the person's output folder
         :return:
         """
-        folder_path = os.path.join(MemoStatics.OUTPUT_DIR, str(self.id))
+        folder_path = os.path.join(MemorStatics.OUTPUT_DIR, str(self.id))
         if not os.path.exists(folder_path):
             msg = f"Expected output folder not existent at path: {folder_path}"
             raise ValueError(msg)
@@ -233,7 +233,7 @@ class MemoPerson:
                 raise ValueError(msg)
 
     def write_as_datastreams_csv(self):
-        folder_path = os.path.join(MemoStatics.OUTPUT_DIR, str(self.id))
+        folder_path = os.path.join(MemorStatics.OUTPUT_DIR, str(self.id))
         datastreams_csv_path = os.path.join(folder_path, 'datastreams.csv')
         datastreams = []
 
@@ -311,7 +311,7 @@ class MemoPerson:
         if self.is_youth:
             tags.append("jugendlich")
 
-        search_json_path = os.path.join(MemoStatics.OUTPUT_DIR, str(self.id), 'CUSTOM_SEARCH.json')
+        search_json_path = os.path.join(MemorStatics.OUTPUT_DIR, str(self.id), 'CUSTOM_SEARCH.json')
         data = [{
             # first required fields
             "id": self.id,
@@ -320,7 +320,7 @@ class MemoPerson:
             "entityTitles": [f"{self.first_name} {self.last_name}"],
             "entityFulltext": self.biography_text,
             "entityTags": tags,
-            "entityStartDate": MemoPerson._convert_date(self.birth_date),
+            "entityStartDate": MemorPerson._convert_date(self.birth_date),
             "entityEndDate": self.death_date,
             "entityPointers": [self.memorial_signs]
         }]
@@ -341,7 +341,7 @@ class MemoPerson:
                 "entityPointers": [self.memorial_signs]
             })
 
-        death_event: MemoEvent = None
+        death_event: MemorEvent = None
         for event in self.events:
             if event.type == "Tod":
                 death_event = event
@@ -389,7 +389,7 @@ class MemoPerson:
             built_date = f"{year}-{month}-{day}T00:00:00Z"
 
             # constructed must parse as ISO 8601 date
-            if MemoPerson.datetime_valid(built_date):
+            if MemorPerson.datetime_valid(built_date):
                 return built_date
             else:
                 raise ValueError(f"Invalid date format after conversion: {built_date}")
@@ -407,7 +407,7 @@ class MemoPerson:
         """
 
         # small error safe for nan values
-        mapping = MemoVocab.VICTIM_CATEGORY_TYPES
+        mapping = MemorVocab.VICTIM_CATEGORY_TYPES
 
         dc_field_mapped = mapping.get(dc_field)
 
@@ -592,7 +592,7 @@ class MemoPerson:
 
         geojson = {
             "type": "FeatureCollection",
-            "vocab": MemoVocab.VOCAB_CONTAINER,
+            "vocab": MemorVocab.VOCAB_CONTAINER,
             "metadata": {
                 "person_id": self.id,
                 "person_name": f"{self.first_name} {self.last_name}",
@@ -608,8 +608,8 @@ class MemoPerson:
         }
 
         # Write to file
-        from memobuch_preprocessing.MemorStatics import MemoStatics
-        json_path = os.path.join(MemoStatics.OUTPUT_DIR, str(self.id), 'EVENTS.json')
+        from memorbuch_preprocessing.MemorStatics import MemorStatics
+        json_path = os.path.join(MemorStatics.OUTPUT_DIR, str(self.id), 'EVENTS.json')
 
         with open(json_path, 'w', encoding='utf-8') as f:
             json.dump(geojson, f, ensure_ascii=False, indent=2)

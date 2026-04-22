@@ -8,25 +8,25 @@ from typing import Literal
 
 import pandas as pd
 
-from memobuch_preprocessing.GSheet import GSheet
-from memobuch_preprocessing.MemorEvent import MemoEvent
-from memobuch_preprocessing.MemorVocab import MemoVocab
-from memobuch_preprocessing.Person.MemorPerson import MemoPerson
-from memobuch_preprocessing.MemorStatics import MemoStatics
-from memobuch_preprocessing.Person.MemorPersonFile import MemoPersonFile
-from memobuch_preprocessing.geo.FeatureAggregator import FeatureAggregator
+from memorbuch_preprocessing.GSheet import GSheet
+from memorbuch_preprocessing.MemorEvent import MemorEvent
+from memorbuch_preprocessing.MemorVocab import MemorVocab
+from memorbuch_preprocessing.Person.MemorPerson import MemorPerson
+from memorbuch_preprocessing.MemorStatics import MemorStatics
+from memorbuch_preprocessing.Person.MemorPersonFile import MemorPersonFile
+from memorbuch_preprocessing.geo.FeatureAggregator import FeatureAggregator
 
 
-class MemoProcessor:
+class MemorProcessor:
 
-    memo_persons: list[MemoPerson] = []
-    memo_events: list[MemoEvent] = []
+    memo_persons: list[MemorPerson] = []
+    memo_events: list[MemorEvent] = []
 
     memo_persons_frame: pd.DataFrame
     memo_events_frame: pd.DataFrame
     logger: logging.Logger
 
-    MATERIAL_ROOT_PATH = MemoStatics.MATERIAL_ROOT_PATH
+    MATERIAL_ROOT_PATH = MemorStatics.MATERIAL_ROOT_PATH
 
     def __init__(self):
         #
@@ -67,33 +67,33 @@ class MemoProcessor:
             if memo_person_col_id.isspace() or len(memo_person_col_id) == 0:
                 self.logger.error(f"Missing identifier number for person entry: {person_entry}. Skipping entry.")
                 continue
-            memo_person_id = f"{MemoStatics.PROJECT_ABBR}.person.{memo_person_col_id}"
+            memo_person_id = f"{MemorStatics.PROJECT_ABBR}.person.{memo_person_col_id}"
 
             try:
-                cur_memo_person = MemoPerson(
+                cur_memo_person = MemorPerson(
                     id=memo_person_id, # required
-                    last_name= MemoProcessor.map_nullable_col(person_entry['Nachname']), # optional
-                    first_name=MemoProcessor.map_nullable_col(person_entry['Vorname']), # optional
-                    maiden_name=MemoProcessor.map_nullable_col(person_entry['Mädchenname']), # optional
-                    alternative_spelling=MemoProcessor.map_nullable_col(person_entry['Alternative Schreibweise']), # optional
-                    is_youth=MemoProcessor.map_is_youth_col(person_entry['Jugendlich']), # required
-                    gender=MemoProcessor.map_gender_col(person_entry['Geschlecht']), # required
-                    memorial_signs=MemoProcessor.map_memorial_signs(person_entry['Erinnerungszeichen (DERLA Nummer)']), # optional
-                    biography_text=MemoProcessor.map_nullable_col(person_entry['Biografie']), # optional
-                    birth_place=MemoProcessor.map_nullable_col(person_entry['Geburtsort']), # optional
-                    birth_date=MemoProcessor.map_nullable_col(person_entry['Geburtsdatum']), # optional
-                    death_date=MemoProcessor.map_nullable_col(person_entry['Todesdatum']), # optional
-                    death_place=MemoProcessor.map_nullable_col(person_entry['Sterbeort (Bezeichnung)']),
-                    death_longitude=MemoProcessor.map_nullable_col(person_entry['Längengrad (Sterbeort)']),
-                    death_lattitude=MemoProcessor.map_nullable_col(person_entry['Breitengrad (Sterbeort)']),
-                    voluntary_address=MemoProcessor.map_nullable_col(person_entry["Letzte freiwillige Wohnadresse"]),
-                    voluntary_longitude=MemoProcessor.map_nullable_col(person_entry["Längengrad (freiwillige Wohnadresse)"]),
-                    voluntary_latitude=MemoProcessor.map_nullable_col(person_entry["Breitengrad (freiwillige Wohnadresse)"]),
-                    forced_address=MemoProcessor.map_nullable_col(person_entry["Letzte erzwungene Wohnadresse"]),
-                    forced_longitude=MemoProcessor.map_nullable_col(person_entry["Längengrad (erzwungene Wohnadresse)"]),
-                    forced_latitude=MemoProcessor.map_nullable_col(person_entry["Breitengrad (erzwungene Wohnadresse)"]),
-                    victim_category=MemoProcessor.map_victim_categories(person_entry['Opferkategorie']),
-                    literature=MemoProcessor.map_nullable_col(person_entry["Literatur"]),
+                    last_name= MemorProcessor.map_nullable_col(person_entry['Nachname']), # optional
+                    first_name=MemorProcessor.map_nullable_col(person_entry['Vorname']), # optional
+                    maiden_name=MemorProcessor.map_nullable_col(person_entry['Mädchenname']), # optional
+                    alternative_spelling=MemorProcessor.map_nullable_col(person_entry['Alternative Schreibweise']), # optional
+                    is_youth=MemorProcessor.map_is_youth_col(person_entry['Jugendlich']), # required
+                    gender=MemorProcessor.map_gender_col(person_entry['Geschlecht']), # required
+                    memorial_signs=MemorProcessor.map_memorial_signs(person_entry['Erinnerungszeichen (DERLA Nummer)']), # optional
+                    biography_text=MemorProcessor.map_nullable_col(person_entry['Biografie']), # optional
+                    birth_place=MemorProcessor.map_nullable_col(person_entry['Geburtsort']), # optional
+                    birth_date=MemorProcessor.map_nullable_col(person_entry['Geburtsdatum']), # optional
+                    death_date=MemorProcessor.map_nullable_col(person_entry['Todesdatum']), # optional
+                    death_place=MemorProcessor.map_nullable_col(person_entry['Sterbeort (Bezeichnung)']),
+                    death_longitude=MemorProcessor.map_nullable_col(person_entry['Längengrad (Sterbeort)']),
+                    death_lattitude=MemorProcessor.map_nullable_col(person_entry['Breitengrad (Sterbeort)']),
+                    voluntary_address=MemorProcessor.map_nullable_col(person_entry["Letzte freiwillige Wohnadresse"]),
+                    voluntary_longitude=MemorProcessor.map_nullable_col(person_entry["Längengrad (freiwillige Wohnadresse)"]),
+                    voluntary_latitude=MemorProcessor.map_nullable_col(person_entry["Breitengrad (freiwillige Wohnadresse)"]),
+                    forced_address=MemorProcessor.map_nullable_col(person_entry["Letzte erzwungene Wohnadresse"]),
+                    forced_longitude=MemorProcessor.map_nullable_col(person_entry["Längengrad (erzwungene Wohnadresse)"]),
+                    forced_latitude=MemorProcessor.map_nullable_col(person_entry["Breitengrad (erzwungene Wohnadresse)"]),
+                    victim_category=MemorProcessor.map_victim_categories(person_entry['Opferkategorie']),
+                    literature=MemorProcessor.map_nullable_col(person_entry["Literatur"]),
                 )
             except Exception as e:
                 self.logger.error(f"Error creating MemoPerson for entry - Skipping person: {person_entry}: {e}")
@@ -123,7 +123,7 @@ class MemoProcessor:
                     except:
                         pass
 
-                    memo_image = MemoPersonFile(
+                    memo_image = MemorPersonFile(
                         source_path=cur_image_path,
                         title=entry["Titel"],
                         desc=entry["Beschreibung"],
@@ -135,7 +135,7 @@ class MemoProcessor:
                 person_haftorte_metadata_path = f"{person_folder_path}{os.sep}haftorte.txt"
                 haftorte_entries = self._load_metadata_csv(person_haftorte_metadata_path)
                 for i, haftort in enumerate(haftorte_entries):
-                    event = MemoEvent(
+                    event = MemorEvent(
                         id=f"{cur_memo_person.id}_event_haft_{i}",
                         event_type="haft",
                         title=haftort["Titel"],
@@ -151,7 +151,7 @@ class MemoProcessor:
                 person_fluchtorte_metadata_path = f"{person_folder_path}{os.sep}fluchtorte.txt"
                 fluchtorte_entries = self._load_metadata_csv(person_fluchtorte_metadata_path)
                 for i, fluchtort in enumerate(fluchtorte_entries):
-                    event = MemoEvent(
+                    event = MemorEvent(
                         id=f"{cur_memo_person.id}_event_flucht_{i}",
                         event_type="flucht",
                         title=fluchtort["Titel"],
@@ -167,7 +167,7 @@ class MemoProcessor:
                 person_documents_metadata_path = f"{person_folder_path}{os.sep}files.txt"
                 documents_entries = self._load_metadata_csv(person_documents_metadata_path)
                 for i, person_document in enumerate(documents_entries):
-                    document = MemoPersonFile(
+                    document = MemorPersonFile(
                         title=person_document["Titel"],
                         desc=person_document["Beschreibung"],
                         source_path=f"{person_folder_path}{os.path.sep}files{os.path.sep}{person_document['Dateiname']}",
@@ -254,7 +254,7 @@ class MemoProcessor:
         """
         for person in self.memo_persons:
             folder_name = person.id
-            folder_path = os.path.join(MemoStatics.OUTPUT_DIR, str(folder_name))
+            folder_path = os.path.join(MemorStatics.OUTPUT_DIR, str(folder_name))
             os.makedirs(folder_path, exist_ok=True)
 
             try:
@@ -409,7 +409,7 @@ class MemoProcessor:
         """
 
         try:
-            col = MemoProcessor.map_nullable_col(col)
+            col = MemorProcessor.map_nullable_col(col)
             victim_categories = col.split(",")
             victim_categories = [cat.strip() for cat in victim_categories]
             # replace semicolons through normal commas
@@ -426,7 +426,7 @@ class MemoProcessor:
         Maps memorial signs from the column value
         """
         try:
-            col = MemoProcessor.map_nullable_col(col)
+            col = MemorProcessor.map_nullable_col(col)
             memorial_signs = col.split(";")
             memorial_signs = [sign.strip() for sign in memorial_signs]
             return memorial_signs
@@ -444,7 +444,7 @@ class MemoProcessor:
 
         # first create folder
         object_id = "memo.person-register"
-        folder_path = os.path.join(MemoStatics.OUTPUT_DIR, str(object_id))
+        folder_path = os.path.join(MemorStatics.OUTPUT_DIR, str(object_id))
         os.makedirs(folder_path, exist_ok=True)
 
         # create aggregated geojson file
@@ -468,7 +468,7 @@ class MemoProcessor:
 
         geojson = {
             "type": "FeatureCollection",
-            "vocab": MemoVocab.VOCAB_CONTAINER,
+            "vocab": MemorVocab.VOCAB_CONTAINER,
             "metadata": {
                 "project": "MEMO - Digitales Memobuch",
                 "total_persons": len(self.memo_persons),

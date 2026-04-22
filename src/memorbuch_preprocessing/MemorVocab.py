@@ -1,6 +1,6 @@
 
 
-class MemoVocab:
+class MemorVocab:
     """
     Holds vocab enums like, victim categories and event types
     with correspondent german labels.

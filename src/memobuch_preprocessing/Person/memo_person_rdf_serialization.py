@@ -25,7 +25,7 @@ from typing import Optional
 import os
 
 from memobuch_preprocessing.MemorStatics import MemoStatics
-from memobuch_preprocessing.MemoVocab import MemoVocab
+from memobuch_preprocessing.MemorVocab import MemoVocab
 
 
 def write_as_rdf_xml_improved(self):

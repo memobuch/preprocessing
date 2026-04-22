@@ -12,7 +12,7 @@ import xml.etree.ElementTree as ET
 from memobuch_preprocessing.MemorStatics import MemoStatics
 import pandas as pd
 
-from memobuch_preprocessing.MemoVocab import MemoVocab
+from memobuch_preprocessing.MemorVocab import MemoVocab
 from memobuch_preprocessing.Person.MemoPersonFile import MemoPersonFile
 from memobuch_preprocessing.Person.memo_person_rdf_serialization import write_as_rdf_xml_improved
 from memobuch_preprocessing.Person.memo_person_turtle_serialization import write_as_turtle

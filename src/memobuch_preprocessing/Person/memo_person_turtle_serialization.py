@@ -31,7 +31,7 @@ from typing import Optional
 from rdflib import Graph, Namespace, Literal, URIRef
 from rdflib.namespace import RDF, RDFS, XSD, FOAF, SKOS, DCTERMS
 
-from memobuch_preprocessing.MemoVocab import MemoVocab
+from memobuch_preprocessing.MemorVocab import MemoVocab
 
 
 # ============================================================================

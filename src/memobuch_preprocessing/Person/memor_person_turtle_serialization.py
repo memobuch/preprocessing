@@ -7,7 +7,7 @@ When ingested via gams-packager + pyrilo, GAMS5 automatically loads
 these triples into the Blazegraph / QLever triple store, enabling
 SPARQL queries across all MEMO persons.
 
-Produces semantically equivalent output to memo_person_rdf_serialization.py
+Produces semantically equivalent output to memor_person_rdf_serialization.py
 (RDF/XML) but in Turtle format, with all non-ASCII characters escaped
 as \\uXXXX sequences for QLever-safe transport.
 
@@ -37,7 +37,7 @@ from memobuch_preprocessing.MemorVocab import MemoVocab
 # ============================================================================
 # NAMESPACE DEFINITIONS
 # ============================================================================
-# Keep these aligned with memo_person_rdf_serialization.py
+# Keep these aligned with memor_person_rdf_serialization.py
 
 MEMO_BASE_URI = "https://www.ns-opfer-graz.at/"
 MEMO_ONTOLOGY_URI = MEMO_BASE_URI + "ontology#"
@@ -175,7 +175,7 @@ def _slugify(text: str) -> str:
     Convert text to URL-friendly slug.
 
     NOTE: This mirrors the (no-op) behavior of _slugify() in
-    memo_person_rdf_serialization.py — it only lowercases without
+    memor_person_rdf_serialization.py — it only lowercases without
     sanitizing special chars. Since the resulting slug is embedded
     into a URI, and we also apply ASCII escaping to the Turtle output,
     any remaining non-ASCII / reserved chars in the URI would cause

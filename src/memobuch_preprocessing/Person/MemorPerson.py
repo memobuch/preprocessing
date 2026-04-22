@@ -14,7 +14,7 @@ import pandas as pd
 
 from memobuch_preprocessing.MemorVocab import MemoVocab
 from memobuch_preprocessing.Person.MemorPersonFile import MemoPersonFile
-from memobuch_preprocessing.Person.memo_person_rdf_serialization import write_as_rdf_xml_improved
+from memobuch_preprocessing.Person.memor_person_rdf_serialization import write_as_rdf_xml_improved
 from memobuch_preprocessing.Person.memor_person_turtle_serialization import write_as_turtle
 
 class MemoPerson:

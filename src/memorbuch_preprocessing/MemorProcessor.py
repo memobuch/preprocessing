@@ -67,6 +67,10 @@ class MemorProcessor:
             if memor_person_col_id.isspace() or len(memor_person_col_id) == 0:
                 self.logger.error(f"Missing identifier number for person entry: {person_entry}. Skipping entry.")
                 continue
+            # gsheet might return the numbers as float with e.g. a "1" as "1.0" -> remove if needed
+            if memor_person_col_id.endswith(".0"):
+                memor_person_col_id = memor_person_col_id.replace(".0", "")
+
             memor_person_id = f"{MemorStatics.PROJECT_ABBR}.person.{memor_person_col_id}"
 
             try:

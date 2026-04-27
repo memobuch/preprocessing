@@ -62,6 +62,11 @@ class MemorProcessor:
         for person_entry in persons_dict:
             # first handle building memor person id (somewhat only required field)
             memor_person_col_id = str(person_entry['Identifikatornummer'])
+
+            # fix if identifikatornummer ends with .0 against expectations
+            if memor_person_col_id.endswith(".0"):
+                memor_person_col_id = memor_person_col_id.replace(".0", "")
+
             self.logger.info(f"Processing person entry from gsheet: {memor_person_col_id}")
             # if no identifier number is given, skip the entry
             if memor_person_col_id.isspace() or len(memor_person_col_id) == 0:
@@ -104,7 +109,7 @@ class MemorProcessor:
                 continue
 
             # image logic must be here now
-            person_folder_path = f"{self.MATERIAL_ROOT_PATH}{str(person_entry['Identifikatornummer'])}"
+            person_folder_path = f"{self.MATERIAL_ROOT_PATH}{memor_person_col_id}"
 
             try:
                 if not os.path.exists(person_folder_path):

@@ -70,7 +70,7 @@ class MemorVocab:
             "label": "Jüdische Opfer",
             "color": "#228B22"
         },
-        "jüdischeopfer_als Jude verfolgt": {
+        "jüdischeopfer_als-Jude-verfolgt": {
             "label": "Jüdische Opfer, als Jude verfolgt",
             "color": "#228B22"
         },

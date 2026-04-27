@@ -423,7 +423,17 @@ class MemorProcessor:
             victim_categories = [cat.strip() for cat in victim_categories]
             # replace semicolons through normal commas
             victim_categories = [cat.replace(";","_") for cat in victim_categories]
-            return victim_categories
+
+            victim_categories_cleaned = []
+
+            # remove / translate outdated category in data
+            for category in victim_categories:
+                if category == "jüdischeopfer_als Jude verfolgt":
+                    victim_categories_cleaned.append("jüdischeopfer_als-Jude-verfolgt")
+                else:
+                    victim_categories_cleaned.append(category)
+
+            return victim_categories_cleaned
         except Exception as e:
             msg = f"Error analysing victim categories. There might be no victim categories assigned - assigning default empty list {e}"
             logging.warning(msg)

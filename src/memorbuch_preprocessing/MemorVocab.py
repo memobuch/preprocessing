@@ -43,7 +43,7 @@ class MemorVocab:
 
     VICTIM_CATEGORY_TYPES = {
         "NS-Gegnerschaft": {
-            "label": "NS-Gegnerschaft",
+            "label": "NS-Gegner",
             "color": "#ADFF2F"
         },
         "widerstand_politisch": {
@@ -75,41 +75,41 @@ class MemorVocab:
             "color": "#228B22"
         },
         "roma": {
-            "label": "Roma",
+            "label": "Roma/Romnija und Sinti/Sintize",
             "color": "#FF8C00"
         },
         "euthanasieopfer": {
-            "label": "Euthanasie Opfer",
+            "label": "Opfer der NS-Euthanasie",
             "color": "#ADD8E6"
         },
         "homosexuelleopfer": {
             "label": "Homosexuelle Opfer",
             "color": "#00008B"
         },
-        "opfernsjustiz": {
-            "label": "Opfer der NS-Justiz",
-            "color": "#4169E1"
-        },
+        # "opfernsjustiz": {
+        #     "label": "Opfer der NS-Justiz",
+        #     "color": "#4169E1"
+        # },
         "asoziale": {
-            "label": "Asoziale",
+            "label": "Als „asozial“ Verfolgte",
             "color": "#B5523E"
         },
         "spanienkämpfer": {
             "label": "SpanienkämpferInnen",
             "color": "#702963"
         },
-        "zwangsarbeiter": {
-            "label": "ZwangsarbeiterInnen",
-            "color": "#E0FFFF"
-        },
-        "alliierte": {
-            "label": "Alliierte Soldaten",
-            "color": "#00BFCB"
-        },
-        "zivileopfer": {
-            "label": "Zivile Opfer",
-            "color": "#8B008B"
-        },
+        # "zwangsarbeiter": {
+        #     "label": "ZwangsarbeiterInnen",
+        #     "color": "#E0FFFF"
+        # },
+        # "alliierte": {
+        #     "label": "Alliierte Soldaten",
+        #     "color": "#00BFCB"
+        # },
+        # "zivileopfer": {
+        #     "label": "Zivile Opfer",
+        #     "color": "#8B008B"
+        # },
     }
 
     VOCAB_CONTAINER = {

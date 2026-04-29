@@ -445,7 +445,7 @@ def write_as_turtle(person) -> Optional[str]:
 
 def _add_birth_event(g: Graph, person_uri: URIRef, birth_date: str, birth_place: str):
     """Create a Bio:Birth / CIDOC:E67_Birth event."""
-    birth_uri = URIRef(str(person_uri) + "/birth")
+    birth_uri = URIRef(str(person_uri) + "#birth")
     g.add((birth_uri, RDF.type, BIO.Birth))
     g.add((birth_uri, RDF.type, CIDOC.E5_Event))
     g.add((birth_uri, RDF.type, CIDOC.E67_Birth))
@@ -464,7 +464,7 @@ def _add_birth_event(g: Graph, person_uri: URIRef, birth_date: str, birth_place:
 def _add_death_event(g: Graph, person_uri: URIRef, death_date: str, death_place: str,
                      lat: float, lon: float):
     """Create a Bio:Death / CIDOC:E69_Death event."""
-    death_uri = URIRef(str(person_uri) + "/death")
+    death_uri = URIRef(str(person_uri) + "#death")
     g.add((death_uri, RDF.type, BIO.Death))
     g.add((death_uri, RDF.type, CIDOC.E5_Event))
     g.add((death_uri, RDF.type, CIDOC.E69_Death))

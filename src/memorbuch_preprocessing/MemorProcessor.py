@@ -235,7 +235,7 @@ class MemorProcessor:
         """
         rows = []
         if not os.path.exists(path):
-            self.logger.error(f"No metadata file at {path} found!")
+            self.logger.info(f"No metadata file at {path} found!")
             return rows
 
         with open(path, "r", encoding="utf-8-sig") as txt_file:  # Handle BOM

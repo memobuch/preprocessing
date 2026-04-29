@@ -114,7 +114,6 @@ class MemorProcessor:
             try:
                 if not os.path.exists(person_folder_path):
                     msg = f"No gdrive folder found for person (from table): {cur_memor_person.id} at expected path: {person_folder_path}. Every should have a folder defined!"
-                    self.memor_persons.append(cur_memor_person)
                     raise FileNotFoundError(msg)
 
                 # image loading per person
@@ -182,7 +181,6 @@ class MemorProcessor:
                         source_path=f"{person_folder_path}{os.path.sep}files{os.path.sep}{person_document['Dateiname']}",
                     )
                     cur_memor_person.add_document(document)
-
             except Exception as e:
                 self.logger.warning(f"Error loading material files for person {cur_memor_person.id} at path {person_folder_path}: {e}")
             finally:
@@ -261,6 +259,10 @@ class MemorProcessor:
         Output the data to the output folder
         :return:
         """
+
+        rendered_persons = 0
+        error_persons = 0
+
         for person in self.memor_persons:
             folder_name = person.id
             folder_path = os.path.join(MemorStatics.OUTPUT_DIR, str(folder_name))
@@ -277,12 +279,17 @@ class MemorProcessor:
                 person.write_as_geojson()
                 person.write_as_datastreams_csv()
                 self.logger.info(f"Outputted digital object: {folder_path}")
+                rendered_persons += 1
             except Exception as e:
                 logging.error(f"SKIPPING writing output files for memor person: {person.id} - Error writing digital object at path: {folder_path}: {e}")
                 try:
                     shutil.rmtree(folder_path)
+                    error_persons += 1
                 except Exception as cleanup_error:
                     logging.error(f"Failed to remove folder {folder_path}: {cleanup_error}")
+
+        logging.info(f"***** Finished writing individual persons as object folder. Successfully wrote: {rendered_persons} of {len(self.memor_persons)} persons as object folder")
+        logging.info(f"***** Failed to write person as object folder count: {error_persons}")
 
 
     def clear_output_folder(self, output_root):

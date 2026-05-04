@@ -118,7 +118,7 @@ memor:hasEvent a rdfs:Property;
         rdfs:range memor:event.
 
 memor:hasLiteratureReference a owl:DataTypeProperty;
-        rdfs:label "Literature"@en, "Literaturreferenz"@de;
+        rdfs:label "has literature source"@en, "hat Literaturreferenz"@de;
         rdfs:domain memor:victim;
         rdfs:range xsd:string.
 

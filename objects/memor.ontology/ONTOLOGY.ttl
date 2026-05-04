@@ -1,4 +1,5 @@
 @prefix bio: <http://purl.org/vocab/bio/0.1/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix cidoc: <http://www.cidoc-crm.org/cidoc-crm/> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
@@ -13,99 +14,98 @@
 #
 
 # base event of memor
-memor:event a rdfs:Class,
-                cidoc:E5_Event,
-                # every event might be represented by a geo point
-                wgs84_pos:Point;
-        rdfs:label "Event associated with a person"@en,
-                "Ereignis assoziiert mit einer Person"@de.
+memor:event a owl:Class;
+        rdfs:subClassOf cidoc:E5_Event,
+        # every event might be represented by a geo point
+        rdfs:subClassOf wgs84_pos:Point;
+        rdfs:label "Event associated with a person"@en, "Ereignis assoziiert mit einer Person"@de.
         
 # birth
-memor:birth a rdfs:Class;
+memor:birth a owl:Class;
         rdfs:subClassOf memor:event;
-        a bio:Birth,
-                cidoc:E67_Birth;
+        rdfs:subClassOf bio:Birth;
+        rdfs:subClassOf cidoc:E67_Birth;
         rdfs:label "Birth event of a person"@en,
                 "Geburtsereignis einer Person"@de.
 
 # death
-memor:death a rdfs:Class; 
+memor:death a owl:Class; 
         rdfs:subClassOf memor:event;
-        a cidoc:E69_Death;
+        rdfs:subClassOf cidoc:E69_Death;
         rdfs:label "Death event of a person"@en,
                 "Todesereignis einer Person"@de.
 
 
 # voluntary residence as event
-memor:voluntary_residence a rdfs:Class;
+memor:voluntary_residence a owl:Class;
         rdfs:subClassOf memor:event;
         rdfs:label "Letzte Freiwillige Wohnadresse"@de.
 
 #
 # prosecution
 #
-memor:prosecution a rdfs:Class;
+memor:prosecution a owl:Class;
         rdfs:subClassOf memor:event;
         rdfs:label "Verfolgungsereignis für ein Opfer des Nationalsozialismus."@de.
 
-memor:prosecution_jüdischeopfer_jüdisch a rdfs:Class;
+memor:prosecution_jüdischeopfer_jüdisch a owl:Class;
         rdfs:subClassOf memor:prosecution;
         rdfs:label "Verfolgung aufgrund der Nürnberger Rassengesetze (jüdische Religion)"@de,
                    "Persecution under the Nuremberg Race Laws (Jewish religion)"@en.    
 
-memor:NS-Gegnerschaft a rdfs:Class;
+memor:NS-Gegnerschaft a owl:Class;
         rdfs:subClassOf memor:prosecution;
         rdfs:label "NS-Gegner"@de.
 
 # TODO update elsewhere
-memor:widerstand_politisch a rdfs:Class;
+memor:widerstand_politisch a owl:Class;
         rdfs:subClassOf memor:prosecution;
         rdfs:label "Widerstand, politisch"@de.
 
-memor:widerstand_religioes a rdfs:Class;
+memor:widerstand_religioes a owl:Class;
         rdfs:subClassOf memor:prosecution;
         rdfs:label "Widerstand, religiös"@de.
 
-memor:widerstand_individuell a rdfs:Class;
+memor:widerstand_individuell a owl:Class;
         rdfs:subClassOf memor:prosecution;
         rdfs:label "Widerstand, individuell"@de.
 
-memor:widerstand_deserteure a rdfs:Class;
+memor:widerstand_deserteure a owl:Class;
         rdfs:subClassOf memor:prosecution;
         rdfs:label "Widerstand, Deserteure"@de.
 
-memor:zeugenjehovas a rdfs:Class;
+memor:zeugenjehovas a owl:Class;
         rdfs:subClassOf memor:prosecution;
         rdfs:label "Zeugen Jehovas"@de.
 
 # TODO update elsewhere
-memor:juedischeopfer_juedisch a rdfs:Class;
+memor:juedischeopfer_juedisch a owl:Class;
         rdfs:subClassOf memor:prosecution;
         rdfs:label "Jüdische Opfer"@de.
 
 # TODO update elsewhere
-memor:juedischeopfer_als-Jude-verfolgt a rdfs:Class;
+memor:juedischeopfer_als-Jude-verfolgt a owl:Class;
         rdfs:subClassOf memor:prosecution;
         rdfs:label "Jüdische Opfer, als Jude verfolgt"@de.
 
-memor:roma a rdfs:Class;
+memor:roma a owl:Class;
         rdfs:subClassOf memor:prosecution;
         rdfs:label "Roma/Romnija und Sinti/Sintize"@de.
 
-memor:euthanasieopfer a rdfs:Class;
+memor:euthanasieopfer a owl:Classs;
         rdfs:subClassOf memor:prosecution;
         rdfs:label "Opfer der NS-Euthanasie"@de.
 
-memor:homosexuelleopfer a rdfs:Class;
+memor:homosexuelleopfer a owl:Class;
         rdfs:subClassOf memor:prosecution;
         rdfs:label "Homosexuelle Opfer"@de.
 
-memor:asoziale a rdfs:Class;
+memor:asoziale a owl:Class;
         rdfs:subClassOf memor:prosecution;
         rdfs:label "Als „asozial“ Verfolgte"@de.
 
 # TODO update elsewhere
-memor:spanienkaempfer a rdfs:Class;
+memor:spanienkaempfer a owl:Class;
         rdfs:subClassOf memor:prosecution;
         rdfs:label "SpanienkämpferInnen"@de.
 
@@ -113,7 +113,7 @@ memor:spanienkaempfer a rdfs:Class;
 #
 # Person / victim modeling
 #
-memor:victim a rdfs:Class,
+memor:victim a owl:Class,
          foaf:Person,
          schema:Person.
 
@@ -123,10 +123,22 @@ memor:hasEvent a rdfs:Property;
 
 
 #
-# Archival material TODO
+# Archival material
 # 
 
-memor:image a schema:ImageObject,
-        foaf:Image.
+memor:source a owl:Class;
+        rdfs:label "Historische Quelle"@de, "historical source"@en.
+
+memor:hasSource a owl:ObjectProperty;
+        rdfs:label "has source"@en, "hat Quelle"@de;
+        rdfs:comment "Links a person to it's source material"@en; 
+        rdfs:domain memor:victim;
+        rdfs:range memor:image.
+
+memor:image a owl:Class; 
+        rdfs:subClassOf memor:source;
+        rdfs:subClassOf schema:ImageObject;
+        rdfs:subClassOf foaf:Image;
+        rdfs:label "Bildquelle"@de, "image source"@en.
 
 

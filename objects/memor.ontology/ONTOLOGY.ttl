@@ -15,7 +15,7 @@
 
 # base event of memor
 memor:event a owl:Class;
-        rdfs:subClassOf cidoc:E5_Event,
+        rdfs:subClassOf cidoc:E5_Event;
         # every event might be represented by a geo point
         rdfs:subClassOf wgs84_pos:Point;
         rdfs:label "Event associated with a person"@en, "Ereignis assoziiert mit einer Person"@de.

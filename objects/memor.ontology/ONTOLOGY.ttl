@@ -89,7 +89,7 @@ memor:roma a owl:Class;
         rdfs:subClassOf memor:prosecution;
         rdfs:label "Roma/Romnija und Sinti/Sintize"@de.
 
-memor:euthanasieopfer a owl:Classs;
+memor:euthanasieopfer a owl:Class;
         rdfs:subClassOf memor:prosecution;
         rdfs:label "Opfer der NS-Euthanasie"@de.
 

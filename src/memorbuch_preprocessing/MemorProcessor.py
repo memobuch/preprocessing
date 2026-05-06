@@ -186,7 +186,7 @@ class MemorProcessor:
             finally:
                 # as final step add the person
                 self.memor_persons.append(cur_memor_person)
-                self.logger.info(f"Loaded memor person: {cur_memor_person}")
+                self.logger.debug(f"Loaded memor person: {cur_memor_person}")
 
         # Reading in Events from the gsheet
         # for event_entry in self.memor_events_frame.to_dict(orient='records'):

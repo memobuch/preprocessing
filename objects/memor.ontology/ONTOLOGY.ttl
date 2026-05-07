@@ -8,6 +8,7 @@
 @prefix schema: <http://schema.org/> .
 @prefix wgs84_pos: <http://www.w3.org/2003/01/geo/wgs84_pos#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix derla: <https://gams.uni-graz.at/>
 
 #
 # Event modeling of MEMOR
@@ -40,6 +41,21 @@ memor:death a owl:Class;
 memor:voluntary_residence a owl:Class;
         rdfs:subClassOf memor:event;
         rdfs:label "Letzte Freiwillige Wohnadresse"@de.
+
+# forced residence as event
+memor:forced_residence a owl:Class;
+    rdfs:subClassOf memor:event;
+    rdfs:label "Erzwungene Wohnadresse"@de.
+
+# imprisonment
+memor:imprisonment a owl:Class;
+    rdfs:subClassOf memor:event;
+    rdfs:label "Haft"@de.
+
+# flight event
+memor:flight a owl:Class;
+    rdfs:subClassOf memor:event;
+    rdfs:label "Flucht"@de.
 
 #
 # prosecution
@@ -109,9 +125,8 @@ memor:spanienkaempfer a owl:Class;
 #
 # Person / victim modeling
 #
-memor:victim a owl:Class,
-         foaf:Person,
-         schema:Person.
+memor:victim a owl:Class ;
+         rdfs:subClassOf foaf:Person, schema:Person .
 
 memor:hasEvent a rdfs:Property;
         rdfs:domain memor:victim;
@@ -121,6 +136,11 @@ memor:hasLiteratureReference a owl:DataTypeProperty;
         rdfs:label "has literature source"@en, "hat Literaturreferenz"@de;
         rdfs:domain memor:victim;
         rdfs:range xsd:string.
+
+memor:hasMemorialSign a owl:DataTypeProperty;
+        rdfs:label "has memorial sign"@en, "hat Erinnerungszeichen"@de;
+        rdfs:domain memor:victim;
+        rdfs:range derla:placeOfRemembrance.
 
 #
 # Archival material
@@ -133,7 +153,7 @@ memor:hasSource a owl:ObjectProperty;
         rdfs:label "has source"@en, "hat Quelle"@de;
         rdfs:comment "Links a person to it's source material"@en; 
         rdfs:domain memor:victim;
-        rdfs:range memor:image.
+        rdfs:range memor:source.
 
 memor:image a owl:Class; 
         rdfs:subClassOf memor:source;

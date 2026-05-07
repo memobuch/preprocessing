@@ -6,7 +6,7 @@
 @prefix memor: <https://www.ns-opfer-graz.at/ontology#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix schema: <http://schema.org/> .
-@prefix wgs84_pos: <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+@prefix geo: <http://www.opengis.net/ont/geosparql#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix derla: <https://gams.uni-graz.at/>
 
@@ -17,9 +17,21 @@
 # base event of memor
 memor:event a owl:Class;
         rdfs:subClassOf cidoc:E5_Event;
-        # every event might be represented by a geo point
-        rdfs:subClassOf wgs84_pos:Point;
         rdfs:label "Event associated with a person"@en, "Ereignis assoziiert mit einer Person"@de.
+
+# place of event
+memor:place a owl:Class ;
+        rdfs:subClassOf cidoc:E53_Place ;
+        # We declare that our historical places are spatial features
+        rdfs:subClassOf geo:Feature ;
+        rdfs:label "Ort"@de, "Place"@en .
+
+# 2. Event-to-Place link remains strictly CIDOC
+memor:took_place_at a owl:ObjectProperty ;
+        rdfs:subPropertyOf cidoc:P7_took_place_at ;
+        rdfs:domain memor:event ;
+        rdfs:range memor:place ;
+        rdfs:label "fand statt in"@de, "took place at"@en
         
 # birth
 memor:birth a owl:Class;

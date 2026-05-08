@@ -271,7 +271,7 @@ class MemorProcessor:
             try:
                 person.write_as_dublin_core()
                 person.write_as_object_csv()
-                person.write_as_rdf_xml()
+                # person.write_as_rdf_xml()
                 person.write_as_turtle()
                 person.write_as_search_json()
                 person.write_as_image_files()
@@ -424,27 +424,47 @@ class MemorProcessor:
         :return: A set of unique victim categories
         """
 
-        try:
-            col = MemorProcessor.map_nullable_col(col)
-            victim_categories = col.split(",")
-            victim_categories = [cat.strip() for cat in victim_categories]
-            # replace semicolons through normal commas
-            victim_categories = [cat.replace(";","_") for cat in victim_categories]
 
-            victim_categories_cleaned = []
-
-            # remove / translate outdated category in data
-            for category in victim_categories:
-                if category == "jüdischeopfer_als Jude verfolgt":
-                    victim_categories_cleaned.append("jüdischeopfer_als-Jude-verfolgt")
-                else:
-                    victim_categories_cleaned.append(category)
-
-            return victim_categories_cleaned
-        except Exception as e:
-            msg = f"Error analysing victim categories. There might be no victim categories assigned - assigning default empty list {e}"
-            logging.warning(msg)
+        col = MemorProcessor.map_nullable_col(col)
+        if col is None:
+            logging.debug("No victim categories found in column")
             return []
+
+        victim_categories = col.split(",")
+        victim_categories = [cat.strip() for cat in victim_categories]
+
+        # new
+        sheet_internal_mapping = {
+            "widerstand;politisch": "resistance-political",
+            "widerstand;religiös": "resistance-religious",
+            "widerstand;individuell": "resistance-individual",
+            "widerstand;deserteure": "resistance-deserters",
+            "zeugenjehovas": "witnesses-jehovah",
+            "jüdischeopfer;jüdisch":"jewish-victims-jewish",
+            "jüdischeopfer;als Jude verfolgt":"jewish-victims-persecuted-as-jew",
+            "roma":"roma",
+            "euthanasieopfer": "euthanasia-victim",
+            "homosexuelleopfer": "homosexual-victim",
+            "spanienkämpfer":"spain-fighter",
+            "NS-Gegnerschaft":"ns-opposition"
+        }
+
+        victim_category_ids_mapped = []
+        for victim_category in victim_categories:
+            mapped_category_id = sheet_internal_mapping.get(victim_category, "MAPPING_ERROR")
+            if mapped_category_id == "MAPPING_ERROR":
+                msg = f"Invalid victim category '{victim_category}'"
+                logging.error(msg)
+                raise ValueError(msg)
+            victim_category_ids_mapped.append(
+                mapped_category_id
+            )
+
+        if len(victim_category_ids_mapped) == 0:
+            logging.debug("No victim categories found in column")
+
+        return victim_category_ids_mapped
+
 
     @staticmethod
     def map_memorial_signs(col):

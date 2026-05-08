@@ -37,7 +37,7 @@ class FeatureAggregator:
 
             if unique_key in unique_features:
                 duplicate_count += 1
-                logging.warning(f"Removing exact duplicate feature: {unique_key}")
+                logging.debug(f"Removing exact duplicate feature: {unique_key}")
             else:
                 unique_features[unique_key] = feature
 

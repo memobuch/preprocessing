@@ -1,6 +1,6 @@
 
 
-class MemoVocab:
+class MemorVocab:
     """
     Holds vocab enums like, victim categories and event types
     with correspondent german labels.
@@ -14,12 +14,12 @@ class MemoVocab:
 
 
     EVENT_TYPES = {
-        "voluntary_residence": {
+        "voluntary-residence": {
             "label":"Letzte Freiwillige Wohnadresse",
             "color":"#b3b3b3",
             "shape": "circle"
         },
-        "forced_residence": {
+        "forced-residence": {
             "label": "Erzwungene Wohnadresse",
             "color": "#666666",
             "shape": "square"
@@ -42,70 +42,74 @@ class MemoVocab:
     }
 
     VICTIM_CATEGORY_TYPES = {
-        "widerstand;politisch": {
+        "ns-opposition": {
+            "label": "NS-Gegner",
+            "color": "#ADFF2F"
+        },
+        "resistance-political": {
             "label": "Widerstand, politisch",
             "color": "#ADFF2F"
         },
-        "widerstand;religiös": {
-            "label": "Widerstand, religios",
+        "resistance-religious": {
+            "label": "Widerstand, religiös",
             "color": "#ADFF2F"
         },
-        "widerstand;individuell": {
+        "resistance-individual": {
             "label": "Widerstand, individuell",
             "color": "#ADFF2F"
         },
-        "widerstand;deserteure": {
+        "resistance-deserters": {
             "label": "Widerstand, Deserteure",
             "color": "#ADFF2F"
         },
-        "zeugenjehovas": {
+        "witnesses-jehovah": {
             "label": "Zeugen Jehovas",
             "color": "#EE4B2B"
         },
-        "jüdischeopfer;jüdisch": {
+        "jewish-victims-jewish": {
             "label": "Jüdische Opfer",
             "color": "#228B22"
         },
-        "jüdischeopfer;als Jude verfolgt": {
+        "jewish-victims-persecuted-as-jew": {
             "label": "Jüdische Opfer, als Jude verfolgt",
             "color": "#228B22"
         },
         "roma": {
-            "label": "Roma",
+            "label": "Roma/Romnija und Sinti/Sintize",
             "color": "#FF8C00"
         },
-        "euthanasieopfer": {
-            "label": "Euthanasie Opfer",
+        "euthanasia-victim": {
+            "label": "Opfer der NS-Euthanasie",
             "color": "#ADD8E6"
         },
-        "homosexuelleopfer": {
+        "homosexual-victim": {
             "label": "Homosexuelle Opfer",
             "color": "#00008B"
         },
-        "opfernsjustiz": {
-            "label": "Opfer der NS-Justiz",
-            "color": "#4169E1"
-        },
-        "asoziale": {
-            "label": "Asoziale",
-            "color": "#B5523E"
-        },
-        "spanienkämpfer": {
+        # "opfernsjustiz": {
+        #     "label": "Opfer der NS-Justiz",
+        #     "color": "#4169E1"
+        # },
+        # "antisocial": {
+        #     "label": "Als „asozial“ Verfolgte",
+        #     "color": "#B5523E"
+        # },
+        "spain-fighter": {
             "label": "SpanienkämpferInnen",
             "color": "#702963"
         },
-        "zwangsarbeiter": {
-            "label": "ZwangsarbeiterInnen",
-            "color": "#E0FFFF"
-        },
-        "alliierte": {
-            "label": "Alliierte Soldaten",
-            "color": "#00BFCB"
-        },
-        "zivileopfer": {
-            "label": "Zivile Opfer",
-            "color": "#8B008B"
-        },
+        # "zwangsarbeiter": {
+        #     "label": "ZwangsarbeiterInnen",
+        #     "color": "#E0FFFF"
+        # },
+        # "alliierte": {
+        #     "label": "Alliierte Soldaten",
+        #     "color": "#00BFCB"
+        # },
+        # "zivileopfer": {
+        #     "label": "Zivile Opfer",
+        #     "color": "#8B008B"
+        # },
     }
 
     VOCAB_CONTAINER = {

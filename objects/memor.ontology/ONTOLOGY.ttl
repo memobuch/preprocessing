@@ -8,7 +8,8 @@
 @prefix schema: <http://schema.org/> .
 @prefix geo: <http://www.opengis.net/ont/geosparql#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-@prefix derla: <https://gams.uni-graz.at/>
+@prefix derla: <https://gams.uni-graz.at/> .
+@prefix edtf: <http://id.loc.gov/datatypes/edtf/> .
 
 #
 # Event modeling of MEMOR
@@ -26,13 +27,13 @@ memor:place a owl:Class ;
         rdfs:subClassOf geo:Feature ;
         rdfs:label "Ort"@de, "Place"@en .
 
-# 2. Event-to-Place link remains strictly CIDOC
+# Event-to-Place link remains strictly CIDOC
 memor:took_place_at a owl:ObjectProperty ;
         rdfs:subPropertyOf cidoc:P7_took_place_at ;
         rdfs:domain memor:event ;
         rdfs:range memor:place ;
-        rdfs:label "fand statt in"@de, "took place at"@en
-        
+        rdfs:label "fand statt in"@de, "took place at"@en .
+
 # birth
 memor:birth a owl:Class;
         rdfs:subClassOf memor:event;
@@ -69,6 +70,12 @@ memor:flight a owl:Class;
     rdfs:subClassOf memor:event;
     rdfs:label "Flucht"@de.
 
+# each event has a date
+memor:hasDate a owl:DatatypeProperty;
+        rdfs:label "hasDate"@en, "hat Datum"@de;
+        rdfs:domain memor:event;
+        rdfs:range edtf:EDTF-level1.
+
 #
 # prosecution
 #
@@ -76,40 +83,40 @@ memor:prosecution a owl:Class;
         rdfs:subClassOf memor:event;
         rdfs:label "Verfolgungsereignis für ein Opfer des Nationalsozialismus."@de.
 
-memor:prosecution_jüdischeopfer_jüdisch a owl:Class;
+memor:prosecution_juedischeopfer_juedisch a owl:Class;
         rdfs:subClassOf memor:prosecution;
         rdfs:label "Verfolgung aufgrund der Nürnberger Rassengesetze (jüdische Religion)"@de,
                    "Persecution under the Nuremberg Race Laws (Jewish religion)"@en.    
 
-memor:NS-Gegnerschaft a owl:Class;
+memor:nsopposition a owl:Class;
         rdfs:subClassOf memor:prosecution;
         rdfs:label "NS-Gegner"@de.
 
-memor:widerstand_politisch a owl:Class;
+memor:resistance_political a owl:Class;
         rdfs:subClassOf memor:prosecution;
         rdfs:label "Widerstand, politisch"@de.
 
-memor:widerstand_religioes a owl:Class;
+memor:resistance_religious a owl:Class;
         rdfs:subClassOf memor:prosecution;
         rdfs:label "Widerstand, religiös"@de.
 
-memor:widerstand_individuell a owl:Class;
+memor:resistance_individual a owl:Class;
         rdfs:subClassOf memor:prosecution;
         rdfs:label "Widerstand, individuell"@de.
 
-memor:widerstand_deserteure a owl:Class;
+memor:resistance_deserters a owl:Class;
         rdfs:subClassOf memor:prosecution;
         rdfs:label "Widerstand, Deserteure"@de.
 
-memor:zeugenjehovas a owl:Class;
+memor:witnessesjehovah a owl:Class;
         rdfs:subClassOf memor:prosecution;
         rdfs:label "Zeugen Jehovas"@de.
 
-memor:juedischeopfer_juedisch a owl:Class;
+memor:jewishvictims_jewish a owl:Class;
         rdfs:subClassOf memor:prosecution;
         rdfs:label "Jüdische Opfer"@de.
 
-memor:juedischeopfer_als-Jude-verfolgt a owl:Class;
+memor:jewishvictims_persecuted-as-jew a owl:Class;
         rdfs:subClassOf memor:prosecution;
         rdfs:label "Jüdische Opfer, als Jude verfolgt"@de.
 
@@ -117,19 +124,15 @@ memor:roma a owl:Class;
         rdfs:subClassOf memor:prosecution;
         rdfs:label "Roma/Romnija und Sinti/Sintize"@de.
 
-memor:euthanasieopfer a owl:Class;
+memor:euthanasiavictim a owl:Class;
         rdfs:subClassOf memor:prosecution;
         rdfs:label "Opfer der NS-Euthanasie"@de.
 
-memor:homosexuelleopfer a owl:Class;
+memor:homosexualvictim a owl:Class;
         rdfs:subClassOf memor:prosecution;
         rdfs:label "Homosexuelle Opfer"@de.
 
-memor:asoziale a owl:Class;
-        rdfs:subClassOf memor:prosecution;
-        rdfs:label "Als „asozial“ Verfolgte"@de.
-
-memor:spanienkaempfer a owl:Class;
+memor:spainfighter a owl:Class;
         rdfs:subClassOf memor:prosecution;
         rdfs:label "SpanienkämpferInnen"@de.
 
@@ -140,16 +143,18 @@ memor:spanienkaempfer a owl:Class;
 memor:victim a owl:Class ;
          rdfs:subClassOf foaf:Person, schema:Person .
 
-memor:hasEvent a rdfs:Property;
+memor:hasEvent a owl:ObjectProperty;
+        rdfs:subPropertyOf cidoc:P11i_participated_in ;
         rdfs:domain memor:victim;
-        rdfs:range memor:event.
+        rdfs:range memor:event ;
+        rdfs:label "participated in event"@en, "nahm an Ereignis teil"@de .
 
-memor:hasLiteratureReference a owl:DataTypeProperty;
+memor:hasLiteratureReference a owl:DatatypeProperty;
         rdfs:label "has literature source"@en, "hat Literaturreferenz"@de;
         rdfs:domain memor:victim;
         rdfs:range xsd:string.
 
-memor:hasMemorialSign a owl:DataTypeProperty;
+memor:hasMemorialSign a owl:ObjectProperty;
         rdfs:label "has memorial sign"@en, "hat Erinnerungszeichen"@de;
         rdfs:domain memor:victim;
         rdfs:range derla:placeOfRemembrance.

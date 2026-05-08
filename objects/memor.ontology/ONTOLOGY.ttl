@@ -84,61 +84,63 @@ memor:prosecution a owl:Class;
         rdfs:subClassOf memor:event;
         rdfs:label "Verfolgungsereignis für ein Opfer des Nationalsozialismus."@de.
 
-memor:nsopposition a owl:Class;
+memor:ns-opposition a owl:Class;
         rdfs:subClassOf memor:prosecution;
-        rdfs:label "NS-Gegner"@de.
+        rdfs:label "NS-Gegner"@de,"Opponents of the Nazis"@en.
 
 memor:resistance a owl:Class;
+        rdfs:comment "Prosecutions because of resistance."@en;
         rdfs:subClassOf memor:prosecution;
-        rdfs:label "Widerstand"@de.
+        rdfs:label "Widerstand"@de, "resistance"@en.
 
-memor:resistance_political a owl:Class;
+memor:resistance-political a owl:Class;
         rdfs:subClassOf memor:resistance;
-        rdfs:label "Widerstand, politisch"@de.
+        rdfs:label "Widerstand, politisch"@de, "resistance, political"@en.
 
-memor:resistance_religious a owl:Class;
+memor:resistance-religious a owl:Class;
         rdfs:subClassOf memor:resistance;
-        rdfs:label "Widerstand, religiös"@de.
+        rdfs:label "Widerstand, religiös"@de, "resistance, religious"@en .
 
-memor:resistance_individual a owl:Class;
+memor:resistance-individual a owl:Class;
         rdfs:subClassOf memor:resistance;
-        rdfs:label "Widerstand, individuell"@de.
+        rdfs:label "Widerstand, individuell"@de,"resistance, individual"@en .
 
-memor:resistance_deserters a owl:Class;
+memor:resistance-deserters a owl:Class;
         rdfs:subClassOf memor:resistance;
-        rdfs:label "Widerstand, Deserteure"@de.
+        rdfs:label "Widerstand, Deserteure"@de, "resistance, deserters"@en.
 
-memor:witnessesjehovah a owl:Class;
+memor:witnesses-jehovah a owl:Class;
         rdfs:subClassOf memor:prosecution;
-        rdfs:label "Zeugen Jehovas"@de.
+        rdfs:label "Zeugen Jehovas"@de,"Jehovah's Witnesses"@en.
 
-memor:jewishvictims a owl:Class;
+memor:jewish-victims a owl:Class;
+        rdfs:comment "Persecution based on the Nürnberger Rassengesetze."@en;
         rdfs:subClassOf memor:prosecution;
-        rdfs:label "Jüdische Opfer"@de.
+        rdfs:label "Jüdische Opfer"@de, "jewish victims"@en.
 
-memor:jewishvictims_jewish a owl:Class;
-        rdfs:subClassOf memor:jewishvictims;
-        rdfs:label "Jüdische Opfer (jüdische Religion)"@de.
+memor:jewish-victims-jewish a owl:Class;
+        rdfs:subClassOf memor:jewish-victims;
+        rdfs:label "Jüdische Opfer (jüdische Religion)"@de, "jewish victims (jewish religion)"@en.
 
-memor:jewishvictims_persecutedasjew a owl:Class;
-        rdfs:subClassOf memor:jewishvictims;
-        rdfs:label "Jüdische Opfer, als Jude verfolgt"@de.
+memor:jewish-victims-persecuted-as-jew a owl:Class;
+        rdfs:subClassOf memor:jewish-victims;
+        rdfs:label "Jüdische Opfer, als Jude verfolgt"@de, "jewish victims, persecuted as a Jew"@en.
 
 memor:roma a owl:Class;
         rdfs:subClassOf memor:prosecution;
-        rdfs:label "Roma/Romnija und Sinti/Sintize"@de.
+        rdfs:label "Roma/Romnija und Sinti/Sintize"@de,"Roma/Romnija and Sinti/Sintize"@en .
 
-memor:euthanasiavictim a owl:Class;
+memor:euthanasia-victim a owl:Class;
         rdfs:subClassOf memor:prosecution;
-        rdfs:label "Opfer der NS-Euthanasie"@de.
+        rdfs:label "Opfer der NS-Euthanasie"@de, "victims of euthanasia"@en.
 
-memor:homosexualvictim a owl:Class;
+memor:homosexual-victim a owl:Class;
         rdfs:subClassOf memor:prosecution;
-        rdfs:label "Homosexuelle Opfer"@de.
+        rdfs:label "Homosexuelle Opfer"@de, "homosexual victims"@en.
 
-memor:spainfighter a owl:Class;
+memor:spain-fighter a owl:Class;
         rdfs:subClassOf memor:prosecution;
-        rdfs:label "SpanienkämpferInnen"@de.
+        rdfs:label "SpanienkämpferInnen"@de, "spain fighter"@en.
 
 
 #

@@ -14,12 +14,12 @@ class MemorVocab:
 
 
     EVENT_TYPES = {
-        "voluntary_residence": {
+        "voluntary-residence": {
             "label":"Letzte Freiwillige Wohnadresse",
             "color":"#b3b3b3",
             "shape": "circle"
         },
-        "forced_residence": {
+        "forced-residence": {
             "label": "Erzwungene Wohnadresse",
             "color": "#666666",
             "shape": "square"
@@ -42,35 +42,35 @@ class MemorVocab:
     }
 
     VICTIM_CATEGORY_TYPES = {
-        "nsopposition": {
+        "ns-opposition": {
             "label": "NS-Gegner",
             "color": "#ADFF2F"
         },
-        "resistance_political": {
+        "resistance-political": {
             "label": "Widerstand, politisch",
             "color": "#ADFF2F"
         },
-        "resistance_religious": {
+        "resistance-religious": {
             "label": "Widerstand, religiös",
             "color": "#ADFF2F"
         },
-        "resistance_individual": {
+        "resistance-individual": {
             "label": "Widerstand, individuell",
             "color": "#ADFF2F"
         },
-        "resistance_deserters": {
+        "resistance-deserters": {
             "label": "Widerstand, Deserteure",
             "color": "#ADFF2F"
         },
-        "witnessesjehovah": {
+        "witnesses-jehovah": {
             "label": "Zeugen Jehovas",
             "color": "#EE4B2B"
         },
-        "jewishvictims_jewish": {
+        "jewish-victims-jewish": {
             "label": "Jüdische Opfer",
             "color": "#228B22"
         },
-        "jewishvictims_persecutedasjew": {
+        "jewish-victims-persecuted-as-jew": {
             "label": "Jüdische Opfer, als Jude verfolgt",
             "color": "#228B22"
         },
@@ -78,11 +78,11 @@ class MemorVocab:
             "label": "Roma/Romnija und Sinti/Sintize",
             "color": "#FF8C00"
         },
-        "euthanasiavictim": {
+        "euthanasia-victim": {
             "label": "Opfer der NS-Euthanasie",
             "color": "#ADD8E6"
         },
-        "homosexualvictim": {
+        "homosexual-victim": {
             "label": "Homosexuelle Opfer",
             "color": "#00008B"
         },
@@ -94,7 +94,7 @@ class MemorVocab:
         #     "label": "Als „asozial“ Verfolgte",
         #     "color": "#B5523E"
         # },
-        "spainfighter": {
+        "spain-fighter": {
             "label": "SpanienkämpferInnen",
             "color": "#702963"
         },

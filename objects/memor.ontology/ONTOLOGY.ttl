@@ -28,7 +28,7 @@ memor:place a owl:Class ;
         rdfs:label "Ort"@de, "Place"@en .
 
 # Event-to-Place link remains strictly CIDOC
-memor:took_place_at a owl:ObjectProperty ;
+memor:took-place-at a owl:ObjectProperty ;
         rdfs:subPropertyOf cidoc:P7_took_place_at ;
         rdfs:domain memor:event ;
         rdfs:range memor:place ;
@@ -51,28 +51,27 @@ memor:death a owl:Class;
 
 
 # voluntary residence as event
-memor:voluntary_residence a owl:Class;
+memor:voluntary-residence a owl:Class;
         rdfs:subClassOf memor:event;
-        rdfs:label "Letzte Freiwillige Wohnadresse"@de.
+        rdfs:label "Letzte Freiwillige Wohnadresse"@de, "Last known voluntary residence"@en .
 
 # forced residence as event
-memor:forced_residence a owl:Class;
+memor:forced-residence a owl:Class;
     rdfs:subClassOf memor:event;
-    rdfs:label "Erzwungene Wohnadresse"@de.
+    rdfs:label "Erzwungene Wohnadresse"@de, "Forced place of residence"@en.
 
 # imprisonment
 memor:imprisonment a owl:Class;
     rdfs:subClassOf memor:event;
-    rdfs:label "Haft"@de.
+    rdfs:label "Haft"@de, "Imprisonment"@en.
 
 # flight event
 memor:flight a owl:Class;
     rdfs:subClassOf memor:event;
-    rdfs:label "Flucht"@de.
+    rdfs:label "Flucht"@de, "Flight"@en.
 
 # each event has a date
 memor:hasDate a owl:DatatypeProperty;
-        # CRITICAL: Hook it back into the global LOD graph
         rdfs:subPropertyOf dcterms:date ;
         rdfs:label "has date"@en, "hat Datum"@de;
         rdfs:domain memor:event;

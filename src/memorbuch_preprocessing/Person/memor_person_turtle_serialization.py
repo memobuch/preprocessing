@@ -1,3 +1,6 @@
+
+from memorbuch_preprocessing.MemorVocab import MemorVocab
+
 """
 Turtle (SEMANTIC_STATEMENTS.ttl) Generation for MEMOR Project
 =============================================================

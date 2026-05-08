@@ -181,8 +181,8 @@ class MemorPerson:
             "funder": ";".join(["City of Graz", "National Fund of the Republic of Austria for Victims of National Socialism", "Future Fund of the Republic of Austria", "Federal Chancellery of the Republic of Austria"]),
             'source': ['Memor datasheet transformed by Memor preprocessing tool'],
             'objectType': ['RDF'],
-            'mainResource': ['RDF.xml'],
-            'tags': ";".join(object_tags) # tags separated by semicolon # TODO make sure english translation?
+            'mainResource': ['SEMANTIC_STATEMENTS.ttl'],
+            'tags': ";".join(object_tags) # tags separated by semicolon
         }
 
         df = pd.DataFrame(data)

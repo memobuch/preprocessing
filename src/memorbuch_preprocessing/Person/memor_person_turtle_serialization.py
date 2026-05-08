@@ -203,7 +203,7 @@ def write_as_turtle(person) -> Optional[str]:
     # HAFT / FLUCHT EVENTS
     # ------------------------------------------------------------------
     for event in person.events:
-        event_uri = URIRef(f"{MEMOR_BASE_URI}objects/{person.id}/events/{event.id}")
+        event_uri = URIRef(f"{MEMOR_BASE_URI}objects/{person.id}#events/{event.id}")
         _add_haft_flucht_event(g, event_uri, event, person_uri)
 
     # ------------------------------------------------------------------
@@ -263,7 +263,7 @@ def _add_event_place_geometry(g: Graph, event_uri: URIRef, place_name: Optional[
 
 def _add_birth_event(g: Graph, person_uri: URIRef, birth_date: Optional[str], birth_place: Optional[str], lat,
                      lon) -> None:
-    birth_uri = URIRef(str(person_uri) + "/events/birth")
+    birth_uri = URIRef(str(person_uri) + "#events/birth")
     g.add((birth_uri, RDF.type, MEMOR.birth))
     _add_event_base_types(g, birth_uri)
 
@@ -279,7 +279,7 @@ def _add_birth_event(g: Graph, person_uri: URIRef, birth_date: Optional[str], bi
 
 def _add_death_event(g: Graph, person_uri: URIRef, death_date: Optional[str], death_place: Optional[str], lat,
                      lon) -> None:
-    death_uri = URIRef(str(person_uri) + "/events/death")
+    death_uri = URIRef(str(person_uri) + "#events/death")
     g.add((death_uri, RDF.type, MEMOR.death))
     _add_event_base_types(g, death_uri)
 
@@ -295,7 +295,7 @@ def _add_death_event(g: Graph, person_uri: URIRef, death_date: Optional[str], de
 
 def _add_residence_event(g: Graph, person_uri: URIRef, *, event_local_name: str, ontology_class: URIRef,
                          address: Optional[str], lat, lon, label: str) -> None:
-    event_uri = URIRef(str(person_uri) + f"/events/{event_local_name}")
+    event_uri = URIRef(str(person_uri) + f"#events/{event_local_name}")
     g.add((event_uri, RDF.type, ontology_class))
     _add_event_base_types(g, event_uri)
 
@@ -315,7 +315,7 @@ def _add_prosecution_event(g: Graph, person_uri: URIRef, person_id: str, categor
         logging.warning(f"Category '{category_key}' not found in MemorVocab. Skipping.")
         return
 
-    prosecution_uri = URIRef(f"{MEMOR_BASE_URI}objects/{person_id}/events/prosecution_{category_key}")
+    prosecution_uri = URIRef(f"{MEMOR_BASE_URI}objects/{person_id}#events/prosecution_{category_key}")
 
     # Use dict lookup to safely inject the kebab-case key into the Namespace
     g.add((prosecution_uri, RDF.type, MEMOR[category_key]))

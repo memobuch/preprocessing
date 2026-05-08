@@ -409,9 +409,9 @@ class MemorProcessor:
         col_value = str(col_value)
         col_value = col_value.strip().lower()
         if col_value == "männlich":
-            return "männlich"
+            return "male"
         elif col_value == "weiblich":
-            return "weiblich"
+            return "female"
         else:
             msg = f"Invalid gender column: {col_value}"
             logging.error(msg)

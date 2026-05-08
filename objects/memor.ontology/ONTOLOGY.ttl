@@ -89,32 +89,40 @@ memor:nsopposition a owl:Class;
         rdfs:subClassOf memor:prosecution;
         rdfs:label "NS-Gegner"@de.
 
-memor:resistance_political a owl:Class;
+memor:resistance a owl:Class;
         rdfs:subClassOf memor:prosecution;
+        rdfs:label "Widerstand"@de.
+
+memor:resistance_political a owl:Class;
+        rdfs:subClassOf memor:resistance;
         rdfs:label "Widerstand, politisch"@de.
 
 memor:resistance_religious a owl:Class;
-        rdfs:subClassOf memor:prosecution;
+        rdfs:subClassOf memor:resistance;
         rdfs:label "Widerstand, religiös"@de.
 
 memor:resistance_individual a owl:Class;
-        rdfs:subClassOf memor:prosecution;
+        rdfs:subClassOf memor:resistance;
         rdfs:label "Widerstand, individuell"@de.
 
 memor:resistance_deserters a owl:Class;
-        rdfs:subClassOf memor:prosecution;
+        rdfs:subClassOf memor:resistance;
         rdfs:label "Widerstand, Deserteure"@de.
 
 memor:witnessesjehovah a owl:Class;
         rdfs:subClassOf memor:prosecution;
         rdfs:label "Zeugen Jehovas"@de.
 
-memor:jewishvictims_jewish a owl:Class;
+memor:jewishvictims a owl:Class;
         rdfs:subClassOf memor:prosecution;
         rdfs:label "Jüdische Opfer"@de.
 
-memor:jewishvictims_persecuted-as-jew a owl:Class;
-        rdfs:subClassOf memor:prosecution;
+memor:jewishvictims_jewish a owl:Class;
+        rdfs:subClassOf memor:jewishvictims;
+        rdfs:label "Jüdische Opfer (jüdische Religion)"@de.
+
+memor:jewishvictims_persecutedasjew a owl:Class;
+        rdfs:subClassOf memor:jewishvictims;
         rdfs:label "Jüdische Opfer, als Jude verfolgt"@de.
 
 memor:roma a owl:Class;

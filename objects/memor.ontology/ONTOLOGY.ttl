@@ -72,9 +72,11 @@ memor:flight a owl:Class;
 
 # each event has a date
 memor:hasDate a owl:DatatypeProperty;
-        rdfs:label "hasDate"@en, "hat Datum"@de;
+        # CRITICAL: Hook it back into the global LOD graph
+        rdfs:subPropertyOf dcterms:date ;
+        rdfs:label "has date"@en, "hat Datum"@de;
         rdfs:domain memor:event;
-        rdfs:range edtf:EDTF-level1.
+        rdfs:range edtf:EDTF-level1 .
 
 #
 # prosecution
@@ -82,11 +84,6 @@ memor:hasDate a owl:DatatypeProperty;
 memor:prosecution a owl:Class;
         rdfs:subClassOf memor:event;
         rdfs:label "Verfolgungsereignis für ein Opfer des Nationalsozialismus."@de.
-
-memor:prosecution_juedischeopfer_juedisch a owl:Class;
-        rdfs:subClassOf memor:prosecution;
-        rdfs:label "Verfolgung aufgrund der Nürnberger Rassengesetze (jüdische Religion)"@de,
-                   "Persecution under the Nuremberg Race Laws (Jewish religion)"@en.    
 
 memor:nsopposition a owl:Class;
         rdfs:subClassOf memor:prosecution;

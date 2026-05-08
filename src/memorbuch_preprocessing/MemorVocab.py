@@ -42,35 +42,35 @@ class MemorVocab:
     }
 
     VICTIM_CATEGORY_TYPES = {
-        "NS-Gegnerschaft": {
+        "nsopposition": {
             "label": "NS-Gegner",
             "color": "#ADFF2F"
         },
-        "widerstand_politisch": {
+        "resistance_political": {
             "label": "Widerstand, politisch",
             "color": "#ADFF2F"
         },
-        "widerstand_religiös": {
+        "resistance_religious": {
             "label": "Widerstand, religiös",
             "color": "#ADFF2F"
         },
-        "widerstand_individuell": {
+        "resistance_individual": {
             "label": "Widerstand, individuell",
             "color": "#ADFF2F"
         },
-        "widerstand_deserteure": {
+        "resistance_deserters": {
             "label": "Widerstand, Deserteure",
             "color": "#ADFF2F"
         },
-        "zeugenjehovas": {
+        "witnessesjehovah": {
             "label": "Zeugen Jehovas",
             "color": "#EE4B2B"
         },
-        "jüdischeopfer_jüdisch": {
+        "jewishvictims_jewish": {
             "label": "Jüdische Opfer",
             "color": "#228B22"
         },
-        "jüdischeopfer_als-Jude-verfolgt": {
+        "jewishvictims_persecutedasjew": {
             "label": "Jüdische Opfer, als Jude verfolgt",
             "color": "#228B22"
         },
@@ -78,11 +78,11 @@ class MemorVocab:
             "label": "Roma/Romnija und Sinti/Sintize",
             "color": "#FF8C00"
         },
-        "euthanasieopfer": {
+        "euthanasiavictim": {
             "label": "Opfer der NS-Euthanasie",
             "color": "#ADD8E6"
         },
-        "homosexuelleopfer": {
+        "homosexualvictim": {
             "label": "Homosexuelle Opfer",
             "color": "#00008B"
         },
@@ -90,11 +90,11 @@ class MemorVocab:
         #     "label": "Opfer der NS-Justiz",
         #     "color": "#4169E1"
         # },
-        "asoziale": {
-            "label": "Als „asozial“ Verfolgte",
-            "color": "#B5523E"
-        },
-        "spanienkämpfer": {
+        # "antisocial": {
+        #     "label": "Als „asozial“ Verfolgte",
+        #     "color": "#B5523E"
+        # },
+        "spainfighter": {
             "label": "SpanienkämpferInnen",
             "color": "#702963"
         },

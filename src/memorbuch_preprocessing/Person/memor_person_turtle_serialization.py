@@ -178,7 +178,7 @@ def write_as_turtle(person) -> Optional[str]:
             if sign and sign.strip():
                 # Assuming 'sign' here is a resolvable URI to DERLA or a string identifier.
                 # Adjust to URIRef(sign.strip()) if it's an absolute URI
-                g.add((person_uri, MEMOR.hasMemorialSign, _safe_literal(sign.strip())))
+                g.add((person_uri, MEMOR.hasMemorialSign, URIRef(f"https://gams.uni-graz.at/{sign.strip()}")))
 
     # --- Literature ---
     if person.literature:

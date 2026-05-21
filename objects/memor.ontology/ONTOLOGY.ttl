@@ -10,6 +10,7 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix derla: <https://gams.uni-graz.at/> .
 @prefix edtf: <http://id.loc.gov/datatypes/edtf/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
 
 #
 # Event modeling of MEMOR
@@ -91,23 +92,23 @@ memor:ns-opposition a owl:Class;
 memor:resistance a owl:Class;
         rdfs:comment "Prosecutions because of resistance."@en;
         rdfs:subClassOf memor:prosecution;
-        rdfs:label "Widerstand"@de, "resistance"@en.
+        rdfs:label "Widerstand"@de, "Resistance"@en.
 
 memor:resistance-political a owl:Class;
         rdfs:subClassOf memor:resistance;
-        rdfs:label "Widerstand, politisch"@de, "resistance, political"@en.
+        rdfs:label "Widerstand, politisch"@de, "Resistance, political"@en.
 
 memor:resistance-religious a owl:Class;
         rdfs:subClassOf memor:resistance;
-        rdfs:label "Widerstand, religiös"@de, "resistance, religious"@en .
+        rdfs:label "Widerstand, religiös"@de, "Resistance, religious"@en .
 
 memor:resistance-individual a owl:Class;
         rdfs:subClassOf memor:resistance;
-        rdfs:label "Widerstand, individuell"@de,"resistance, individual"@en .
+        rdfs:label "Widerstand, individuell"@de,"Resistance, individual"@en .
 
 memor:resistance-deserters a owl:Class;
         rdfs:subClassOf memor:resistance;
-        rdfs:label "Widerstand, Deserteure"@de, "resistance, deserters"@en.
+        rdfs:label "Widerstand, Deserteure"@de, "Resistance, deserters"@en.
 
 memor:witnesses-jehovah a owl:Class;
         rdfs:subClassOf memor:prosecution;
@@ -116,15 +117,15 @@ memor:witnesses-jehovah a owl:Class;
 memor:jewish-victims a owl:Class;
         rdfs:comment "Persecution based on the Nürnberger Rassengesetze."@en;
         rdfs:subClassOf memor:prosecution;
-        rdfs:label "Jüdische Opfer"@de, "jewish victims"@en.
+        rdfs:label "Jüdische Opfer"@de, "Jewish victims"@en.
 
 memor:jewish-victims-jewish a owl:Class;
         rdfs:subClassOf memor:jewish-victims;
-        rdfs:label "Jüdische Opfer (jüdische Religion)"@de, "jewish victims (jewish religion)"@en.
+        rdfs:label "Jüdische Opfer (jüdische Religion)"@de, "Jewish victims (jewish religion)"@en.
 
 memor:jewish-victims-persecuted-as-jew a owl:Class;
         rdfs:subClassOf memor:jewish-victims;
-        rdfs:label "Jüdische Opfer, als Jude verfolgt"@de, "jewish victims, persecuted as a Jew"@en.
+        rdfs:label "Jüdische Opfer, als Jude verfolgt"@de, "Jewish victims, persecuted as a Jew"@en.
 
 memor:roma a owl:Class;
         rdfs:subClassOf memor:prosecution;
@@ -132,15 +133,15 @@ memor:roma a owl:Class;
 
 memor:euthanasia-victim a owl:Class;
         rdfs:subClassOf memor:prosecution;
-        rdfs:label "Opfer der NS-Euthanasie"@de, "victims of euthanasia"@en.
+        rdfs:label "Opfer der NS-Euthanasie"@de, "Victims of euthanasia"@en.
 
 memor:homosexual-victim a owl:Class;
         rdfs:subClassOf memor:prosecution;
-        rdfs:label "Homosexuelle Opfer"@de, "homosexual victims"@en.
+        rdfs:label "Homosexuelle Opfer"@de, "Homosexual victims"@en.
 
 memor:spain-fighter a owl:Class;
         rdfs:subClassOf memor:prosecution;
-        rdfs:label "SpanienkämpferInnen"@de, "spain fighter"@en.
+        rdfs:label "SpanienkämpferInnen"@de, "Spanish Civil War volunteer"@en.
 
 
 #
@@ -170,18 +171,28 @@ memor:hasMemorialSign a owl:ObjectProperty;
 # 
 
 memor:source a owl:Class;
-        rdfs:label "Historische Quelle"@de, "historical source"@en.
+        # Anchor to CIDOC (A source is a historical document)
+        rdfs:subClassOf cidoc:E31_Document ;
+        # Anchor to PROV (A source is an entity from which facts are derived)
+        rdfs:subClassOf prov:Entity ;
+        rdfs:label "Historische Quelle"@de, "historical source"@en .
 
 memor:hasSource a owl:ObjectProperty;
+        # Hook into global standard for provenance
+        rdfs:subPropertyOf prov:wasDerivedFrom ;
+        # Hook into CIDOC for document evidence
+        rdfs:subPropertyOf cidoc:P70i_is_documented_in ;
         rdfs:label "has source"@en, "hat Quelle"@de;
-        rdfs:comment "Links a person to it's source material"@en; 
-        rdfs:domain memor:victim;
-        rdfs:range memor:source.
+        rdfs:comment "Links an entity (Person, Event, or Place) to its archival source material."@en;
+        # By setting the domain to the CIDOC root entity, we allow it to be
+        # used safely on Victims, Events, and Places
+        rdfs:domain cidoc:E1_CRM_Entity ;
+        rdfs:range memor:source .
 
 memor:image a owl:Class; 
         rdfs:subClassOf memor:source;
         rdfs:subClassOf schema:ImageObject;
         rdfs:subClassOf foaf:Image;
-        rdfs:label "Bildquelle"@de, "image source"@en.
+        rdfs:label "Bildquelle"@de, "Image source"@en.
 
 

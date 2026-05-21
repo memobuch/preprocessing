@@ -10,4 +10,4 @@ class MemorStatics:
     MATERIAL_ROOT_PATH = 'C:\\Users\\stoffse\\Meine Ablage\\01_Berufliches\\01_Projekte\\10_memo\\02_data\\material\\'
 
     MEMOR_BASE_URI = "https://www.ns-opfer-graz.at/"
-    MEMOR_ONTOLOGY = MEMOR_BASE_URI + "ontology#"
+    MEMOR_ONTOLOGY = MEMOR_BASE_URI + "ontology.html#"

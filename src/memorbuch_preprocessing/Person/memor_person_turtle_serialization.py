@@ -23,6 +23,7 @@ CIDOC = Namespace("http://www.cidoc-crm.org/cidoc-crm/")
 GEO = Namespace("http://www.opengis.net/ont/geosparql#")
 EDTF = Namespace("http://id.loc.gov/datatypes/edtf/")
 DERLA = Namespace("https://gams.uni-graz.at/")
+PROV = Namespace("http://www.w3.org/ns/prov#")
 
 
 # ============================================================================
@@ -96,6 +97,7 @@ def write_as_turtle(person) -> Optional[str]:
     g.bind("edtf", EDTF)
     g.bind("cidoc", CIDOC)
     g.bind("derla", DERLA)
+    g.bind("prov", PROV)
     g.bind("memor", MEMOR)
 
     # ------------------------------------------------------------------
@@ -135,8 +137,7 @@ def write_as_turtle(person) -> Optional[str]:
     _add_birth_event(g, person_uri, person.birth_date, person.birth_place, lat=None, lon=None)
 
     # --- Death ---
-    _add_death_event(g, person_uri, person.death_date, person.death_place, person.death_latitude,
-                     person.death_longitude)
+    _add_death_event(g, person_uri, person.death_date, person.death_place, person.death_latitude, person.death_longitude)
 
     # --- Voluntary residence ---
     if person.voluntary_address:
@@ -164,7 +165,7 @@ def write_as_turtle(person) -> Optional[str]:
             label=forced_label,
         )
 
-    # --- Prosecution events (Directly mapped to Vocab Keys) ---
+    # --- Prosecution events ---
     if person.victim_category:
         for category in person.victim_category:
             category = (category or "").strip()
@@ -185,7 +186,7 @@ def write_as_turtle(person) -> Optional[str]:
         g.add((person_uri, MEMOR.hasLiteratureReference, _safe_literal(person.literature)))
 
     # ------------------------------------------------------------------
-    # SOURCES (images + documents)
+    # SOURCES (General Person-Level Sources)
     # ------------------------------------------------------------------
     for i, image in enumerate(person.images):
         image_dsid = os.path.basename(image.source_path).upper()
@@ -224,7 +225,7 @@ def write_as_turtle(person) -> Optional[str]:
 
 
 # ============================================================================
-# EVENT BUILDERS (GeoSPARQL & EDTF Compliant)
+# EVENT BUILDERS
 # ============================================================================
 
 def _add_event_base_types(g: Graph, event_uri: URIRef) -> None:
@@ -233,10 +234,6 @@ def _add_event_base_types(g: Graph, event_uri: URIRef) -> None:
 
 
 def _add_event_place_geometry(g: Graph, event_uri: URIRef, place_name: Optional[str], lat, lon) -> None:
-    """
-    Separates the spatial logic: Event -> Place -> Geometry (WKT).
-    This complies with GeoSPARQL and avoids CIDOC logic violations.
-    """
     if not place_name and (lat is None or lon is None):
         return
 
@@ -254,15 +251,13 @@ def _add_event_place_geometry(g: Graph, event_uri: URIRef, place_name: Optional[
             geom_uri = URIRef(str(place_uri) + "_geom")
             g.add((place_uri, GEO.hasGeometry, geom_uri))
             g.add((geom_uri, RDF.type, GEO.Geometry))
-            # WKT Standard: LONGITUDE LATITUDE
             wkt_str = f"POINT({lon_f} {lat_f})"
             g.add((geom_uri, GEO.asWKT, Literal(wkt_str, datatype=GEO.wktLiteral)))
         except (TypeError, ValueError):
             logging.warning(f"Invalid coordinates for {event_uri}: lat={lat!r}, lon={lon!r}")
 
 
-def _add_birth_event(g: Graph, person_uri: URIRef, birth_date: Optional[str], birth_place: Optional[str], lat,
-                     lon) -> None:
+def _add_birth_event(g: Graph, person_uri: URIRef, birth_date: Optional[str], birth_place: Optional[str], lat, lon) -> None:
     birth_uri = URIRef(str(person_uri) + "#events/birth")
     g.add((birth_uri, RDF.type, MEMOR.birth))
     _add_event_base_types(g, birth_uri)
@@ -277,8 +272,7 @@ def _add_birth_event(g: Graph, person_uri: URIRef, birth_date: Optional[str], bi
     _add_event_place_geometry(g, birth_uri, birth_place, lat, lon)
 
 
-def _add_death_event(g: Graph, person_uri: URIRef, death_date: Optional[str], death_place: Optional[str], lat,
-                     lon) -> None:
+def _add_death_event(g: Graph, person_uri: URIRef, death_date: Optional[str], death_place: Optional[str], lat, lon) -> None:
     death_uri = URIRef(str(person_uri) + "#events/death")
     g.add((death_uri, RDF.type, MEMOR.death))
     _add_event_base_types(g, death_uri)
@@ -306,10 +300,6 @@ def _add_residence_event(g: Graph, person_uri: URIRef, *, event_local_name: str,
 
 
 def _add_prosecution_event(g: Graph, person_uri: URIRef, person_id: str, category_key: str) -> None:
-    """
-    Directly leverages the strictly aligned vocabulary. The category_key 
-    maps 1:1 to the ontology class (e.g., ns-opposition -> memor:ns-opposition).
-    """
     category_vocab = MemorVocab.VICTIM_CATEGORY_TYPES.get(category_key)
     if not category_vocab:
         logging.warning(f"Category '{category_key}' not found in MemorVocab. Skipping.")
@@ -317,7 +307,6 @@ def _add_prosecution_event(g: Graph, person_uri: URIRef, person_id: str, categor
 
     prosecution_uri = URIRef(f"{MEMOR_BASE_URI}objects/{person_id}#events/prosecution_{category_key}")
 
-    # Use dict lookup to safely inject the kebab-case key into the Namespace
     g.add((prosecution_uri, RDF.type, MEMOR[category_key]))
     g.add((prosecution_uri, RDF.type, MEMOR.prosecution))
     _add_event_base_types(g, prosecution_uri)
@@ -330,10 +319,9 @@ def _add_prosecution_event(g: Graph, person_uri: URIRef, person_id: str, categor
 def _add_haft_flucht_event(g: Graph, event_uri: URIRef, event, person_uri: URIRef) -> None:
     _add_event_base_types(g, event_uri)
 
-    # Aligning legacy string identifiers with modern vocab keys
-    if event.type == "haft" or event.type == "imprisonment":
+    if event.type in ["haft", "imprisonment"]:
         g.add((event_uri, RDF.type, MEMOR.imprisonment))
-    elif event.type == "flucht" or event.type == "flight":
+    elif event.type in ["flucht", "flight"]:
         g.add((event_uri, RDF.type, MEMOR.flight))
 
     if event.title:
@@ -348,6 +336,17 @@ def _add_haft_flucht_event(g: Graph, event_uri: URIRef, event, person_uri: URIRe
     _add_event_place_geometry(g, event_uri, getattr(event, "location", None), event.lat,
                               getattr(event, "long", getattr(event, "lon", None)))
 
+    # --- GRANULAR PROVENANCE FIX ---
+    # If your specific event object carries documents or references, map them to the EVENT here.
+    # Currently, your input model groups all documents on the `person` object.
+    # If the data model is ever updated to support event.documents, uncomment and use this logic:
+    if getattr(event, "documents", None):
+        for doc in event.documents:
+            doc_dsid = os.path.basename(doc.source_path).upper()
+            # Note: doc_uri needs to match the URI scheme used in write_as_turtle
+            doc_uri = URIRef(f"{MEMOR_BASE_URI}api/v1/projects/memor/objects/{str(person_uri).split('/')[-1]}/datastreams/{doc_dsid}")
+            g.add((event_uri, MEMOR.hasSource, doc_uri))
+
     g.add((person_uri, MEMOR.hasEvent, event_uri))
 
 
@@ -357,6 +356,9 @@ def _add_haft_flucht_event(g: Graph, event_uri: URIRef, event, person_uri: URIRe
 
 def _add_image_resource(g: Graph, image_uri: URIRef, title: Optional[str], description: Optional[str]) -> None:
     g.add((image_uri, RDF.type, MEMOR.image))
+    g.add((image_uri, RDF.type, MEMOR.source)) # Explicit base class inheritance
+    g.add((image_uri, RDF.type, CIDOC.E31_Document)) # Explicit CIDOC base
+    g.add((image_uri, RDF.type, PROV.Entity)) # Explicit PROV base
     g.add((image_uri, RDF.type, SCHEMA.ImageObject))
     if title:
         g.add((image_uri, RDFS.label, _safe_literal(title)))
@@ -366,6 +368,8 @@ def _add_image_resource(g: Graph, image_uri: URIRef, title: Optional[str], descr
 
 def _add_document_resource(g: Graph, doc_uri: URIRef, title: Optional[str], description: Optional[str]) -> None:
     g.add((doc_uri, RDF.type, MEMOR.source))
+    g.add((doc_uri, RDF.type, CIDOC.E31_Document)) # Explicit CIDOC base
+    g.add((doc_uri, RDF.type, PROV.Entity)) # Explicit PROV base
     g.add((doc_uri, RDF.type, SCHEMA.DigitalDocument))
     if title:
         g.add((doc_uri, RDFS.label, _safe_literal(title)))

@@ -12,13 +12,16 @@
 @prefix edtf: <http://id.loc.gov/datatypes/edtf/> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
 
+memor: a owl:Ontology ;
+  dcterms:title "MEMOR Ontology (Digital Memorial Book of Graz's Victims of Nationalsocialism)"@en, "MEMOR Ontologie (Digitales Gedenkbuch der Stadt Graz)"@de ;
+  dcterms:description "The MEMOR ontology is an event-centric Semantic Web model designed to document the biographies and persecution histories of victims of National Socialism."@en, "Die MEMOR-Ontologie ist ein ereignisorientiertes Semantic-Web-Modell, das dazu dient, die Lebensläufe und Verfolgungsgeschichten von Opfern des Nationalsozialismus zu dokumentieren."@de;
+  dcterms:identifier <https://doi.org/10.xxxx/xxxxx> ;
+  owl:versionInfo "1.0" ;
+  owl:versionIRI <https://doi.org/10.xxxx/xxxxxxx> .
+
 #
 # Event modeling of MEMOR
 #
-
-memor: a owl:Ontology ;
-  dc11:title "MEMOR Ontology (Digital Memorial Book of Graz's Victims of Nationalsocialism)"@en, "MEMOR Ontologie (Digitales Gedenkbuch der Stadt Graz)"@de ;
-  dc11:description "The MEMOR ontology is an event-centric Semantic Web model designed to document the biographies and persecution histories of victims of National Socialism."@en, "Die MEMOR-Ontologie ist ein ereignisorientiertes Semantic-Web-Modell, das dazu dient, die Lebensläufe und Verfolgungsgeschichten von Opfern des Nationalsozialismus zu dokumentieren."@de .
 
 # base event of memor
 memor:event a owl:Class;

@@ -173,6 +173,8 @@ memor:spain-fighter a owl:Class;
 # ============================================================================
 
 memor:victim a owl:Class ;
+        rdfs:subClassOf cidoc:E21_Person ;
+        # Keep generic LOD anchors for cross-domain federated queries
         rdfs:subClassOf foaf:Person, schema:Person ;
         rdfs:label "Victim"@en, "Opfer"@de ;
         rdfs:comment "A human being who was subjected to persecution during the National Socialist era. Represents the core biographical subject of the graph."@en .

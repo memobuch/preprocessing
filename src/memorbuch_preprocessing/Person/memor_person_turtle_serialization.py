@@ -108,6 +108,7 @@ def write_as_turtle(person) -> Optional[str]:
     g.add((person_uri, RDF.type, MEMOR.victim))
     g.add((person_uri, RDF.type, FOAF.Person))
     g.add((person_uri, RDF.type, SCHEMA.Person))
+    g.add((person_uri, RDF.type, CIDOC.E21_Person))
 
     full_name = f"{person.first_name} {person.last_name}" if person.first_name and person.last_name else "Unknown"
     g.add((person_uri, RDFS.label, _safe_literal(full_name)))

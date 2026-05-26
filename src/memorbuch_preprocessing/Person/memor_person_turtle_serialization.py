@@ -14,7 +14,7 @@ from memorbuch_preprocessing.MemorVocab import MemorVocab
 # ============================================================================
 
 MEMOR_BASE_URI = "https://www.ns-opfer-graz.at/"
-MEMOR_ONTOLOGY_URI = MEMOR_BASE_URI + "ontology.html#"
+MEMOR_ONTOLOGY_URI = MEMOR_BASE_URI + "ontology#"
 
 MEMOR = Namespace(MEMOR_ONTOLOGY_URI)
 SCHEMA = Namespace("http://schema.org/")
@@ -23,7 +23,22 @@ CIDOC = Namespace("http://www.cidoc-crm.org/cidoc-crm/")
 GEO = Namespace("http://www.opengis.net/ont/geosparql#")
 EDTF = Namespace("http://id.loc.gov/datatypes/edtf/")
 DERLA = Namespace("https://gams.uni-graz.at/")
-PROV = Namespace("http://www.w3.org/ns/prov#")
+
+def _bind_namespaces(g: Graph) -> None:
+    """Helper to bind all required namespaces to a graph consistently."""
+    g.bind("rdf", RDF)
+    g.bind("rdfs", RDFS)
+    g.bind("xsd", XSD)
+    g.bind("foaf", FOAF)
+    g.bind("dcterms", DCTERMS)
+    g.bind("schema", SCHEMA, override=True, replace=True)
+    g.bind("bio", BIO)
+    g.bind("skos", SKOS)
+    g.bind("geo", GEO)
+    g.bind("edtf", EDTF)
+    g.bind("cidoc", CIDOC)
+    g.bind("derla", DERLA)
+    g.bind("memor", MEMOR)
 
 
 # ============================================================================
@@ -78,27 +93,18 @@ def _convert_to_edtf(date_str: str) -> Optional[Literal]:
 
 
 # ============================================================================
-# MAIN ENTRY POINT
+# GRAPH POPULATION (Core Logic)
 # ============================================================================
 
-def write_as_turtle(person) -> Optional[str]:
-    """Generate SEMANTIC_STATEMENTS.ttl for a MemorPerson."""
-    g = Graph()
-
-    g.bind("rdf", RDF)
-    g.bind("rdfs", RDFS)
-    g.bind("xsd", XSD)
-    g.bind("foaf", FOAF)
-    g.bind("dcterms", DCTERMS)
-    g.bind("schema", SCHEMA, override=True, replace=True)
-    g.bind("bio", BIO)
-    g.bind("skos", SKOS)
-    g.bind("geo", GEO)
-    g.bind("edtf", EDTF)
-    g.bind("cidoc", CIDOC)
-    g.bind("derla", DERLA)
-    g.bind("prov", PROV)
-    g.bind("memor", MEMOR)
+def populate_person_graph(person, g: Optional[Graph] = None) -> Graph:
+    """
+    Populates an rdflib Graph with the person's semantic statements.
+    If no graph is provided, creates a new one. This allows for both
+    individual files and aggregated repository graphs.
+    """
+    if g is None:
+        g = Graph()
+        _bind_namespaces(g)
 
     # ------------------------------------------------------------------
     # PERSON
@@ -108,7 +114,6 @@ def write_as_turtle(person) -> Optional[str]:
     g.add((person_uri, RDF.type, MEMOR.victim))
     g.add((person_uri, RDF.type, FOAF.Person))
     g.add((person_uri, RDF.type, SCHEMA.Person))
-    g.add((person_uri, RDF.type, CIDOC.E21_Person))
 
     full_name = f"{person.first_name} {person.last_name}" if person.first_name and person.last_name else "Unknown"
     g.add((person_uri, RDFS.label, _safe_literal(full_name)))
@@ -138,7 +143,8 @@ def write_as_turtle(person) -> Optional[str]:
     _add_birth_event(g, person_uri, person.birth_date, person.birth_place, lat=None, lon=None)
 
     # --- Death ---
-    _add_death_event(g, person_uri, person.death_date, person.death_place, person.death_latitude, person.death_longitude)
+    _add_death_event(g, person_uri, person.death_date, person.death_place, person.death_latitude,
+                     person.death_longitude)
 
     # --- Voluntary residence ---
     if person.voluntary_address:
@@ -166,7 +172,7 @@ def write_as_turtle(person) -> Optional[str]:
             label=forced_label,
         )
 
-    # --- Prosecution events ---
+    # --- Prosecution events (Directly mapped to Vocab Keys) ---
     if person.victim_category:
         for category in person.victim_category:
             category = (category or "").strip()
@@ -178,8 +184,6 @@ def write_as_turtle(person) -> Optional[str]:
     if memorial_signs_attr:
         for sign in memorial_signs_attr:
             if sign and sign.strip():
-                # Assuming 'sign' here is a resolvable URI to DERLA or a string identifier.
-                # Adjust to URIRef(sign.strip()) if it's an absolute URI
                 g.add((person_uri, MEMOR.hasMemorialSign, URIRef(f"https://gams.uni-graz.at/{sign.strip()}")))
 
     # --- Literature ---
@@ -187,7 +191,7 @@ def write_as_turtle(person) -> Optional[str]:
         g.add((person_uri, MEMOR.hasLiteratureReference, _safe_literal(person.literature)))
 
     # ------------------------------------------------------------------
-    # SOURCES (General Person-Level Sources)
+    # SOURCES (images + documents)
     # ------------------------------------------------------------------
     for i, image in enumerate(person.images):
         image_dsid = os.path.basename(image.source_path).upper()
@@ -215,9 +219,17 @@ def write_as_turtle(person) -> Optional[str]:
     g.add((person_uri, DCTERMS.rights, _safe_literal("Creative Commons BY-NC 4.0")))
     g.add((person_uri, DCTERMS.rightsHolder, _safe_literal("MEMOR Project")))
 
-    # ------------------------------------------------------------------
-    # SERIALIZE
-    # ------------------------------------------------------------------
+    return g
+
+
+# ============================================================================
+# FILE SERIALIZATION
+# ============================================================================
+
+def write_as_turtle(person) -> Optional[str]:
+    """Generate individual SEMANTIC_STATEMENTS.ttl for a single MemorPerson."""
+    g = populate_person_graph(person)
+
     from memorbuch_preprocessing.MemorStatics import MemorStatics
     ttl_file_path = os.path.join(MemorStatics.OUTPUT_DIR, str(person.id), "SEMANTIC_STATEMENTS.ttl")
     g.serialize(destination=ttl_file_path, format="turtle", encoding="utf-8")
@@ -226,7 +238,7 @@ def write_as_turtle(person) -> Optional[str]:
 
 
 # ============================================================================
-# EVENT BUILDERS
+# EVENT BUILDERS (GeoSPARQL & EDTF Compliant)
 # ============================================================================
 
 def _add_event_base_types(g: Graph, event_uri: URIRef) -> None:
@@ -252,13 +264,15 @@ def _add_event_place_geometry(g: Graph, event_uri: URIRef, place_name: Optional[
             geom_uri = URIRef(str(place_uri) + "_geom")
             g.add((place_uri, GEO.hasGeometry, geom_uri))
             g.add((geom_uri, RDF.type, GEO.Geometry))
+            # WKT Standard: LONGITUDE LATITUDE
             wkt_str = f"POINT({lon_f} {lat_f})"
             g.add((geom_uri, GEO.asWKT, Literal(wkt_str, datatype=GEO.wktLiteral)))
         except (TypeError, ValueError):
             logging.warning(f"Invalid coordinates for {event_uri}: lat={lat!r}, lon={lon!r}")
 
 
-def _add_birth_event(g: Graph, person_uri: URIRef, birth_date: Optional[str], birth_place: Optional[str], lat, lon) -> None:
+def _add_birth_event(g: Graph, person_uri: URIRef, birth_date: Optional[str], birth_place: Optional[str], lat,
+                     lon) -> None:
     birth_uri = URIRef(str(person_uri) + "#events/birth")
     g.add((birth_uri, RDF.type, MEMOR.birth))
     _add_event_base_types(g, birth_uri)
@@ -273,7 +287,8 @@ def _add_birth_event(g: Graph, person_uri: URIRef, birth_date: Optional[str], bi
     _add_event_place_geometry(g, birth_uri, birth_place, lat, lon)
 
 
-def _add_death_event(g: Graph, person_uri: URIRef, death_date: Optional[str], death_place: Optional[str], lat, lon) -> None:
+def _add_death_event(g: Graph, person_uri: URIRef, death_date: Optional[str], death_place: Optional[str], lat,
+                     lon) -> None:
     death_uri = URIRef(str(person_uri) + "#events/death")
     g.add((death_uri, RDF.type, MEMOR.death))
     _add_event_base_types(g, death_uri)
@@ -320,9 +335,9 @@ def _add_prosecution_event(g: Graph, person_uri: URIRef, person_id: str, categor
 def _add_haft_flucht_event(g: Graph, event_uri: URIRef, event, person_uri: URIRef) -> None:
     _add_event_base_types(g, event_uri)
 
-    if event.type in ["haft", "imprisonment"]:
+    if event.type == "haft" or event.type == "imprisonment":
         g.add((event_uri, RDF.type, MEMOR.imprisonment))
-    elif event.type in ["flucht", "flight"]:
+    elif event.type == "flucht" or event.type == "flight":
         g.add((event_uri, RDF.type, MEMOR.flight))
 
     if event.title:
@@ -337,17 +352,6 @@ def _add_haft_flucht_event(g: Graph, event_uri: URIRef, event, person_uri: URIRe
     _add_event_place_geometry(g, event_uri, getattr(event, "location", None), event.lat,
                               getattr(event, "long", getattr(event, "lon", None)))
 
-    # --- GRANULAR PROVENANCE FIX ---
-    # If your specific event object carries documents or references, map them to the EVENT here.
-    # Currently, your input model groups all documents on the `person` object.
-    # If the data model is ever updated to support event.documents, uncomment and use this logic:
-    if getattr(event, "documents", None):
-        for doc in event.documents:
-            doc_dsid = os.path.basename(doc.source_path).upper()
-            # Note: doc_uri needs to match the URI scheme used in write_as_turtle
-            doc_uri = URIRef(f"{MEMOR_BASE_URI}api/v1/projects/memor/objects/{str(person_uri).split('/')[-1]}/datastreams/{doc_dsid}")
-            g.add((event_uri, MEMOR.hasSource, doc_uri))
-
     g.add((person_uri, MEMOR.hasEvent, event_uri))
 
 
@@ -357,9 +361,6 @@ def _add_haft_flucht_event(g: Graph, event_uri: URIRef, event, person_uri: URIRe
 
 def _add_image_resource(g: Graph, image_uri: URIRef, title: Optional[str], description: Optional[str]) -> None:
     g.add((image_uri, RDF.type, MEMOR.image))
-    g.add((image_uri, RDF.type, MEMOR.source)) # Explicit base class inheritance
-    g.add((image_uri, RDF.type, CIDOC.E31_Document)) # Explicit CIDOC base
-    g.add((image_uri, RDF.type, PROV.Entity)) # Explicit PROV base
     g.add((image_uri, RDF.type, SCHEMA.ImageObject))
     if title:
         g.add((image_uri, RDFS.label, _safe_literal(title)))
@@ -369,8 +370,6 @@ def _add_image_resource(g: Graph, image_uri: URIRef, title: Optional[str], descr
 
 def _add_document_resource(g: Graph, doc_uri: URIRef, title: Optional[str], description: Optional[str]) -> None:
     g.add((doc_uri, RDF.type, MEMOR.source))
-    g.add((doc_uri, RDF.type, CIDOC.E31_Document)) # Explicit CIDOC base
-    g.add((doc_uri, RDF.type, PROV.Entity)) # Explicit PROV base
     g.add((doc_uri, RDF.type, SCHEMA.DigitalDocument))
     if title:
         g.add((doc_uri, RDFS.label, _safe_literal(title)))

@@ -555,6 +555,7 @@ class MemorProcessor:
                 <dc:identifier>{object_id}</dc:identifier>
                 <dc:creator>Born digital - memor project GAMS</dc:creator>
                 <dc:title xml:lang="de">Personenregister</dc:title>
+                <dc:title xml:lang="en">person register</dc:title>
                 <dc:subject>Register</dc:subject>
                 <dc:rights>Creative Commons BY-NC 4.0</dc:rights>
                 <dc:description xml:lang="de">Personenregister des Memor Projekts</dc:description>

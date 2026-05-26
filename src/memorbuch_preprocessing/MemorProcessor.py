@@ -555,7 +555,7 @@ class MemorProcessor:
                 <dc:identifier>{object_id}</dc:identifier>
                 <dc:creator>Born digital - memor project GAMS</dc:creator>
                 <dc:title xml:lang="de">Personenregister</dc:title>
-                <dc:title xml:lang="en">person register</dc:title>
+                <dc:title xml:lang="en">person register and related indices</dc:title>
                 <dc:subject>Register</dc:subject>
                 <dc:rights>Creative Commons BY-NC 4.0</dc:rights>
                 <dc:description xml:lang="de">Personenregister des Memor Projekts</dc:description>
@@ -578,7 +578,7 @@ class MemorProcessor:
         with open(object_csv_path, "w", encoding="utf-8", newline='') as csv_file:
             csv_writer = csv.writer(csv_file)
             csv_writer.writerow(["recid", "title", "project", "description", "creator", "rights", "publisher", "source", "objectType", "mainResource", "tags"])
-            csv_writer.writerow([object_id, "Personenregister", "memor", "Person registers and related indices for the MEMOR project", "Born digital - memor project GAMS", "Creative Commons BY-NC 4.0", "memor project GAMS5", "Memor datasheet transformed by Memor preprocessing tool", "Dataset", "EVENTS.json", "register"])
+            csv_writer.writerow([object_id, "Person register", "memor", "This digital object contains person registers and related indices for the MEMOR project", "Born digital - memor project GAMS", "Creative Commons BY-NC 4.0", "memor project GAMS5", "Memor datasheet transformed by Memor preprocessing tool", "Dataset", "EVENTS.json", "register"])
         self.logger.info(f"Outputted all persons object.csv: {object_csv_path}")
 
         # Datastreams csv
@@ -586,7 +586,7 @@ class MemorProcessor:
         with open(datastreams_csv_path, "w", encoding="utf-8", newline='') as csv_file:
             csv_writer = csv.writer(csv_file)
             csv_writer.writerow(["dsid","dspath", "title","mimetype", "description","creator","rights"])
-            csv_writer.writerow(["EVENTS.json","EVENTS.json","All Persons as GEOJSON", "application/json", "GEOJSON file containing all persons","Born digital - memor project GAMS","Creative Commons BY-NC 4.0"])
+            csv_writer.writerow(["EVENTS.json","EVENTS.json","MEMOR person events geojson", "application/json", "GEOJSON file containing all MEMOR persons, associated events and locations.","Born digital - memor project GAMS","Creative Commons BY-NC 4.0"])
             csv_writer.writerow(["DC.xml","DC.xml", "Dublin Core Metadata","application/xml", "Dublin Core metadata for the persons register","Born digital - memor project GAMS","Creative Commons BY-NC 4.0"])
-            csv_writer.writerow(["REGISTER.ttl", "REGISTER.ttl", "Aggregated Person Register", "text/turtle", "Aggregated RDF statements for all persons", "Born digital - memor project GAMS", "Creative Commons BY-NC 4.0"])
+            csv_writer.writerow(["REGISTER.ttl", "REGISTER.ttl", "Aggregated Person Register", "text/turtle", "Aggregated RDF statements for all persons of the MEMOR project", "Born digital - memor project GAMS", "Creative Commons BY-NC 4.0"])
         self.logger.info(f"Outputted all persons datastreams.csv: {datastreams_csv_path}")

@@ -182,11 +182,14 @@ class MemorProcessor:
                     )
                     cur_memor_person.add_document(document)
             except Exception as e:
-                self.logger.warning(f"Error loading material files for person {cur_memor_person.id} at path {person_folder_path}: {e}")
+                self.logger.debug(f"Error loading material files for person {cur_memor_person.id} at path {person_folder_path}: {e}")
             finally:
                 # as final step add the person
                 self.memor_persons.append(cur_memor_person)
                 self.logger.debug(f"Loaded memor person: {cur_memor_person}")
+
+        # display statistics
+        logging.info(f"*** Successfully read in {len(self.memor_persons)} memor persons from gsheets")
 
         # Reading in Events from the gsheet
         # for event_entry in self.memor_events_frame.to_dict(orient='records'):

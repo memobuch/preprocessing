@@ -14,7 +14,7 @@ from memorbuch_preprocessing.MemorVocab import MemorVocab
 # ============================================================================
 
 MEMOR_BASE_URI = "https://www.ns-opfer-graz.at/"
-MEMOR_ONTOLOGY_URI = MEMOR_BASE_URI + "ontology#"
+MEMOR_ONTOLOGY_URI = MEMOR_BASE_URI + "ontology.html#"
 
 MEMOR = Namespace(MEMOR_ONTOLOGY_URI)
 SCHEMA = Namespace("http://schema.org/")

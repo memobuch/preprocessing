@@ -175,10 +175,19 @@ class MemorProcessor:
                 person_documents_metadata_path = f"{person_folder_path}{os.sep}files.txt"
                 documents_entries = self._load_metadata_csv(person_documents_metadata_path)
                 for i, person_document in enumerate(documents_entries):
+
+                    # small fail safe if the column is not defined
+                    source = ""
+                    try:
+                        source = entry["Quelle"]
+                    except:
+                        pass
+
                     document = MemorPersonFile(
                         title=person_document["Titel"],
                         desc=person_document["Beschreibung"],
                         source_path=f"{person_folder_path}{os.path.sep}files{os.path.sep}{person_document['Dateiname']}",
+                        source=source
                     )
                     cur_memor_person.add_document(document)
             except Exception as e:

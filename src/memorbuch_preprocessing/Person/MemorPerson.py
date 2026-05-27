@@ -119,6 +119,14 @@ class MemorPerson:
 
         description_element = ET.SubElement(root, 'dc:description', {'xml:lang': 'de'})
         description_element.text = self.biography_text
+        # add voluntary address to description element
+        description_element.text += f" Letzte freiwillige Wohnadresse: {self.voluntary_address if len(self.voluntary_address) > 1 else '-' }"
+        # add linked DERLA memorial signs if available
+        if len(self.memorial_signs) > 0:
+            description_element.text += " | Verbundene DERLA-Zeichen: "
+            for sign in self.memorial_signs:
+                description_element.text += f"{sign};"
+
 
         date_element = ET.SubElement(root, 'dc:date')
         date_element.text = "2026"

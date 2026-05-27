@@ -179,7 +179,7 @@ class MemorProcessor:
                     # small fail safe if the column is not defined
                     source = ""
                     try:
-                        source = entry["Quelle"]
+                        source = person_document["Quelle"]
                     except:
                         pass
 

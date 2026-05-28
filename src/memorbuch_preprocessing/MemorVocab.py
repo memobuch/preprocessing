@@ -70,10 +70,6 @@ class MemorVocab:
             "label": "Jüdische Opfer",
             "color": "#228B22"
         },
-        "jewish-victims-persecuted-as-jew": {
-            "label": "Jüdische Opfer, als Jude verfolgt",
-            "color": "#228B22"
-        },
         "roma": {
             "label": "Roma/Romnija und Sinti/Sintize",
             "color": "#FF8C00"

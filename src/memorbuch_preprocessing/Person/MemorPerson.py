@@ -525,6 +525,7 @@ class MemorPerson:
         if self.voluntary_address and self.voluntary_longitude and self.voluntary_latitude:
             voluntary_feature = create_feature(
                 event_id=f'{self.id}#events/voluntary-residence',
+                title=f'Freiwillige Wohnhaftigkeit von {self.first_name or ''} {self.last_name or ''}',
                 event_type='voluntary_residence',
                 lon=self.voluntary_longitude,
                 lat=self.voluntary_latitude,
@@ -540,6 +541,7 @@ class MemorPerson:
         if self.forced_address and self.forced_longitude and self.forced_latitude:
             forced_feature = create_feature(
                 event_id=f'{self.id}#events/forced-residence',
+                title=f'Erzwungene Wohnhaftigkeit von {self.first_name or ''} {self.last_name or ''}',
                 event_type='forced_residence',
                 lon=self.forced_longitude,
                 lat=self.forced_latitude,
@@ -580,6 +582,7 @@ class MemorPerson:
         # =========================================================================
         if self.death_place and self.death_longitude and self.death_latitude:
             death_feature = create_feature(
+                title=f'Tod von {self.first_name or ''} {self.last_name or ''}',
                 event_id=f'{self.id}#events/death',
                 event_type='death',
                 lon=self.death_longitude,

@@ -529,16 +529,17 @@ class MemorProcessor:
             event_type = tags[0] if tags else "unknown"
 
             csv_rows.append({
+                "event_id": props.get("event_id", ""),
                 "person_id": props.get("person_id"),
+                "link": f'<a href="{MemorStatics.MEMOR_BASE_URI}/objects/{props.get('person_id')}" target="_blank">Link zu MEMOR</a>',
                 "person_name": props.get("person_name"),
                 "event_type": event_type,
-                "event_id": props.get("event_id", ""),
-                "event_title": props.get("event_title", ""),
+                "Name": props.get("event_title", ""),
                 "event_description": props.get("event_description", ""),
                 "place_name": props.get("place_name", ""),
-                "date": props.get("date", ""),
-                "longitude": coords[0],
-                "latitude": coords[1],
+                "TimeStamp": props.get("date", ""),
+                "Longitude": coords[0],
+                "Latitude": coords[1],
                 "tags": ";".join(tags),  # Flatten lists for CSV compatibility
                 "gender": props.get("gender", ""),
                 "is_youth": props.get("is_youth", False),

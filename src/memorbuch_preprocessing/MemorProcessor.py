@@ -515,6 +515,50 @@ class MemorProcessor:
             person_features = person.to_geojson_features()
             all_features.extend(person_features)
 
+        # ---------------------------------------------------------------------
+        # NEW: Generate tabular EVENTS.csv (Pre-deduplication)
+        # ---------------------------------------------------------------------
+        self.logger.info("Generating flat EVENTS.csv for tabular analysis...")
+        csv_rows = []
+        for feature in all_features:
+            props = feature.get('properties', {})
+            coords = feature.get('geometry', {}).get('coordinates', [None, None])
+            tags = props.get('tags', [])
+
+            # WORKAROUND: Extracting event_type from tags because it was commented out in properties
+            event_type = tags[0] if tags else "unknown"
+
+            csv_rows.append({
+                "person_id": props.get("person_id"),
+                "person_name": props.get("person_name"),
+                "event_type": event_type,
+                "event_id": props.get("event_id", ""),
+                "event_title": props.get("event_title", ""),
+                "event_description": props.get("event_description", ""),
+                "place_name": props.get("place_name", ""),
+                "date": props.get("date", ""),
+                "longitude": coords[0],
+                "latitude": coords[1],
+                "tags": ";".join(tags),  # Flatten lists for CSV compatibility
+                "gender": props.get("gender", ""),
+                "is_youth": props.get("is_youth", False),
+                "birth_date": props.get("birth_date", ""),
+                "death_date": props.get("death_date", ""),
+            })
+
+        events_df = pd.DataFrame(csv_rows)
+        events_csv_path = os.path.join(folder_path, 'EVENTS.csv')
+
+        # Use QUOTE_MINIMAL so pandas handles quoting only when necessary (e.g. descriptions with commas)
+        events_df.to_csv(
+            events_csv_path,
+            index=False,
+            sep=',',
+            encoding='utf-8',
+            lineterminator='\n'
+        )
+        self.logger.info(f"Outputted all persons tabular CSV: {events_csv_path}")
+
         self.logger.info(f"Original feature count: {len(all_features)}")
         deduplicated_features = FeatureAggregator().deduplicate_geojson_features(all_features)
         self.logger.info(f"Deduplicated feature count: {len(deduplicated_features)}")
@@ -596,6 +640,7 @@ class MemorProcessor:
             csv_writer = csv.writer(csv_file)
             csv_writer.writerow(["dsid","dspath", "title","mimetype", "description","creator","rights"])
             csv_writer.writerow(["EVENTS.json","EVENTS.json","MEMOR person events geojson", "application/json", "GEOJSON file containing all MEMOR persons, associated events and locations.","Born digital - memor project GAMS","Creative Commons BY-NC 4.0"])
+            csv_writer.writerow(["EVENTS.csv", "EVENTS.csv", "All Person Events as CSV", "text/csv","Tabular dataset of all historical events", "Born digital - memor project GAMS","Creative Commons BY-NC 4.0"])
             csv_writer.writerow(["DC.xml","DC.xml", "Dublin Core Metadata","application/xml", "Dublin Core metadata for the persons register","Born digital - memor project GAMS","Creative Commons BY-NC 4.0"])
             csv_writer.writerow(["REGISTER.ttl", "REGISTER.ttl", "Aggregated Person Register", "text/turtle", "Aggregated RDF statements for all persons of the MEMOR project", "Born digital - memor project GAMS", "Creative Commons BY-NC 4.0"])
         self.logger.info(f"Outputted all persons datastreams.csv: {datastreams_csv_path}")

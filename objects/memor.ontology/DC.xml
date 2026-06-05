@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='utf-8'?>
+<oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+    <dc:identifier>memor.ontology</dc:identifier>
+    <dc:creator>Sebastian David Schiller-Stoff</dc:creator>
+    <dc:title xml:lang="en">Datamodel of MEMOR</dc:title>
+    <dc:subject>datamodel</dc:subject>
+    <dc:rights xml:lang="en">Creative Commons BY-NC 4.0</dc:rights>
+    <dc:description xml:lang="en">Contains material related to the datamodel of MEMOR e.g. RDFS turtle</dc:description>
+    <dc:date>2026</dc:date>
+    <dc:language>en</dc:language>
+    <dc:publisher xml:lang="de">GAMS</dc:publisher>
+    <dc:rights>https://creativecommons.org/licenses/by-nc/4.0</dc:rights>
+    <dc:type xml:lang="en">Dataset</dc:type>
+    <dc:format>RDF dataset</dc:format>
+    <dc:relation>https://ns-opfer-graz.at</dc:relation>
+</oai_dc:dc>

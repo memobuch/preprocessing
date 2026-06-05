@@ -1,22 +1,23 @@
-# memobuch-preprocessing
+# memorbuch-preprocessing
 
-Preprocsessing of the memobuch data.
+Preprocsessing of the memorbuch data.
 
 
+## Quickstart
+
+1. Start the tool
 
 ```sh
-packager bag create C:\Users\sebas\Documents\programming\py\memo_preprocessing_zimlab\output --overwrite-bag
+# activate venv then launch via 
+memor 
 
-pyrilo -h http://143.50.30.162:18085 -r C:\Users\stoffse\Documents\programming\gams\gams-packaging\bags sync memo
+```
 
+2. Further processing for GAMS5 
 
-# personal laptop
-
-packager bag create C:\Users\sebas\Documents\programming\py\memo_preprocessing_zimlab\output --overwrite-bag
-
-
-
-pyrilo -r C:\Users\sebas\Documents\programming\gams\gams-packager\bags sync memo
+```sh
+# demo usage of generated data with gams-packager and pyrilo
+packager create "C:\Users\stoffse\Documents\programming\python\memo_preprocessing_zimlab\output" --overwrite-bag
 
 ```
 

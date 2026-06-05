@@ -1,0 +1,227 @@
+@prefix bio: <http://purl.org/vocab/bio/0.1/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix cidoc: <http://www.cidoc-crm.org/cidoc-crm/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix memor: <https://www.ns-opfer-graz.at/ontology.html#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix schema: <http://schema.org/> .
+@prefix geo: <http://www.opengis.net/ont/geosparql#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix derla: <https://gams.uni-graz.at/> .
+@prefix edtf: <http://id.loc.gov/datatypes/edtf/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+memor: a owl:Ontology ;
+  dcterms:title "MEMOR Ontology (Digital Memorial Book of Graz's Victims of Nationalsocialism)"@en, "MEMOR Ontologie (Digitales Gedenkbuch der Stadt Graz)"@de ;
+  dcterms:description "The MEMOR ontology is an event-centric Semantic Web model designed to document the biographies and persecution histories of victims of National Socialism."@en, "Die MEMOR-Ontologie ist ein ereignisorientiertes Semantic-Web-Modell, das dazu dient, die Lebensläufe und Verfolgungsgeschichten von Opfern des Nationalsozialismus zu dokumentieren."@de;
+  dcterms:identifier <https://doi.org/10.xxxx/xxxxx> ;
+  owl:versionInfo "1.0" ;
+  owl:versionIRI <https://doi.org/10.xxxx/xxxxxxx> .
+
+
+# ============================================================================
+# BASE CLASSES (Space & Time)
+# ============================================================================
+
+memor:event a owl:Class;
+        rdfs:subClassOf cidoc:E5_Event;
+        rdfs:label "Event associated with a Person"@en, "Ereignis assoziiert mit einer Person"@de ;
+        rdfs:comment "Base class for all temporal occurrences associated with a victim's biography or persecution history. Decouples the timeline from the static person entity."@en .
+
+memor:place a owl:Class ;
+        rdfs:subClassOf cidoc:E53_Place ;
+        rdfs:subClassOf geo:Feature ;
+        rdfs:label "Place"@en, "Ort"@de ;
+        rdfs:comment "A conceptual historical extent in space where an event occurred. This is the historical entity (e.g., 'Auschwitz'), distinct from its mathematical WGS84 coordinates."@en .
+
+memor:took-place-at a owl:ObjectProperty ;
+        rdfs:subPropertyOf cidoc:P7_took_place_at ;
+        rdfs:domain memor:event ;
+        rdfs:range memor:place ;
+        rdfs:label "Took Place At"@en, "Fand statt in"@de ;
+        rdfs:comment "Links a historical event to the specific geographic feature or conceptual place where it occurred."@en .
+
+
+# ============================================================================
+# BIOGRAPHICAL EVENTS
+# ============================================================================
+
+memor:birth a owl:Class;
+        rdfs:subClassOf memor:event;
+        rdfs:subClassOf bio:Birth;
+        rdfs:subClassOf cidoc:E67_Birth;
+        rdfs:label "Birth Event of a Person"@en, "Geburtsereignis einer Person"@de ;
+        rdfs:comment "The specific temporal event of a victim's birth."@en .
+
+memor:death a owl:Class;
+        rdfs:subClassOf memor:event;
+        rdfs:subClassOf cidoc:E69_Death;
+        rdfs:label "Death Event of a Person"@en, "Todesereignis einer Person"@de ;
+        rdfs:comment "The specific temporal event of a victim's death, whether natural or as a direct result of persecution."@en .
+
+memor:voluntary-residence a owl:Class;
+        rdfs:subClassOf memor:event;
+        rdfs:label "Last Known Voluntary Residence"@en, "Letzte Freiwillige Wohnadresse"@de ;
+        rdfs:comment "A period of time during which a person chose to reside at a specific location, prior to or outside of forced relocation by the NS regime."@en .
+
+memor:forced-residence a owl:Class;
+        rdfs:subClassOf memor:event;
+        rdfs:label "Forced Place of Residence"@en, "Erzwungene Wohnadresse"@de ;
+        rdfs:comment "A period of time during which a person was compelled to live at a specific location due to persecution, such as ghettos or assigned 'Judenhaus' housing."@en .
+
+memor:imprisonment a owl:Class;
+        rdfs:subClassOf memor:event;
+        rdfs:label "Imprisonment"@en, "Haft"@de ;
+        rdfs:comment "The event of being held in captivity by state or paramilitary forces, including jails, concentration camps, or Gestapo custody."@en .
+
+memor:flight a owl:Class;
+        rdfs:subClassOf memor:event;
+        rdfs:label "Flight"@en, "Flucht"@de ;
+        rdfs:comment "The act of fleeing, emigrating, or escaping under duress to avoid persecution or imminent danger."@en .
+
+memor:hasDate a owl:DatatypeProperty;
+        rdfs:subPropertyOf dcterms:date ;
+        rdfs:domain memor:event;
+        rdfs:range edtf:EDTF-level1 ;
+        rdfs:label "Has Date"@en, "Hat Datum"@de ;
+        rdfs:comment "Provides the temporal bounding of an event. Strictly expects EDTF-level1 strings to accommodate historical uncertainty (e.g., '1944', '1938/1941') without fabricating exact XSD dates."@en .
+
+
+# ============================================================================
+# PROSECUTION CATEGORIES
+# ============================================================================
+
+memor:prosecution a owl:Class;
+        rdfs:subClassOf memor:event;
+        rdfs:label "Persecution Event"@en, "Verfolgungsereignis"@de ;
+        rdfs:comment "An overarching event class representing any systemic act of persecution, marginalization, or violence inflicted upon a victim by the NS regime."@en .
+
+memor:ns-opposition a owl:Class;
+        rdfs:subClassOf memor:prosecution;
+        rdfs:label "Opponent of the Nazis"@en, "NS-Gegner"@de ;
+        rdfs:comment "Persecution resulting from general opposition to the National Socialist regime, distinct from organized resistance."@en .
+
+memor:resistance a owl:Class;
+        rdfs:subClassOf memor:prosecution;
+        rdfs:label "Resistance"@en, "Widerstand"@de ;
+        rdfs:comment "Persecution resulting from active, organized, or individual acts of resistance against the NS regime."@en .
+
+memor:resistance-political a owl:Class;
+        rdfs:subClassOf memor:resistance;
+        rdfs:label "Resistance, Political"@en, "Widerstand, politisch"@de ;
+        rdfs:comment "Persecution resulting from resistance motivated by political affiliation (e.g., Communist, Social Democrat)."@en .
+
+memor:resistance-religious a owl:Class;
+        rdfs:subClassOf memor:resistance;
+        rdfs:label "Resistance, Religious"@en, "Widerstand, religiös"@de ;
+        rdfs:comment "Persecution resulting from resistance motivated by religious convictions or church affiliations."@en .
+
+memor:resistance-individual a owl:Class;
+        rdfs:subClassOf memor:resistance;
+        rdfs:label "Resistance, Individual"@en, "Widerstand, individuell"@de ;
+        rdfs:comment "Persecution resulting from spontaneous or unaffiliated acts of resistance by individuals."@en .
+
+memor:resistance-deserters a owl:Class;
+        rdfs:subClassOf memor:resistance;
+        rdfs:label "Resistance, Deserters"@en, "Widerstand, Deserteure"@de ;
+        rdfs:comment "Persecution resulting from desertion or refusal of military service (Wehrkraftzersetzung)."@en .
+
+memor:witnesses-jehovah a owl:Class;
+        rdfs:subClassOf memor:prosecution;
+        rdfs:label "Jehovah's Witnesses"@en, "Zeugen Jehovas"@de ;
+        rdfs:comment "Persecution directed specifically at members of the Jehovah's Witnesses (Bibelforscher) due to their refusal to swear allegiance to the state or bear arms."@en .
+
+memor:jewish-victims a owl:Class;
+        rdfs:subClassOf memor:prosecution;
+        rdfs:label "Jewish Victims"@en, "Jüdische Opfer"@de ;
+        rdfs:comment "The base class for persecution based on the Nuremberg Race Laws."@en .
+
+memor:jewish-victims-jewish a owl:Class;
+        rdfs:subClassOf memor:jewish-victims;
+        rdfs:label "Jewish Victims (Jewish Religion)"@en, "Jüdische Opfer (jüdische Religion)"@de ;
+        rdfs:comment "Persecution of victims who were targeted as Jews and who actively practiced or belonged to the Jewish faith."@en .
+
+memor:jewish-victims-persecuted-as-jew a owl:Class;
+        rdfs:subClassOf memor:jewish-victims;
+        rdfs:label "Jewish Victims, Persecuted as a Jew"@en, "Jüdische Opfer, als Jude verfolgt"@de ;
+        rdfs:comment "Persecution of victims who were classified and targeted as Jews under the Nuremberg laws, regardless of their actual religious self-identification (e.g., converts, secular)."@en .
+
+memor:roma a owl:Class;
+        rdfs:subClassOf memor:prosecution;
+        rdfs:label "Roma/Romnija and Sinti/Sintize"@en, "Roma/Romnija und Sinti/Sintize"@de ;
+        rdfs:comment "Persecution targeting individuals belonging to the Roma or Sinti minority groups on racist grounds."@en .
+
+memor:euthanasia-victim a owl:Class;
+        rdfs:subClassOf memor:prosecution;
+        rdfs:label "Victims of Euthanasia"@en, "Opfer der NS-Euthanasie"@de ;
+        rdfs:comment "Persecution and murder of victims with physical, mental, or psychological disabilities under the NS 'Aktion T4' or decentralized euthanasia programs."@en .
+
+memor:homosexual-victim a owl:Class;
+        rdfs:subClassOf memor:prosecution;
+        rdfs:label "Homosexual Victims"@en, "Homosexuelle Opfer"@de ;
+        rdfs:comment "Persecution of victims targeted under Paragraph 175 or related mandates criminalizing homosexuality."@en .
+
+memor:spain-fighter a owl:Class;
+        rdfs:subClassOf memor:prosecution;
+        rdfs:label "SpanienkämpferInnen"@de, "Spanish Civil War volunteer"@en;
+        rdfs:comment "Persecution of individuals who volunteered in the International Brigades during the Spanish Civil War and were subsequently targeted by the NS regime."@en .
+
+
+# ============================================================================
+# PERSON MODELING
+# ============================================================================
+
+memor:victim a owl:Class ;
+        rdfs:subClassOf cidoc:E21_Person ;
+        # Keep generic LOD anchors for cross-domain federated queries
+        rdfs:subClassOf foaf:Person, schema:Person ;
+        rdfs:label "Victim"@en, "Opfer"@de ;
+        rdfs:comment "A human being who was subjected to persecution during the National Socialist era. Represents the core biographical subject of the graph."@en .
+
+memor:hasEvent a owl:ObjectProperty;
+        rdfs:subPropertyOf cidoc:P11i_participated_in ;
+        rdfs:domain memor:victim;
+        rdfs:range memor:event ;
+        rdfs:label "Participated In Event"@en, "Nahm an Ereignis teil"@de ;
+        rdfs:comment "Connects a victim to a historical event they participated in or were subjected to, adhering strictly to CIDOC actor-participation logic."@en .
+
+memor:hasLiteratureReference a owl:DatatypeProperty;
+        rdfs:domain memor:victim;
+        rdfs:range xsd:string ;
+        rdfs:label "Has Literature Source"@en, "Hat Literaturreferenz"@de ;
+        rdfs:comment "Provides a flat string citation to secondary literature mentioning the victim. Used when full bibliographic entities (like DOI/Wikidata) are unavailable."@en .
+
+memor:hasMemorialSign a owl:ObjectProperty;
+        rdfs:domain memor:victim;
+        rdfs:range derla:placeOfRemembrance ;
+        rdfs:label "Has Memorial Sign"@en, "Hat Erinnerungszeichen"@de ;
+        rdfs:comment "Links a victim to a physical memorial sign, such as a Stolperstein, represented formally in the DERLA graph."@en .
+
+
+# ============================================================================
+# ARCHIVAL SOURCE MATERIAL & PROVENANCE
+# ============================================================================
+
+memor:source a owl:Class;
+        rdfs:subClassOf cidoc:E31_Document ;
+        rdfs:subClassOf prov:Entity ;
+        rdfs:label "Historical Source"@en, "Historische Quelle"@de ;
+        rdfs:comment "A historical document, archival artifact, or digital surrogate that provides evidentiary backing for a biographical claim or historical event."@en .
+
+memor:hasSource a owl:ObjectProperty;
+        rdfs:subPropertyOf prov:wasDerivedFrom ;
+        rdfs:subPropertyOf cidoc:P70i_is_documented_in ;
+        rdfs:domain cidoc:E1_CRM_Entity ;
+        rdfs:range memor:source ;
+        rdfs:label "Has Source"@en, "Hat Quelle"@de ;
+        rdfs:comment "Provides granular provenance by linking an entity (a Person, an Event, or a Place) to its documentary evidence. Domain is left broad to allow attaching evidence directly to specific historical events."@en .
+
+memor:image a owl:Class;
+        rdfs:subClassOf memor:source;
+        rdfs:subClassOf schema:ImageObject;
+        rdfs:subClassOf foaf:Image;
+        rdfs:label "Image Source"@en, "Bildquelle"@de ;
+        rdfs:comment "A visual historical source, such as a photograph, portrait, or scanned visual document of the victim or event."@en .
+
+

@@ -119,6 +119,17 @@ class MemorPerson:
 
         description_element = ET.SubElement(root, 'dc:description', {'xml:lang': 'de'})
         description_element.text = self.biography_text
+        # add voluntary address to description element
+        if self.voluntary_address is not None:
+            description_element.text += f" Letzte freiwillige Wohnadresse: {self.voluntary_address if len(self.voluntary_address) > 1 else '-' }"
+
+        # add linked DERLA memorial signs if available
+        if self.memorial_signs is not None:
+            if len(self.memorial_signs) > 0:
+                description_element.text += " | Verbundene DERLA-Zeichen: "
+                for sign in self.memorial_signs:
+                    description_element.text += f"{sign};"
+
 
         date_element = ET.SubElement(root, 'dc:date')
         date_element.text = "2026"
@@ -181,8 +192,8 @@ class MemorPerson:
             "funder": ";".join(["City of Graz", "National Fund of the Republic of Austria for Victims of National Socialism", "Future Fund of the Republic of Austria", "Federal Chancellery of the Republic of Austria"]),
             'source': ['Memor datasheet transformed by Memor preprocessing tool'],
             'objectType': ['RDF'],
-            'mainResource': ['RDF.xml'],
-            'tags': ";".join(object_tags) # tags separated by semicolon # TODO make sure english translation?
+            'mainResource': ['SEMANTIC_STATEMENTS.ttl'],
+            'tags': ";".join(object_tags) # tags separated by semicolon
         }
 
         df = pd.DataFrame(data)
@@ -513,6 +524,8 @@ class MemorPerson:
         # =========================================================================
         if self.voluntary_address and self.voluntary_longitude and self.voluntary_latitude:
             voluntary_feature = create_feature(
+                event_id=f'{self.id}#events/voluntary-residence',
+                title=f'Freiwillige Wohnhaftigkeit von {self.first_name or ''} {self.last_name or ''}',
                 event_type='voluntary_residence',
                 lon=self.voluntary_longitude,
                 lat=self.voluntary_latitude,
@@ -527,6 +540,8 @@ class MemorPerson:
         # =========================================================================
         if self.forced_address and self.forced_longitude and self.forced_latitude:
             forced_feature = create_feature(
+                event_id=f'{self.id}#events/forced-residence',
+                title=f'Erzwungene Wohnhaftigkeit von {self.first_name or ''} {self.last_name or ''}',
                 event_type='forced_residence',
                 lon=self.forced_longitude,
                 lat=self.forced_latitude,
@@ -567,6 +582,8 @@ class MemorPerson:
         # =========================================================================
         if self.death_place and self.death_longitude and self.death_latitude:
             death_feature = create_feature(
+                title=f'Tod von {self.first_name or ''} {self.last_name or ''}',
+                event_id=f'{self.id}#events/death',
                 event_type='death',
                 lon=self.death_longitude,
                 lat=self.death_latitude,

@@ -175,18 +175,30 @@ class MemorProcessor:
                 person_documents_metadata_path = f"{person_folder_path}{os.sep}files.txt"
                 documents_entries = self._load_metadata_csv(person_documents_metadata_path)
                 for i, person_document in enumerate(documents_entries):
+
+                    # small fail safe if the column is not defined
+                    source = ""
+                    try:
+                        source = person_document["Quelle"]
+                    except:
+                        pass
+
                     document = MemorPersonFile(
                         title=person_document["Titel"],
                         desc=person_document["Beschreibung"],
                         source_path=f"{person_folder_path}{os.path.sep}files{os.path.sep}{person_document['Dateiname']}",
+                        source=source
                     )
                     cur_memor_person.add_document(document)
             except Exception as e:
-                self.logger.warning(f"Error loading material files for person {cur_memor_person.id} at path {person_folder_path}: {e}")
+                self.logger.debug(f"Error loading material files for person {cur_memor_person.id} at path {person_folder_path}: {e}")
             finally:
                 # as final step add the person
                 self.memor_persons.append(cur_memor_person)
                 self.logger.debug(f"Loaded memor person: {cur_memor_person}")
+
+        # display statistics
+        logging.info(f"*** Successfully read in {len(self.memor_persons)} memor persons from gsheets")
 
         # Reading in Events from the gsheet
         # for event_entry in self.memor_events_frame.to_dict(orient='records'):
@@ -484,33 +496,73 @@ class MemorProcessor:
 
     def output_person_list_object(self):
         """
-        Creates a object folder (with datastreams.csv / object.csv) containing all persons data as GEOJSON
-        :return:
+        Creates an object folder (with datastreams.csv / object.csv) containing all persons data
+        as GEOJSON and an aggregated RDF Turtle file.
         """
+        from rdflib import Graph
+        from memorbuch_preprocessing.Person.memor_person_turtle_serialization import populate_person_graph, _bind_namespaces
 
         # first create folder
         object_id = "memor.person-register"
         folder_path = os.path.join(MemorStatics.OUTPUT_DIR, str(object_id))
         os.makedirs(folder_path, exist_ok=True)
 
-        # create aggregated geojson file
+        # ---------------------------------------------------------
+        # 1. GEOJSON AGGREGATION
+        # ---------------------------------------------------------
         all_features = []
         for person in self.memor_persons:
             person_features = person.to_geojson_features()
             all_features.extend(person_features)
 
-        # aggregate features with same coordinates
-        # **NEW: Deduplicate features with identical coordinates**
+        # ---------------------------------------------------------------------
+        # NEW: Generate tabular EVENTS.csv (Pre-deduplication)
+        # ---------------------------------------------------------------------
+        self.logger.info("Generating flat EVENTS.csv for tabular analysis...")
+        csv_rows = []
+        for feature in all_features:
+            props = feature.get('properties', {})
+            coords = feature.get('geometry', {}).get('coordinates', [None, None])
+            tags = props.get('tags', [])
+
+            # WORKAROUND: Extracting event_type from tags because it was commented out in properties
+            event_type = tags[0] if tags else "unknown"
+
+            csv_rows.append({
+                "event_id": props.get("event_id", ""),
+                "person_id": props.get("person_id"),
+                "link": f'<a href="{MemorStatics.MEMOR_BASE_URI}/objects/{props.get('person_id')}" target="_blank">Link zu MEMOR</a>',
+                "person_name": props.get("person_name"),
+                "event_type": event_type,
+                "Name": props.get("event_title", ""),
+                "event_description": props.get("event_description", ""),
+                "place_name": props.get("place_name", ""),
+                "TimeStamp": props.get("date", ""),
+                "Longitude": coords[0],
+                "Latitude": coords[1],
+                "tags": ";".join(tags),  # Flatten lists for CSV compatibility
+                "gender": props.get("gender", ""),
+                "is_youth": props.get("is_youth", False),
+                "birth_date": props.get("birth_date", ""),
+                "death_date": props.get("death_date", ""),
+            })
+
+        events_df = pd.DataFrame(csv_rows)
+        events_csv_path = os.path.join(folder_path, 'EVENTS.csv')
+
+        # Use QUOTE_MINIMAL so pandas handles quoting only when necessary (e.g. descriptions with commas)
+        events_df.to_csv(
+            events_csv_path,
+            index=False,
+            sep=',',
+            encoding='utf-8',
+            lineterminator='\n'
+        )
+        self.logger.info(f"Outputted all persons tabular CSV: {events_csv_path}")
+
         self.logger.info(f"Original feature count: {len(all_features)}")
         deduplicated_features = FeatureAggregator().deduplicate_geojson_features(all_features)
         self.logger.info(f"Deduplicated feature count: {len(deduplicated_features)}")
-
-        # Statistics
-        # TODO update tag count?
-        # event_type_counts = {}
-        # for feature in deduplicated_features:
-        #     event_type = feature['properties']['event_type']
-        #     event_type_counts[event_type] = event_type_counts.get(event_type, 0) + 1
 
         geojson = {
             "type": "FeatureCollection",
@@ -519,28 +571,45 @@ class MemorProcessor:
                 "project": "MEMOR - Digitales Memorbuch",
                 "total_persons": len(self.memor_persons),
                 "total_location_events": len(deduplicated_features),
-                # "event_type_counts": event_type_counts,
                 "generated": datetime.now().isoformat()
             },
             "features": deduplicated_features
         }
 
         json_path = os.path.join(folder_path, 'EVENTS.json')
-
         with open(json_path, 'w', encoding='utf-8') as f:
             json.dump(geojson, f, ensure_ascii=False, indent=2)
 
-
         self.logger.info(f"Outputted all persons GEOJSON object: {json_path}")
 
-        # Create dublin core xml
+        # ---------------------------------------------------------
+        # 2. RDF TURTLE AGGREGATION
+        # ---------------------------------------------------------
+        self.logger.info("Building aggregated RDF graph...")
+        aggregated_graph = Graph()
+        _bind_namespaces(aggregated_graph)
+
+        for person in self.memor_persons:
+            try:
+                populate_person_graph(person, g=aggregated_graph)
+            except Exception as e:
+                self.logger.error(f"Failed to add person {person.id} to aggregated graph: {e}")
+
+        aggregated_ttl_path = os.path.join(folder_path, "REGISTER.ttl")
+        aggregated_graph.serialize(destination=aggregated_ttl_path, format="turtle", encoding="utf-8")
+        self.logger.info(f"Outputted aggregated TTL: {aggregated_ttl_path}")
+
+        # ---------------------------------------------------------
+        # 3. METADATA (DC.xml & object.csv & datastreams.csv)
+        # ---------------------------------------------------------
         dc_xml_string = f"""
             <oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
                 <dc:identifier>{object_id}</dc:identifier>
                 <dc:creator>Born digital - memor project GAMS</dc:creator>
-                <dc:title xml:lang="en">Ernst Altmann</dc:title>
+                <dc:title xml:lang="de">Personenregister</dc:title>
+                <dc:title xml:lang="en">person register and related indices</dc:title>
                 <dc:subject>Register</dc:subject>
                 <dc:rights>Creative Commons BY-NC 4.0</dc:rights>
                 <dc:description xml:lang="de">Personenregister des Memor Projekts</dc:description>
@@ -563,7 +632,7 @@ class MemorProcessor:
         with open(object_csv_path, "w", encoding="utf-8", newline='') as csv_file:
             csv_writer = csv.writer(csv_file)
             csv_writer.writerow(["recid", "title", "project", "description", "creator", "rights", "publisher", "source", "objectType", "mainResource", "tags"])
-            csv_writer.writerow([object_id, "Personenregister", "memor", "Person registers and related indices for the MEMOR project", "Born digital - memor project GAMS", "Creative Commons BY-NC 4.0", "memor project GAMS5", "Memor datasheet transformed by Memor preprocessing tool", "Dataset", "EVENTS.json", "register"])
+            csv_writer.writerow([object_id, "Person register", "memor", "This digital object contains person registers and related indices for the MEMOR project", "Born digital - memor project GAMS", "Creative Commons BY-NC 4.0", "memor project GAMS5", "Memor datasheet transformed by Memor preprocessing tool", "Dataset", "EVENTS.json", "register"])
         self.logger.info(f"Outputted all persons object.csv: {object_csv_path}")
 
         # Datastreams csv
@@ -571,6 +640,8 @@ class MemorProcessor:
         with open(datastreams_csv_path, "w", encoding="utf-8", newline='') as csv_file:
             csv_writer = csv.writer(csv_file)
             csv_writer.writerow(["dsid","dspath", "title","mimetype", "description","creator","rights"])
-            csv_writer.writerow(["EVENTS.json","EVENTS.json","All Persons as GEOJSON", "application/json", "GEOJSON file containing all persons","Born digital - memor project GAMS","Creative Commons BY-NC 4.0"])
+            csv_writer.writerow(["EVENTS.json","EVENTS.json","MEMOR person events geojson", "application/json", "GEOJSON file containing all MEMOR persons, associated events and locations.","Born digital - memor project GAMS","Creative Commons BY-NC 4.0"])
+            csv_writer.writerow(["EVENTS.csv", "EVENTS.csv", "MEMOR Person events as CSV", "text/csv","Tabular dataset of all person related historical events (deaths, imprisonments, prosecutions, etc.)", "Born digital - memor project GAMS","Creative Commons BY-NC 4.0"])
             csv_writer.writerow(["DC.xml","DC.xml", "Dublin Core Metadata","application/xml", "Dublin Core metadata for the persons register","Born digital - memor project GAMS","Creative Commons BY-NC 4.0"])
+            csv_writer.writerow(["REGISTER.ttl", "REGISTER.ttl", "Aggregated Person Register", "text/turtle", "Aggregated RDF statements for all persons of the MEMOR project", "Born digital - memor project GAMS", "Creative Commons BY-NC 4.0"])
         self.logger.info(f"Outputted all persons datastreams.csv: {datastreams_csv_path}")

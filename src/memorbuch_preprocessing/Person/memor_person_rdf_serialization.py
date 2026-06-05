@@ -40,7 +40,7 @@ def write_as_rdf_xml_improved(self):
     # ============================================================================
 
     MEMOR_BASE_URI = "https://www.ns-opfer-graz.at/"
-    MEMOR_ONTOLOGY = MEMOR_BASE_URI + "ontology#"
+    MEMOR_ONTOLOGY = MEMOR_BASE_URI + "ontology.html#"
 
     # Define all namespaces
     namespaces = {
@@ -476,7 +476,7 @@ def _create_event_description(root, event_uri: str, event, person_uri: str):
 
     from memorbuch_preprocessing.MemorStatics import MemorStatics
     MEMOR_BASE_URI = "https://www.ns-opfer-graz.at/"
-    MEMOR_ONTOLOGY = MEMOR_BASE_URI + "ontology#"
+    MEMOR_ONTOLOGY = MEMOR_BASE_URI + "ontology.html#"
 
     # Type the event
     ET.SubElement(event_desc, 'rdf:type', {'rdf:resource': 'http://purl.org/vocab/bio/0.1/Event'})
